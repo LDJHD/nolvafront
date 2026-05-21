@@ -1,0 +1,1654 @@
+/* ============================================
+   NOLVA - Theme Premium
+   Marketplace Evenementiel au Benin
+   Couleurs : Rouge / Noir / Blanc / Gris
+   ============================================ */
+
+/* --- Variables globales --- */
+:root {
+  --nolva-red: #E31E24;
+  --nolva-red-dark: #c4161b;
+  --nolva-red-light: #ff4d52;
+  --nolva-red-glow: rgba(227, 30, 36, 0.12);
+  --nolva-black: #1A1A1A;
+  --nolva-dark: #2c2c2c;
+  --nolva-gray: #64748b;
+  --nolva-gray-light: #94a3b8;
+  --nolva-light: #f8fafc;
+  --nolva-white: #ffffff;
+  --nolva-border: #e2e8f0;
+  --nolva-shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --nolva-shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.04);
+  --nolva-shadow-md: 0 10px 25px -3px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.04);
+  --nolva-shadow-lg: 0 20px 40px -5px rgba(0,0,0,0.12);
+  --nolva-radius: 12px;
+  --nolva-radius-lg: 16px;
+  --nolva-radius-xl: 24px;
+  --nolva-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Reset and Base Typography --- */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  color: var(--nolva-black);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.gi-btn-1,
+.gi-btn-2,
+button.gi-btn-1,
+button.gi-btn-2,
+a.gi-btn-1,
+a.gi-btn-2 {
+  background: var(--nolva-red) !important;
+  border: 2px solid var(--nolva-red) !important;
+  color: #fff !important;
+  border-radius: 10px !important;
+  padding: 10px 24px !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  letter-spacing: 0.3px;
+  transition: var(--nolva-transition) !important;
+  text-decoration: none !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.gi-btn-1:hover,
+.gi-btn-2:hover {
+  background: var(--nolva-red-dark) !important;
+  border-color: var(--nolva-red-dark) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(227, 30, 36, 0.3) !important;
+}
+.gi-btn-2 {
+  background: transparent !important;
+  color: var(--nolva-red) !important;
+}
+.gi-btn-2:hover {
+  background: var(--nolva-red) !important;
+  color: #fff !important;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.header-top {
+  background: var(--nolva-black) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-size: 13px;
+}
+.header-top .header-top-message {
+  color: rgba(255,255,255,0.7);
+  font-weight: 400;
+  font-size: 13px;
+}
+.header-top a, .header-top .gi-help {
+  color: rgba(255,255,255,0.8) !important;
+  transition: var(--nolva-transition);
+  font-size: 13px;
+}
+.header-top a:hover, .header-top .gi-help:hover {
+  color: var(--nolva-red) !important;
+}
+
+.gi-header-bottom {
+  background: var(--nolva-white) !important;
+  border-bottom: none !important;
+  box-shadow: var(--nolva-shadow-sm);
+  position: relative;
+}
+.gi-header-bottom::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--nolva-red), var(--nolva-red-light), var(--nolva-red));
+}
+
+.header-logo img {
+  max-height: 50px;
+  transition: var(--nolva-transition);
+}
+
+.gi-search-bar {
+  border: 2px solid var(--nolva-border) !important;
+  border-radius: 50px !important;
+  padding: 6px 16px !important;
+  transition: var(--nolva-transition);
+}
+.gi-search-bar:focus-within {
+  border-color: var(--nolva-red) !important;
+  box-shadow: 0 0 0 4px var(--nolva-red-glow) !important;
+}
+.search_submit {
+  background: var(--nolva-red) !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff !important;
+  transition: var(--nolva-transition);
+}
+.search_submit:hover {
+  background: var(--nolva-red-dark) !important;
+  transform: scale(1.05);
+}
+
+/* Account dropdown */
+.gi-acc-drop .gi-btn-title { font-weight: 600; color: var(--nolva-black); }
+.gi-acc-drop .gi-btn-stitle { color: var(--nolva-gray); font-size: 12px; }
+.gi-dropdown-menu {
+  border-radius: var(--nolva-radius) !important;
+  box-shadow: var(--nolva-shadow-lg) !important;
+  border: 1px solid var(--nolva-border) !important;
+  overflow: hidden;
+}
+.gi-dropdown-menu .dropdown-item:hover {
+  background: var(--nolva-red-glow) !important;
+  color: var(--nolva-red) !important;
+}
+
+/* Category menu */
+.gi-category-menu .gi-category-toggle {
+  background: var(--nolva-red) !important;
+  border-radius: 10px !important;
+  font-weight: 600;
+}
+.gi-category-menu .gi-category-toggle:hover {
+  background: var(--nolva-red-dark) !important;
+}
+.gi-cat-dropdown {
+  border-radius: var(--nolva-radius) !important;
+  box-shadow: var(--nolva-shadow-lg) !important;
+  border: 1px solid var(--nolva-border) !important;
+  overflow: hidden;
+}
+.gi-cat-list li a:hover {
+  color: var(--nolva-red) !important;
+  background: var(--nolva-red-glow);
+}
+
+/* Navigation */
+.gi-main-menu ul li > a {
+  font-weight: 500 !important;
+  color: var(--nolva-black) !important;
+  transition: var(--nolva-transition);
+  position: relative;
+}
+.gi-main-menu ul li:hover > a,
+.gi-main-menu ul li.active > a {
+  color: var(--nolva-red) !important;
+}
+.gi-main-menu ul li.non-drop > a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--nolva-red);
+  transition: var(--nolva-transition);
+  transform: translateX(-50%);
+}
+.gi-main-menu ul li.non-drop:hover > a::after {
+  width: 80%;
+}
+
+/* Header buttons */
+.gi-header-bottons .gi-header-btn {
+  transition: var(--nolva-transition);
+}
+.gi-header-bottons .gi-header-btn:hover {
+  color: var(--nolva-red) !important;
+}
+.gi-header-bottons .gi-header-btn:hover .gi-btn-title {
+  color: var(--nolva-red) !important;
+}
+.gi-header-bottons .header-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--nolva-light);
+  transition: var(--nolva-transition);
+}
+.gi-header-bottons .gi-header-btn:hover .header-icon {
+  background: var(--nolva-red-glow);
+  color: var(--nolva-red);
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+.nolva-hero {
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a0000 40%, var(--nolva-black) 100%);
+  min-height: 580px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.nolva-hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(227,30,36,0.18) 0%, transparent 70%);
+}
+.nolva-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -10%;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(227,30,36,0.08) 0%, transparent 70%);
+}
+.nolva-hero-overlay {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: 70px 0;
+}
+.nolva-hero-content { max-width: 720px; }
+.nolva-hero-tagline {
+  color: var(--nolva-red);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.nolva-hero-tagline::before {
+  content: '';
+  width: 30px;
+  height: 2px;
+  background: var(--nolva-red);
+}
+.nolva-hero-title {
+  font-size: 50px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  letter-spacing: -1px;
+}
+.nolva-hero-title span { color: var(--nolva-red); }
+.nolva-hero-subtitle {
+  font-size: 17px;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 40px;
+  line-height: 1.7;
+  max-width: 560px;
+}
+
+/* Search bar hero */
+.nolva-search-bar {
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(10px);
+  border-radius: 60px;
+  padding: 6px 6px 6px 24px;
+  box-shadow: 0 15px 50px rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  max-width: 680px;
+  margin-bottom: 40px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.nolva-search-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  padding: 6px 12px;
+  min-width: 0;
+}
+.nolva-search-field i { color: var(--nolva-gray-light); font-size: 15px; }
+.nolva-search-select {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--nolva-black);
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+  padding: 4px 0;
+}
+.nolva-search-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--nolva-border);
+  flex-shrink: 0;
+  margin: 0 4px;
+}
+.nolva-search-btn {
+  background: var(--nolva-red) !important;
+  border: none !important;
+  color: #fff !important;
+  border-radius: 50px !important;
+  padding: 12px 28px !important;
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: var(--nolva-transition);
+  box-shadow: 0 4px 15px rgba(227, 30, 36, 0.35);
+}
+.nolva-search-btn:hover {
+  background: var(--nolva-red-dark) !important;
+  transform: scale(1.03);
+}
+
+/* Hero stats */
+.nolva-hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.nolva-stat { text-align: center; }
+.nolva-stat strong {
+  display: block;
+  font-size: 28px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.nolva-stat span { font-size: 12px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; }
+.nolva-stat-divider {
+  width: 1px;
+  height: 40px;
+  background: rgba(255,255,255,0.12);
+}
+
+@media (max-width: 768px) {
+  .nolva-hero { min-height: 440px; }
+  .nolva-hero-overlay { padding: 40px 0; }
+  .nolva-hero-title { font-size: 30px; }
+  .nolva-hero-subtitle { font-size: 14px; margin-bottom: 28px; }
+  .nolva-hero-stats { gap: 16px; }
+  .nolva-stat strong { font-size: 22px; }
+  .nolva-search-bar { flex-direction: column; border-radius: var(--nolva-radius-lg); padding: 12px; gap: 8px; }
+  .nolva-search-field { width: 100%; padding: 6px; }
+  .nolva-search-divider { width: 100%; height: 1px; margin: 2px 0; }
+  .nolva-search-btn { width: 100%; justify-content: center; border-radius: 10px !important; }
+}
+
+/* ============================================
+   PROVIDER CARDS
+   ============================================ */
+.nolva-provider-card {
+  border: 1px solid var(--nolva-border);
+  border-radius: var(--nolva-radius-lg);
+  overflow: hidden;
+  transition: var(--nolva-transition);
+  background: var(--nolva-white);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.nolva-provider-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--nolva-shadow-lg);
+  border-color: transparent;
+}
+.nolva-provider-header {
+  background: linear-gradient(135deg, var(--nolva-black) 0%, #2a0000 100%);
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+}
+.nolva-provider-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--nolva-red), transparent);
+}
+.nolva-provider-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid rgba(255,255,255,0.2);
+  background: var(--nolva-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.nolva-provider-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.nolva-provider-initials {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+.nolva-provider-badges { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+.nolva-badge-verified {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.nolva-status {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.nolva-status.available { background: #dbeafe; color: #2563eb; }
+.nolva-status.busy { background: #fee2e2; color: #dc2626; }
+
+.nolva-provider-body {
+  padding: 1.25rem 1.5rem;
+  flex: 1;
+}
+.nolva-provider-name {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--nolva-black);
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
+.nolva-provider-type {
+  font-size: 13px;
+  color: var(--nolva-red);
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.nolva-provider-city {
+  font-size: 13px;
+  color: var(--nolva-gray);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.nolva-provider-desc {
+  font-size: 13px;
+  color: var(--nolva-gray);
+  margin-bottom: 10px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.nolva-provider-price { font-size: 14px; color: var(--nolva-black); margin-bottom: 0; }
+.nolva-provider-price strong { color: var(--nolva-red); font-size: 17px; font-weight: 800; }
+
+.nolva-provider-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--nolva-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--nolva-light);
+}
+.nolva-experience { font-size: 12px; color: var(--nolva-gray); display: flex; align-items: center; gap: 4px; }
+
+/* ============================================
+   FILTERS
+   ============================================ */
+.nolva-filters {
+  background: var(--nolva-white);
+  border-radius: var(--nolva-radius-lg);
+  padding: 1.5rem 2rem;
+  box-shadow: var(--nolva-shadow-sm);
+  border: 1px solid var(--nolva-border);
+}
+.nolva-filter-select {
+  border: 2px solid var(--nolva-border) !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+  padding: 10px 16px !important;
+  font-weight: 500;
+  transition: var(--nolva-transition);
+  background: var(--nolva-white);
+}
+.nolva-filter-select:focus {
+  border-color: var(--nolva-red) !important;
+  box-shadow: 0 0 0 4px var(--nolva-red-glow) !important;
+}
+
+/* ============================================
+   ROLE SELECTOR (Registration)
+   ============================================ */
+.nolva-role-card {
+  border: 2px solid var(--nolva-border);
+  border-radius: var(--nolva-radius-lg);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: var(--nolva-transition);
+  background: var(--nolva-white);
+  cursor: pointer;
+}
+.nolva-role-card i {
+  font-size: 40px;
+  color: var(--nolva-gray-light);
+  display: block;
+  margin-bottom: 14px;
+  transition: var(--nolva-transition);
+}
+.nolva-role-card h6 {
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--nolva-black);
+  margin-bottom: 8px;
+  transition: var(--nolva-transition);
+}
+.nolva-role-card p { font-size: 13px; color: var(--nolva-gray); margin: 0; }
+.nolva-role-card:hover {
+  border-color: var(--nolva-red);
+  box-shadow: var(--nolva-shadow-md);
+  transform: translateY(-2px);
+}
+.nolva-role-card.active {
+  border-color: var(--nolva-red);
+  background: linear-gradient(135deg, rgba(227,30,36,0.04), rgba(227,30,36,0.08));
+  box-shadow: 0 0 0 4px var(--nolva-red-glow);
+}
+.nolva-role-card.active i { color: var(--nolva-red); }
+.nolva-role-card.active h6 { color: var(--nolva-red); }
+
+/* Provider fields */
+.nolva-provider-fields {
+  background: var(--nolva-light);
+  border-radius: var(--nolva-radius);
+  padding: 1.5rem;
+  border: 1px dashed var(--nolva-border);
+}
+
+/* Inscription — grille alignée (évite le flex du template sur form) */
+.nolva-register-form {
+  display: block !important;
+  flex-flow: unset !important;
+  margin: 0 !important;
+  width: 100%;
+}
+.nolva-register-form .nolva-register-field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+.nolva-register-form .nolva-register-field label {
+  display: block;
+  margin-bottom: 8px;
+  color: #4b5966;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.nolva-register-form .nolva-register-field .form-group {
+  margin-bottom: 0;
+  flex: 1;
+  width: 100%;
+}
+.nolva-register-form .nolva-register-field .form-control,
+.nolva-register-form .nolva-register-field .form-select {
+  width: 100% !important;
+  min-height: 48px;
+  box-sizing: border-box;
+}
+.nolva-register-form .gi-rg-select-inner {
+  width: 100% !important;
+  height: auto !important;
+  min-height: 48px;
+}
+.nolva-register-form .gi-rg-select-inner select {
+  width: 100% !important;
+  min-height: 46px;
+}
+.nolva-register-form .row.g-3 {
+  --bs-gutter-x: 1rem;
+  --bs-gutter-y: 1rem;
+  margin-left: calc(var(--bs-gutter-x) * -0.5);
+  margin-right: calc(var(--bs-gutter-x) * -0.5);
+}
+.nolva-register-form .row.g-3 > [class*="col-"] {
+  display: flex;
+  align-items: stretch;
+}
+.nolva-register-form .gi-register-wrap.gi-register-btn {
+  display: flex !important;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  padding: 0;
+  margin-top: 1.5rem;
+  gap: 1rem;
+}
+@media (min-width: 576px) {
+  .nolva-register-form .gi-register-wrap.gi-register-btn {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+/* ============================================
+   FORMS
+   ============================================ */
+.gi-register-form .form-control,
+.gi-register-form .form-select,
+.nolva-quote-form .form-control {
+  border: 2px solid var(--nolva-border) !important;
+  border-radius: 10px !important;
+  padding: 11px 16px !important;
+  font-size: 14px !important;
+  font-weight: 400;
+  transition: var(--nolva-transition);
+  color: var(--nolva-black);
+}
+.gi-register-form .form-control:focus,
+.gi-register-form .form-select:focus,
+.nolva-quote-form .form-control:focus {
+  border-color: var(--nolva-red) !important;
+  box-shadow: 0 0 0 4px var(--nolva-red-glow) !important;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--nolva-red) !important;
+  box-shadow: 0 0 0 4px var(--nolva-red-glow) !important;
+}
+
+/* ============================================
+   BREADCRUMB
+   ============================================ */
+.gi-breadcrumb {
+  background: linear-gradient(135deg, var(--nolva-light) 0%, #fff 100%);
+  border-bottom: 1px solid var(--nolva-border);
+}
+.gi-breadcrumb-title {
+  font-weight: 800 !important;
+  color: var(--nolva-black) !important;
+  letter-spacing: -0.5px;
+}
+.gi-breadcrumb-list li.active { color: var(--nolva-red) !important; font-weight: 600; }
+.gi-breadcrumb-list li a { color: var(--nolva-gray) !important; transition: var(--nolva-transition); }
+.gi-breadcrumb-list li a:hover { color: var(--nolva-red) !important; }
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.gi-footer {
+  background: var(--nolva-black) !important;
+}
+.footer-top {
+  background: var(--nolva-black) !important;
+}
+.gi-footer-widget .gi-footer-heading {
+  color: #fff !important;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.3px;
+  position: relative;
+  padding-bottom: 12px;
+}
+.gi-footer-widget .gi-footer-heading::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background: var(--nolva-red);
+}
+.gi-footer-logo {
+  max-width: 120px !important;
+  margin-bottom: 15px;
+}
+.gi-footer-detail {
+  color: rgba(255,255,255,0.6) !important;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.gi-footer-link a {
+  color: rgba(255,255,255,0.55) !important;
+  font-size: 14px;
+  transition: var(--nolva-transition);
+}
+.gi-footer-link a:hover {
+  color: var(--nolva-red) !important;
+  padding-left: 4px;
+}
+.gi-footer-link p {
+  color: rgba(255,255,255,0.55) !important;
+}
+.footer-bottom {
+  background: rgba(0,0,0,0.3) !important;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.gi-copy {
+  color: rgba(255,255,255,0.5) !important;
+  font-size: 13px;
+}
+.gi-copy .site-name { color: var(--nolva-red) !important; font-weight: 700; }
+
+/* Footer social icons */
+.gi-footer-social .gi-footer-link a {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.6) !important;
+  transition: var(--nolva-transition);
+  padding: 0 !important;
+}
+.gi-footer-social .gi-footer-link a:hover {
+  background: var(--nolva-red) !important;
+  color: #fff !important;
+  transform: translateY(-2px);
+  padding-left: 0;
+}
+
+/* ============================================
+   DASHBOARD
+   ============================================ */
+.gi-vendor-dashboard-card {
+  background: var(--nolva-white);
+  border-radius: var(--nolva-radius-lg);
+  box-shadow: var(--nolva-shadow-sm);
+  border: 1px solid var(--nolva-border);
+  overflow: hidden;
+}
+.gi-vendor-card-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--nolva-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--nolva-light);
+}
+.gi-vendor-card-header h5 {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--nolva-black);
+  margin: 0;
+}
+.gi-vendor-card-body { padding: 1.5rem; }
+
+.gi-vendor-dashboard-sort-card {
+  background: var(--nolva-white);
+  border: 1px solid var(--nolva-border);
+  border-radius: var(--nolva-radius);
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+  transition: var(--nolva-transition);
+}
+.gi-vendor-dashboard-sort-card:hover {
+  box-shadow: var(--nolva-shadow-md);
+  border-color: var(--nolva-red);
+}
+.gi-vendor-dashboard-sort-card h5 {
+  font-size: 13px;
+  color: var(--nolva-gray);
+  font-weight: 500;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.gi-vendor-dashboard-sort-card h3 {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--nolva-black);
+  margin: 0;
+}
+
+/* Tables */
+.gi-vender-table {
+  font-size: 14px;
+}
+.gi-vender-table th {
+  font-weight: 600;
+  color: var(--nolva-gray);
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  padding: 12px 16px !important;
+  border-bottom: 2px solid var(--nolva-border) !important;
+  background: var(--nolva-light);
+}
+.gi-vender-table td {
+  padding: 12px 16px !important;
+  vertical-align: middle;
+  color: var(--nolva-black);
+}
+.gi-vender-table tr:hover td {
+  background: var(--nolva-light);
+}
+
+/* Status badges */
+.nolva-status-badge {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 20px;
+  background: var(--nolva-light);
+  color: var(--nolva-gray);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+/* ============================================
+   OFFER CARDS
+   ============================================ */
+.nolva-offer-card {
+  border: 2px solid var(--nolva-border);
+  border-radius: var(--nolva-radius);
+  padding: 1.5rem;
+  transition: var(--nolva-transition);
+  background: var(--nolva-white);
+}
+.nolva-offer-card:hover {
+  border-color: var(--nolva-red);
+  box-shadow: var(--nolva-shadow-md);
+  transform: translateY(-2px);
+}
+.nolva-offer-card .offer-price {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--nolva-red);
+  margin: 8px 0;
+}
+
+/* ============================================
+   SECTION TITLES
+   ============================================ */
+.section-title-2 .gi-title {
+  font-weight: 800 !important;
+  color: var(--nolva-black) !important;
+  letter-spacing: -0.5px;
+}
+.section-title-2 .gi-title span {
+  color: var(--nolva-red) !important;
+}
+
+/* ============================================
+   LINKS
+   ============================================ */
+a { transition: var(--nolva-transition); }
+a:hover { color: var(--nolva-red) !important; text-decoration: none !important; }
+
+/* ============================================
+   MOBILE MENU
+   ============================================ */
+.gi-mobile-menu {
+  background: var(--nolva-white) !important;
+}
+.gi-menu-title {
+  background: var(--nolva-black) !important;
+  color: #fff;
+}
+.gi-menu-title .menu_title { font-weight: 700; }
+.gi-mobile-menu .gi-menu-content ul li a {
+  color: var(--nolva-black) !important;
+  font-weight: 500;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--nolva-border);
+  transition: var(--nolva-transition);
+}
+.gi-mobile-menu .gi-menu-content ul li a:hover {
+  color: var(--nolva-red) !important;
+  background: var(--nolva-red-glow);
+}
+
+/* ============================================
+   PAGINATION
+   ============================================ */
+.pagination .page-item.active .page-link {
+  background-color: var(--nolva-red) !important;
+  border-color: var(--nolva-red) !important;
+}
+.pagination .page-link {
+  border-radius: 8px !important;
+  transition: var(--nolva-transition);
+}
+.pagination .page-link:hover {
+  color: var(--nolva-red) !important;
+  background: var(--nolva-red-glow);
+}
+
+/* ============================================
+   ALERTS
+   ============================================ */
+.alert-success {
+  background: #f0fdf4 !important;
+  border: 1px solid #bbf7d0 !important;
+  color: #166534 !important;
+  border-radius: var(--nolva-radius) !important;
+}
+.alert-danger {
+  background: #fef2f2 !important;
+  border: 1px solid #fecaca !important;
+  color: #991b1b !important;
+  border-radius: var(--nolva-radius) !important;
+}
+
+/* ============================================
+   MISC
+   ============================================ */
+.badge-primary, .gi-badge { background-color: var(--nolva-red) !important; }
+.gi-star-rating i { color: #f59e0b !important; }
+.gi-sidebar .widget .widget-title:after { background-color: var(--nolva-red) !important; }
+.gi-price-filter .noUi-connect { background-color: var(--nolva-red) !important; }
+
+/* Checkboxes & radios */
+.checkbox.style-c input:checked ~ .checkbox__checkmark { background-color: var(--nolva-red) !important; }
+.switch input:checked ~ label { border-color: var(--nolva-red) !important; }
+.switch input:checked ~ label::after { background: var(--nolva-red) !important; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--nolva-light); }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--nolva-gray-light); }
+
+/* Selection */
+::selection {
+  background: var(--nolva-red);
+  color: #fff;
+}
+
+/* Smooth scrolling */
+html { scroll-behavior: smooth; }
+
+/* Loading shimmer effect */
+@keyframes nolva-shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+.nolva-skeleton {
+  background: linear-gradient(90deg, var(--nolva-light) 25%, #e2e8f0 50%, var(--nolva-light) 75%);
+  background-size: 2000px 100%;
+  animation: nolva-shimmer 2s infinite;
+  border-radius: 8px;
+}
+
+/* ============================================
+   EVENTS SECTION - HOMEPAGE
+   ============================================ */
+.nolva-events-section {
+  background: var(--nolva-light);
+  position: relative;
+}
+
+.nolva-events-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--nolva-red), var(--nolva-black), var(--nolva-red));
+}
+
+.nolva-events-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1399px) {
+  .nolva-events-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 1199px) {
+  .nolva-events-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 991px) {
+  .nolva-events-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 575px) {
+  .nolva-events-grid { grid-template-columns: 1fr; }
+}
+
+/* --- Event Card --- */
+.nolva-event-card {
+  background: var(--nolva-white);
+  border-radius: var(--nolva-radius);
+  overflow: hidden;
+  box-shadow: var(--nolva-shadow-sm);
+  transition: var(--nolva-transition);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--nolva-border);
+}
+
+.nolva-event-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--nolva-shadow-lg);
+  border-color: transparent;
+}
+
+/* --- Event Image --- */
+.nolva-event-image {
+  position: relative;
+  height: 170px;
+  overflow: hidden;
+}
+
+.nolva-event-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.nolva-event-card:hover .nolva-event-image img {
+  transform: scale(1.08);
+}
+
+.nolva-event-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--nolva-red) 0%, var(--nolva-black) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* --- Date Badge --- */
+.nolva-event-date-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--nolva-white);
+  border-radius: 10px;
+  padding: 6px 10px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  min-width: 50px;
+  line-height: 1;
+}
+
+.nolva-event-date-badge .day {
+  display: block;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--nolva-red);
+  line-height: 1.1;
+}
+
+.nolva-event-date-badge .month {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--nolva-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* --- Price Tag --- */
+.nolva-event-price-tag {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: var(--nolva-red);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(227, 30, 36, 0.4);
+}
+
+.nolva-event-price-tag.free {
+  background: var(--nolva-black);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Event Content --- */
+.nolva-event-content {
+  padding: 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.nolva-event-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--nolva-black);
+  margin-bottom: 8px;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.nolva-event-card:hover .nolva-event-title {
+  color: var(--nolva-red);
+}
+
+.nolva-event-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.nolva-event-meta span {
+  font-size: 12px;
+  color: var(--nolva-gray);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nolva-event-meta i {
+  color: var(--nolva-red);
+  font-size: 12px;
+}
+
+.nolva-event-desc {
+  font-size: 12px;
+  color: var(--nolva-gray-light);
+  line-height: 1.5;
+  margin-bottom: 12px;
+  flex: 1;
+}
+
+/* --- Event Button --- */
+.nolva-event-actions {
+  margin-top: auto;
+}
+
+.nolva-event-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--nolva-red);
+  text-decoration: none;
+  padding: 6px 0;
+  transition: var(--nolva-transition);
+  border-bottom: 2px solid transparent;
+}
+
+.nolva-event-btn:hover {
+  color: var(--nolva-red-dark);
+  border-bottom-color: var(--nolva-red);
+}
+
+.nolva-event-btn i {
+  transition: transform 0.2s ease;
+}
+
+.nolva-event-btn:hover i {
+  transform: translateX(4px);
+}
+
+/* ============================================
+   EVENT DETAIL PAGE
+   ============================================ */
+.nolva-event-hero {
+  background: var(--nolva-light);
+  padding: 40px 0;
+}
+
+.nolva-event-hero-image {
+  border-radius: var(--nolva-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--nolva-shadow-md);
+  height: 380px;
+}
+
+.nolva-event-hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nolva-event-hero-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--nolva-red) 0%, var(--nolva-black) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.6);
+  gap: 16px;
+  padding: 30px;
+  text-align: center;
+}
+
+.nolva-event-hero-placeholder i {
+  font-size: 56px;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.nolva-event-hero-placeholder span {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.nolva-event-status-badge {
+  display: inline-block;
+  background: rgba(227, 30, 36, 0.1);
+  color: var(--nolva-red);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.nolva-event-hero-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--nolva-black);
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.nolva-event-hero-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.nolva-event-meta-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.nolva-event-meta-item > i {
+  font-size: 18px;
+  color: var(--nolva-red);
+  margin-top: 2px;
+  min-width: 20px;
+}
+
+.nolva-event-meta-item div {
+  display: flex;
+  flex-direction: column;
+}
+
+.nolva-event-meta-item strong {
+  font-size: 12px;
+  color: var(--nolva-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.nolva-event-meta-item span {
+  font-size: 15px;
+  color: var(--nolva-black);
+  font-weight: 500;
+}
+
+/* Ticket Box */
+.nolva-event-ticket-box {
+  background: var(--nolva-white);
+  border: 2px solid var(--nolva-border);
+  border-radius: var(--nolva-radius);
+  padding: 20px;
+}
+
+.nolva-event-price-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.nolva-event-price-display .label {
+  font-size: 14px;
+  color: var(--nolva-gray);
+}
+
+.nolva-event-price-display .price {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--nolva-red);
+}
+
+.nolva-event-tickets-left {
+  margin-bottom: 4px;
+}
+
+.nolva-event-tickets-left .progress-bar-wrapper {
+  height: 6px;
+  background: var(--nolva-border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.nolva-event-tickets-left .progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--nolva-red), var(--nolva-red-light));
+  border-radius: 10px;
+  transition: width 0.6s ease;
+}
+
+.nolva-event-tickets-left > span {
+  font-size: 12px;
+  color: var(--nolva-gray);
+  font-weight: 500;
+}
+
+@media (max-width: 991px) {
+  .nolva-event-hero-image { height: 260px; }
+  .nolva-event-hero-title { font-size: 22px; }
+}
+
+/* ============================================
+   PRESTATAIRES LIST PAGE
+   ============================================ */
+.nolva-providers-filters {
+  background: var(--nolva-white);
+  border: 1px solid var(--nolva-border);
+  border-radius: var(--nolva-radius);
+  padding: 20px 24px;
+  margin-bottom: 30px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  box-shadow: var(--nolva-shadow-sm);
+}
+
+.nolva-providers-filters select,
+.nolva-providers-filters input {
+  padding: 10px 16px;
+  border: 1px solid var(--nolva-border);
+  border-radius: 10px;
+  font-size: 14px;
+  color: var(--nolva-black);
+  background: var(--nolva-light);
+  min-width: 160px;
+  transition: var(--nolva-transition);
+}
+
+.nolva-providers-filters select:focus,
+.nolva-providers-filters input:focus {
+  outline: none;
+  border-color: var(--nolva-red);
+  box-shadow: 0 0 0 3px var(--nolva-red-glow);
+}
+
+.nolva-empty-state {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.nolva-empty-state i {
+  font-size: 56px;
+  color: var(--nolva-border);
+  margin-bottom: 16px;
+  display: block;
+}
+
+.nolva-empty-state h5 {
+  color: var(--nolva-black);
+  margin-bottom: 8px;
+}
+
+.nolva-empty-state p {
+  color: var(--nolva-gray);
+  font-size: 14px;
+}
+
+/* ============================================
+   MOBILE CAROUSEL - Evenements & Prestataires
+   ============================================ */
+
+/* Utility: d-md-grid (show as grid on md+) */
+@media (min-width: 768px) {
+  .d-md-grid { display: grid !important; }
+}
+@media (max-width: 767px) {
+  .d-md-grid { display: none !important; }
+}
+
+.nolva-mobile-carousel {
+  position: relative;
+  padding-bottom: 60px;
+}
+
+.nolva-mobile-carousel .swiper {
+  overflow: visible;
+  padding: 4px 0;
+}
+
+.nolva-mobile-carousel .swiper-slide {
+  height: auto;
+}
+
+.nolva-mobile-carousel .nolva-event-card,
+.nolva-mobile-carousel .nolva-provider-card {
+  height: 100%;
+}
+
+/* Boutons de navigation carousel */
+.nolva-carousel-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.nolva-carousel-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--nolva-red);
+  background: var(--nolva-white);
+  color: var(--nolva-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--nolva-transition);
+  font-size: 16px;
+  box-shadow: var(--nolva-shadow-sm);
+}
+
+.nolva-carousel-btn:hover,
+.nolva-carousel-btn:active {
+  background: var(--nolva-red);
+  color: var(--nolva-white);
+  box-shadow: 0 4px 12px rgba(227, 30, 36, 0.3);
+}
+
+.nolva-carousel-btn.swiper-button-disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  background: var(--nolva-light);
+  border-color: var(--nolva-border);
+  color: var(--nolva-gray-light);
+  box-shadow: none;
+}
+
+.nolva-carousel-btn i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* À propos — zone responsive */
+.nolva-about-textarea {
+  width: 100%;
+  min-height: 160px;
+  resize: vertical;
+  line-height: 1.6;
+  font-size: 15px;
+}
+@media (min-width: 768px) {
+  .nolva-about-textarea {
+    min-height: 200px;
+  }
+}
+
+/* Portfolio grille responsive */
+.nolva-portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+@media (min-width: 576px) {
+  .nolva-portfolio-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (min-width: 992px) {
+  .nolva-portfolio-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.nolva-portfolio-thumb {
+  border: none;
+  padding: 0;
+  background: transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  aspect-ratio: 4 / 3;
+}
+.nolva-portfolio-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.2s ease;
+}
+.nolva-portfolio-thumb:hover img {
+  transform: scale(1.03);
+}
+.nolva-portfolio-grid--edit .nolva-portfolio-edit-item img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Lightbox portfolio (fiche publique) */
+.nolva-portfolio-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.nolva-portfolio-lightbox-inner {
+  position: relative;
+  max-width: min(960px, 100%);
+  max-height: 90vh;
+  width: 100%;
+}
+.nolva-portfolio-lightbox-inner img {
+  width: 100%;
+  max-height: 75vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.nolva-portfolio-lightbox-close {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.nolva-portfolio-lightbox-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Chat reversements admin / prestataire */
+.nolva-payout-chat-messages {
+  max-height: 320px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.nolva-payout-chat-bubble {
+  padding: 0.65rem 0.85rem;
+  border-radius: 10px;
+  font-size: 14px;
+  max-width: 95%;
+}
+.nolva-payout-chat-bubble.admin {
+  align-self: flex-start;
+  background: #f0f4ff;
+  border: 1px solid #d0daf5;
+}
+.nolva-payout-chat-bubble.provider {
+  align-self: flex-end;
+  background: #fff5f5;
+  border: 1px solid #f5d0d0;
+}
