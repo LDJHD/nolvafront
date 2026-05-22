@@ -103,7 +103,7 @@ const UserDashboard = () => {
                     <a
                       href="#"
                       onClick={(e) => { e.preventDefault(); setActiveTab("reservations"); }}
-                      style={{ display: "block", padding: "12px 20px", background: activeTab === "reservations" ? "#fef2f2" : "transparent", color: activeTab === "reservations" ? "#E31E24" : "#333", fontWeight: activeTab === "reservations" ? 600 : 400, borderLeft: activeTab === "reservations" ? "3px solid #E31E24" : "3px solid transparent" }}
+                      style={{ display: "block", padding: "12px 20px", background: activeTab === "reservations" ? "var(--nolva-red-glow)" : "transparent", color: activeTab === "reservations" ? "var(--nolva-primary)" : "#333", fontWeight: activeTab === "reservations" ? 600 : 400, borderLeft: activeTab === "reservations" ? "3px solid var(--nolva-primary)" : "3px solid transparent" }}
                     >
                       Mes Réservations
                     </a>
@@ -112,7 +112,7 @@ const UserDashboard = () => {
                     <a
                       href="#"
                       onClick={(e) => { e.preventDefault(); setActiveTab("quotes"); }}
-                      style={{ display: "block", padding: "12px 20px", background: activeTab === "quotes" ? "#fef2f2" : "transparent", color: activeTab === "quotes" ? "#E31E24" : "#333", fontWeight: activeTab === "quotes" ? 600 : 400, borderLeft: activeTab === "quotes" ? "3px solid #E31E24" : "3px solid transparent" }}
+                      style={{ display: "block", padding: "12px 20px", background: activeTab === "quotes" ? "var(--nolva-red-glow)" : "transparent", color: activeTab === "quotes" ? "var(--nolva-primary)" : "#333", fontWeight: activeTab === "quotes" ? 600 : 400, borderLeft: activeTab === "quotes" ? "3px solid var(--nolva-primary)" : "3px solid transparent" }}
                     >
                       Mes Demandes de devis
                     </a>
@@ -121,7 +121,7 @@ const UserDashboard = () => {
                     <a
                       href="#"
                       onClick={(e) => { e.preventDefault(); setActiveTab("tickets"); }}
-                      style={{ display: "block", padding: "12px 20px", background: activeTab === "tickets" ? "#fef2f2" : "transparent", color: activeTab === "tickets" ? "#E31E24" : "#333", fontWeight: activeTab === "tickets" ? 600 : 400, borderLeft: activeTab === "tickets" ? "3px solid #E31E24" : "3px solid transparent" }}
+                      style={{ display: "block", padding: "12px 20px", background: activeTab === "tickets" ? "var(--nolva-red-glow)" : "transparent", color: activeTab === "tickets" ? "var(--nolva-primary)" : "#333", fontWeight: activeTab === "tickets" ? 600 : 400, borderLeft: activeTab === "tickets" ? "3px solid var(--nolva-primary)" : "3px solid transparent" }}
                     >
                       Mes Billets
                     </a>
@@ -145,7 +145,7 @@ const UserDashboard = () => {
               <Col md={4} className="mb-3">
                 <div className="gi-vendor-dashboard-sort-card">
                   <h5>Réservations</h5>
-                  <h3 style={{ color: "var(--nolva-red, #E31E24)" }}>{loading ? "..." : reservations.length}</h3>
+                  <h3 style={{ color: "var(--nolva-red, var(--nolva-primary))" }}>{loading ? "..." : reservations.length}</h3>
                 </div>
               </Col>
               <Col md={4} className="mb-3">

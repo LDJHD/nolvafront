@@ -68,7 +68,7 @@ const ReservationPaymentActions = ({ reservation, onUpdated }: Props) => {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "6px", minWidth: "140px" }}>
       {ps === "unpaid" && (
-        <button type="button" className="btn btn-sm gi-btn-1" disabled={loading} onClick={handlePay}>
+        <button type="button" className="btn btn-sm gi-btn-1 nolva-btn-reserve" disabled={loading} onClick={handlePay}>
           Payer (FedaPay)
         </button>
       )}

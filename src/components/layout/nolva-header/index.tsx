@@ -36,7 +36,7 @@ export default function NolvaHeader() {
                 <Link href="/login" style={{ color: "rgba(255,255,255,0.8)", fontSize: "13px", textDecoration: "none" }}>
                   Connexion
                 </Link>
-                <Link href="/register" style={{ color: "#E31E24", fontSize: "13px", textDecoration: "none", fontWeight: 600 }}>
+                <Link href="/register" style={{ color: "var(--nolva-gold)", fontSize: "13px", textDecoration: "none", fontWeight: 600 }}>
                   Inscription
                 </Link>
               </>
@@ -50,7 +50,7 @@ export default function NolvaHeader() {
       </div>
 
       {/* Header principal */}
-      <div style={{ background: "#fff", borderBottom: "2px solid #E31E24", padding: "12px 0" }}>
+      <div style={{ background: "#fff", borderBottom: "2px solid var(--nolva-gold)", padding: "12px 0" }}>
         <div className="container d-flex justify-content-between align-items-center">
           {/* Logo */}
           <Link href="/" style={{ textDecoration: "none" }}>
@@ -66,30 +66,30 @@ export default function NolvaHeader() {
               }}
             />
             <span style={{ display: "none", fontWeight: 800, fontSize: "24px", color: "#1A1A1A" }}>
-              NOL<span style={{ color: "#E31E24" }}>VA</span>
+              NOL<span style={{ color: "var(--nolva-gold)" }}>VA</span>
             </span>
           </Link>
 
           {/* Navigation desktop */}
           <nav className="d-none d-lg-flex" style={{ gap: "32px", alignItems: "center" }}>
             <Link href="/prestataires" style={{ color: "#1A1A1A", textDecoration: "none", fontWeight: 500, fontSize: "15px" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "#E31E24")}
+              onMouseEnter={e => (e.currentTarget.style.color = "var(--nolva-gold)")}
               onMouseLeave={e => (e.currentTarget.style.color = "#1A1A1A")}>
               Trouver un prestataire
             </Link>
             <Link href="/evenements" style={{ color: "#1A1A1A", textDecoration: "none", fontWeight: 500, fontSize: "15px" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "#E31E24")}
+              onMouseEnter={e => (e.currentTarget.style.color = "var(--nolva-gold)")}
               onMouseLeave={e => (e.currentTarget.style.color = "#1A1A1A")}>
               Événements
             </Link>
             {isAuthenticated && user?.role === "admin" && (
-              <Link href="/admin" style={{ color: "#E31E24", textDecoration: "none", fontWeight: 600, fontSize: "15px" }}>
+              <Link href="/admin" style={{ color: "var(--nolva-gold)", textDecoration: "none", fontWeight: 600, fontSize: "15px" }}>
                 Administration
               </Link>
             )}
             {isAuthenticated && user?.role === "provider" && (
               <Link href="/vendor-dashboard" style={{ color: "#1A1A1A", textDecoration: "none", fontWeight: 500, fontSize: "15px" }}
-                onMouseEnter={e => (e.currentTarget.style.color = "#E31E24")}
+                onMouseEnter={e => (e.currentTarget.style.color = "var(--nolva-gold)")}
                 onMouseLeave={e => (e.currentTarget.style.color = "#1A1A1A")}>
                 Mon espace
               </Link>
@@ -101,7 +101,7 @@ export default function NolvaHeader() {
             {!isAuthenticated ? (
               <Link href="/inscription?role=provider"
                 style={{
-                  background: "transparent", color: "#E31E24", border: "2px solid #E31E24",
+                  background: "transparent", color: "var(--nolva-gold)", border: "2px solid var(--nolva-gold)",
                   borderRadius: "8px", padding: "8px 18px", fontWeight: 600, fontSize: "14px",
                   textDecoration: "none", display: "none"
                 }}
@@ -112,7 +112,7 @@ export default function NolvaHeader() {
               <div className="dropdown">
                 <button
                   style={{
-                    background: "#E31E24", color: "#fff", border: "none",
+                    background: "var(--nolva-primary)", color: "#fff", border: "none",
                     borderRadius: "8px", padding: "8px 18px", fontWeight: 600, fontSize: "14px", cursor: "pointer"
                   }}
                   data-bs-toggle="dropdown">
@@ -168,7 +168,7 @@ export default function NolvaHeader() {
               {!isAuthenticated && (
                 <>
                   <Link href="/connexion" style={{ color: "#1A1A1A", textDecoration: "none", padding: "8px 0" }} onClick={() => setMenuOpen(false)}>Connexion</Link>
-                  <Link href="/inscription" style={{ color: "#E31E24", textDecoration: "none", padding: "8px 0", fontWeight: 600 }} onClick={() => setMenuOpen(false)}>Inscription</Link>
+                  <Link href="/inscription" style={{ color: "var(--nolva-gold)", textDecoration: "none", padding: "8px 0", fontWeight: 600 }} onClick={() => setMenuOpen(false)}>Inscription</Link>
                 </>
               )}
             </div>

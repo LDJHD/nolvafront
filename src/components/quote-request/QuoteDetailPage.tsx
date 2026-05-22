@@ -137,8 +137,12 @@ const QuoteDetailPage = () => {
                   <Form.Control
                     type="number"
                     className="mb-2"
+                    min={0}
+                    step={1}
+                    inputMode="numeric"
                     value={agreedPrice}
                     onChange={(e) => setAgreedPrice(e.target.value)}
+                    placeholder="Ex. 50000"
                   />
                   <button type="button" className="gi-btn-1 w-100 mb-2" onClick={acceptQuote}>
                     Valider le devis

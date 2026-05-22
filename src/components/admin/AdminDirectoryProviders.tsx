@@ -4,6 +4,7 @@ import { adminApi } from "@/lib/api";
 import { normalizeList } from "@/lib/nolvaData";
 import { useProviderTypes } from "@/lib/useCatalog";
 import { getProviderLabel, getProviderTypeLabel } from "@/lib/providerUtils";
+import { toBooleanFlag } from "@/lib/providerDisplay";
 import { showErrorToast, showSuccessToast } from "../toast-popup/Toastify";
 import { Form } from "react-bootstrap";
 import Link from "next/link";
@@ -137,8 +138,8 @@ const AdminDirectoryProviders = () => {
                 ) : (
                   rows.map((p: any) => {
                     const st = p.status;
-                    const ver = p.isVerified ?? p.is_verified;
-                    const av = p.isAvailable ?? p.is_available;
+                    const ver = toBooleanFlag(p.isVerified ?? p.is_verified);
+                    const av = toBooleanFlag(p.isAvailable ?? p.is_available);
                     const catalog = providerTypes.map((t) => ({ slug: t.slug, label: t.label }));
                     return (
                       <tr key={p.id}>

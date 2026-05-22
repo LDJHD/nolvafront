@@ -59,7 +59,7 @@ const VendorDeshboard = () => {
 
               <Row className="mb-4">
                 <div className="container">
-                  <div className="gi-vendor-cover">
+                  <div className="gi-vendor-cover nolva-vendor-cover">
                     <div className="detail">
                       <div className="nolva-provider-avatar" style={{ width: "80px", height: "80px", fontSize: "32px", overflow: "hidden" }}>
                         {provider?.profilePhoto || provider?.profile_photo || user?.avatar ? (

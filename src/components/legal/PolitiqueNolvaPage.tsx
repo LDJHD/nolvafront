@@ -42,7 +42,7 @@ const PolitiqueNolvaPage = () => {
           {steps.map((s, i) => (
             <Col md={3} sm={6} key={i} className="mb-3">
               <div className="gi-vendor-dashboard-card p-4 text-center h-100">
-                <div style={{ fontSize: "32px", color: "#E31E24", marginBottom: "12px" }}>
+                <div style={{ fontSize: "32px", color: "var(--nolva-primary)", marginBottom: "12px" }}>
                   <i className={`fi ${s.icon}`}></i>
                 </div>
                 <span className="badge bg-secondary mb-2">Étape {i + 1}</span>

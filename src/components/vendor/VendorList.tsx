@@ -5,9 +5,10 @@ import { normalizeList } from "@/lib/nolvaData";
 import Spinner from "../button/Spinner";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useProviderTypes } from "@/lib/useCatalog";
 import { getProviderTypeLabel } from "@/lib/providerUtils";
+import { lowestOfferPrice, providerExperienceYears, toBooleanFlag } from "@/lib/providerDisplay";
 
 const beninCities = [
   { value: "", label: "Toutes les villes" },
@@ -26,25 +27,42 @@ const VendorList = () => {
   const searchParams = useSearchParams();
   const [type, setType] = useState(searchParams.get("type") || "");
   const [city, setCity] = useState(searchParams.get("city") || "");
-  const [filters, setFilters] = useState({ type, city });
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+  const [filters, setFilters] = useState({
+    type: searchParams.get("type") || "",
+    city: searchParams.get("city") || "",
+    search: searchParams.get("search") || "",
+  });
+
+  useEffect(() => {
+    const t = searchParams.get("type") || "";
+    const c = searchParams.get("city") || "";
+    const s = searchParams.get("search") || "";
+    setType(t);
+    setCity(c);
+    setSearch(s);
+    setFilters({ type: t, city: c, search: s });
+  }, [searchParams]);
 
   const buildQuery = () => {
     const params = new URLSearchParams();
     if (filters.type) params.set("type", filters.type);
     if (filters.city) params.set("city", filters.city);
+    if (filters.search) params.set("search", filters.search);
     return params.toString() ? "?" + params.toString() : "";
   };
 
   const { data, error } = useSWR(`/api/providers${buildQuery()}`, fetcher);
 
   const applyFilters = () => {
-    setFilters({ type, city });
+    setFilters({ type, city, search });
   };
 
   const resetFilters = () => {
     setType("");
     setCity("");
-    setFilters({ type: "", city: "" });
+    setSearch("");
+    setFilters({ type: "", city: "", search: "" });
   };
 
   if (error) return <div className="container py-4"><p>Impossible de charger les prestataires.</p></div>;
@@ -59,7 +77,7 @@ const VendorList = () => {
         {/* Filtres */}
         <div className="nolva-filters mb-4">
           <div className="row align-items-end g-3">
-            <div className="col-md-4">
+            <div className="col-md-6 col-lg-3">
               <label className="form-label fw-semibold">Type de prestataire</label>
               <select
                 value={type}
@@ -72,7 +90,18 @@ const VendorList = () => {
                 ))}
               </select>
             </div>
-            <div className="col-md-4">
+            <div className="col-md-6 col-lg-3">
+              <label className="form-label fw-semibold">Recherche</label>
+              <input
+                type="search"
+                className="form-control"
+                placeholder="Nom, spécialité, ville…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && applyFilters()}
+              />
+            </div>
+            <div className="col-md-6 col-lg-3">
               <label className="form-label fw-semibold">Ville</label>
               <select
                 value={city}
@@ -84,7 +113,7 @@ const VendorList = () => {
                 ))}
               </select>
             </div>
-            <div className="col-md-4 d-flex gap-2">
+            <div className="col-md-6 col-lg-3 d-flex gap-2">
               <button onClick={applyFilters} className="gi-btn-1 flex-fill">
                 <i className="fi fi-rr-search"></i> Filtrer
               </button>
@@ -105,15 +134,20 @@ const VendorList = () => {
         ) : (
           <>
             <p className="text-muted mb-3">
-              <strong>{providers.length}</strong> prestataire{providers.length > 1 ? "s" : ""} trouvé{providers.length > 1 ? "s" : ""}
+              <strong>{providers.length}</strong> prestataire{providers.length > 1 ? "s" : ""} trouvé
+              {providers.length > 1 ? "s" : ""}
+              {filters.search ? (
+                <> pour « <em>{filters.search}</em> »</>
+              ) : null}
             </p>
             <div className="row">
               {providers.map((provider: any, index: number) => {
                 const name = provider.business_name || provider.businessName || "Prestataire";
-                const verified = provider.is_verified ?? provider.isVerified;
-                const available = provider.is_available ?? provider.isAvailable;
-                const expYears = provider.experience_years || provider.experienceYears;
+                const verified = toBooleanFlag(provider.is_verified ?? provider.isVerified);
+                const available = toBooleanFlag(provider.is_available ?? provider.isAvailable);
+                const expYears = providerExperienceYears(provider);
                 const offers = provider.offers || [];
+                const fromPrice = lowestOfferPrice(offers);
                 const photo =
                   provider.profile_photo ||
                   provider.profilePhoto ||
@@ -156,14 +190,14 @@ const VendorList = () => {
                         {provider.description && (
                           <p className="nolva-provider-desc">{provider.description.slice(0, 90)}...</p>
                         )}
-                        {offers.length > 0 && (
+                        {fromPrice > 0 && (
                           <p className="nolva-provider-price">
-                            A partir de <strong>{(offers[0].price_min || offers[0].priceMin)?.toLocaleString()} FCFA</strong>
+                            A partir de <strong>{fromPrice.toLocaleString("fr-FR")} FCFA</strong>
                           </p>
                         )}
                       </div>
                       <div className="nolva-provider-footer">
-                        {expYears && (
+                        {expYears > 0 && (
                           <span className="nolva-experience">
                             <i className="fi fi-rr-star"></i> {expYears} ans d&apos;exp.
                           </span>

@@ -6,6 +6,7 @@ import { useEventTypes, getTypeLabel } from "@/lib/useCatalog";
 import { showErrorToast, showSuccessToast } from "../toast-popup/Toastify";
 import { Form } from "react-bootstrap";
 import Link from "next/link";
+import { toBooleanFlag } from "@/lib/providerDisplay";
 
 type Sub = "validation" | "all";
 
@@ -23,6 +24,9 @@ const AdminDirectoryEvents = () => {
   const [rows, setRows] = useState<any[]>([]);
   const [meta, setMeta] = useState<any>(null);
   const [loadingAll, setLoadingAll] = useState(false);
+  const [rejectTarget, setRejectTarget] = useState<any | null>(null);
+  const [rejectNote, setRejectNote] = useState("");
+  const [rejecting, setRejecting] = useState(false);
 
   const loadPending = useCallback(async () => {
     setLoadingPending(true);
@@ -158,16 +162,9 @@ const AdminDirectoryEvents = () => {
                             <button
                               type="button"
                               className="btn btn-sm btn-outline-danger"
-                              onClick={async () => {
-                                const note = window.prompt("Motif du refus (optionnel)") || "";
-                                try {
-                                  await adminApi.rejectEvent(ev.id, { note });
-                                  showSuccessToast("Événement refusé");
-                                  loadPending();
-                                  loadAll();
-                                } catch (e: any) {
-                                  showErrorToast(e.response?.data?.message || "Erreur");
-                                }
+                              onClick={() => {
+                                setRejectTarget(ev);
+                                setRejectNote("");
                               }}
                             >
                               Refuser
@@ -180,6 +177,76 @@ const AdminDirectoryEvents = () => {
                 </tbody>
               </table>
             )}
+          </div>
+        </div>
+      )}
+
+      {rejectTarget && (
+        <div
+          className="modal d-block"
+          style={{ background: "rgba(0,0,0,0.45)" }}
+          role="dialog"
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Refuser l&apos;événement</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setRejectTarget(null)}
+                />
+              </div>
+              <Form
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  if (rejectNote.trim().length < 5) {
+                    showErrorToast("Indiquez un motif d'au moins 5 caractères");
+                    return;
+                  }
+                  setRejecting(true);
+                  try {
+                    await adminApi.rejectEvent(rejectTarget.id, { note: rejectNote.trim() });
+                    showSuccessToast("Événement refusé — organisateur notifié");
+                    setRejectTarget(null);
+                    loadPending();
+                    loadAll();
+                  } catch (err: any) {
+                    showErrorToast(err.response?.data?.message || "Erreur");
+                  } finally {
+                    setRejecting(false);
+                  }
+                }}
+              >
+                <div className="modal-body">
+                  <p className="mb-2">
+                    <strong>{rejectTarget.title}</strong>
+                  </p>
+                  <Form.Label>Motif du refus *</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={4}
+                    value={rejectNote}
+                    onChange={(e) => setRejectNote(e.target.value)}
+                    placeholder="Expliquez pourquoi l'événement est refusé (envoyé à l'organisateur)"
+                    required
+                    minLength={5}
+                  />
+                </div>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setRejectTarget(null)}
+                  >
+                    Annuler
+                  </button>
+                  <button type="submit" className="btn btn-danger" disabled={rejecting}>
+                    {rejecting ? "Envoi..." : "Confirmer le refus"}
+                  </button>
+                </div>
+              </Form>
+            </div>
           </div>
         </div>
       )}
@@ -280,7 +347,7 @@ const AdminDirectoryEvents = () => {
                       rows.map((ev: any) => {
                         const dateStr = ev.eventDate || ev.event_date;
                         const slug = ev.eventType || ev.event_type;
-                        const ok = ev.isApproved ?? ev.is_approved;
+                        const ok = toBooleanFlag(ev.isApproved ?? ev.is_approved);
                         return (
                           <tr key={ev.id}>
                             <td>{ev.id}</td>

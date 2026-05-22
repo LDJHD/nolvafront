@@ -1,11 +1,13 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Form } from "react-bootstrap";
 import { offersApi, providersApi } from "@/lib/api";
 import {
   PAYOUT_METHOD_OPTIONS,
+  PAYOUT_REGIONS,
   payoutDestinationLabel,
   payoutDestinationPlaceholder,
+  payoutNeedsPhone,
 } from "@/lib/payoutMethods";
 import PayoutMessagesPanel from "../vendor/PayoutMessagesPanel";
 import { useEventTypes, useProviderTypes } from "@/lib/useCatalog";
@@ -27,7 +29,7 @@ const safeParseArray = (val: unknown): string[] => {
   return [];
 };
 
-const compressImage = (file: File, max = 1200): Promise<string> =>
+const compressImage = (file: File, max = 900, quality = 0.78): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -45,7 +47,7 @@ const compressImage = (file: File, max = 1200): Promise<string> =>
         const ctx = canvas.getContext("2d");
         if (!ctx) return reject(new Error("canvas"));
         ctx.drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL("image/jpeg", 0.82));
+        resolve(canvas.toDataURL("image/jpeg", quality));
       };
       img.onerror = reject;
       img.src = String(reader.result || "");
@@ -66,8 +68,10 @@ type OfferForm = {
 const ProviderProfileForm = () => {
   const { types: providerTypes } = useProviderTypes();
   const { types: eventTypes } = useEventTypes();
+  const portfolioInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingPortfolio, setUploadingPortfolio] = useState(false);
   const [photos, setPhotos] = useState<any[]>([]);
   const [offers, setOffers] = useState<OfferForm[]>([]);
   const [previewProfilePhoto, setPreviewProfilePhoto] = useState<string | null>(null);
@@ -111,7 +115,10 @@ const ProviderProfileForm = () => {
         momo_network: p.momoNetwork || p.momo_network || "",
         momo_phone: p.momoPhone || p.momo_phone || "",
       });
-      setPhotos(p.photos || []);
+      const loaded = (p.photos || []).filter(
+        (ph: any) => ph?.url && String(ph.url).length > 80
+      );
+      setPhotos(loaded);
       setOffers(
         (p.offers || []).map((o: any) => ({
           id: o.id,
@@ -161,35 +168,56 @@ const ProviderProfileForm = () => {
       return;
     }
     try {
-      const dataUrl = await compressImage(file, 1200);
+      const dataUrl = await compressImage(file, 800, 0.75);
       setPreviewProfilePhoto(dataUrl);
       setForm((prev) => ({ ...prev, profile_photo: dataUrl }));
+      showSuccessToast("Photo vitrine prête. Cliquez sur Enregistrer pour la publier.");
     } catch {
       showErrorToast("Erreur lors du chargement de l'image");
     }
   };
 
-  const onPortfolioFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (photos.length >= MAX_PORTFOLIO_PHOTOS) {
+  const onPortfolioFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const fileList = e.target.files;
+    if (!fileList?.length) return;
+
+    const slotsLeft = MAX_PORTFOLIO_PHOTOS - photos.length;
+    if (slotsLeft <= 0) {
       showErrorToast(`Maximum ${MAX_PORTFOLIO_PHOTOS} photos dans le portfolio`);
       e.target.value = "";
       return;
     }
-    if (file.size > 3 * 1024 * 1024) {
-      showErrorToast("Image trop volumineuse (max 3 Mo)");
-      return;
+
+    const files = Array.from(fileList).slice(0, slotsLeft);
+    if (fileList.length > slotsLeft) {
+      showErrorToast(
+        `Seules ${slotsLeft} photo(s) peuvent être ajoutées (limite ${MAX_PORTFOLIO_PHOTOS}).`
+      );
     }
+
+    setUploadingPortfolio(true);
     try {
-      const url = await compressImage(file, 1200);
-      await providersApi.addPhoto({ url });
-      showSuccessToast("Photo ajoutée au portfolio");
-      void loadProfile();
+      const urls: string[] = [];
+      for (const file of files) {
+        if (file.size > 3 * 1024 * 1024) {
+          showErrorToast(`${file.name} : trop volumineux (max 3 Mo)`);
+          continue;
+        }
+        urls.push(await compressImage(file));
+      }
+      if (urls.length === 0) {
+        showErrorToast("Aucune image valide sélectionnée");
+        return;
+      }
+      const res = await providersApi.addPhotosBatch({ urls });
+      showSuccessToast(res.data?.message || `${urls.length} photo(s) ajoutée(s)`);
+      await loadProfile();
     } catch (err: any) {
-      showErrorToast(err?.response?.data?.message || "Erreur ajout photo");
+      showErrorToast(err?.response?.data?.message || "Erreur lors de l'ajout des photos");
+    } finally {
+      setUploadingPortfolio(false);
+      e.target.value = "";
     }
-    e.target.value = "";
   };
 
   const removePhoto = async (id: number) => {
@@ -271,7 +299,7 @@ const ProviderProfileForm = () => {
     }
     setSaving(true);
     try {
-      await providersApi.updateMyProfile({
+      const payload: Record<string, unknown> = {
         business_name: form.business_name.trim(),
         type: form.type,
         specialty: form.specialty || undefined,
@@ -283,12 +311,15 @@ const ProviderProfileForm = () => {
         instagram: form.instagram || undefined,
         facebook: form.facebook || undefined,
         tiktok: form.tiktok || undefined,
-        profile_photo: form.profile_photo || undefined,
         event_types: form.event_types,
         momo_network: form.momo_network || undefined,
         momo_phone: form.momo_phone || undefined,
-      });
-      showSuccessToast("Profil prestataire enregistré. Il apparaît comme sur votre fiche publique.");
+      };
+      if (form.profile_photo && form.profile_photo.length > 80) {
+        payload.profile_photo = form.profile_photo;
+      }
+      await providersApi.updateMyProfile(payload);
+      showSuccessToast("Profil prestataire enregistré. Visible sur votre fiche publique.");
       setPreviewProfilePhoto(null);
       void loadProfile();
     } catch (err: any) {
@@ -307,6 +338,9 @@ const ProviderProfileForm = () => {
     form.profile_photo ||
     `${process.env.NEXT_PUBLIC_URL || ""}/assets/img/avatar/placeholder.jpg`;
 
+  const slotsLeft = MAX_PORTFOLIO_PHOTOS - photos.length;
+  const payoutIsPhone = form.momo_network ? payoutNeedsPhone(form.momo_network) : true;
+
   return (
     <div className="mt-5 pt-4 border-top">
       <h3 className="gi-title mb-1">
@@ -316,12 +350,12 @@ const ProviderProfileForm = () => {
         Complétez les mêmes informations que sur votre fiche publique (page détail prestataire).
       </p>
 
-      <Form onSubmit={onSubmit}>
+      <Form onSubmit={onSubmit} className="nolva-provider-profile-form">
         <div className="gi-vendor-dashboard-card mb-4 p-4">
           <h5 className="mb-3">Informations</h5>
           <div className="row g-3">
             <div className="col-md-6">
-              <label>Nom commercial *</label>
+              <label className="nolva-field-label">Nom commercial *</label>
               <Form.Control
                 name="business_name"
                 value={form.business_name}
@@ -330,7 +364,7 @@ const ProviderProfileForm = () => {
               />
             </div>
             <div className="col-md-6">
-              <label>Type de prestation *</label>
+              <label className="nolva-field-label">Type de prestation *</label>
               <Form.Select name="type" value={form.type} onChange={onChange} required>
                 <option value="">Choisir...</option>
                 {providerTypes.map((t) => (
@@ -341,11 +375,11 @@ const ProviderProfileForm = () => {
               </Form.Select>
             </div>
             <div className="col-md-6">
-              <label>Spécialité</label>
+              <label className="nolva-field-label">Spécialité</label>
               <Form.Control name="specialty" value={form.specialty} onChange={onChange} />
             </div>
             <div className="col-md-6">
-              <label>Années d&apos;expérience</label>
+              <label className="nolva-field-label">Années d&apos;expérience</label>
               <Form.Control
                 name="experience_years"
                 value={form.experience_years}
@@ -354,7 +388,7 @@ const ProviderProfileForm = () => {
               />
             </div>
             <div className="col-md-6">
-              <label>Ville</label>
+              <label className="nolva-field-label">Ville</label>
               <Form.Select name="city" value={form.city} onChange={onChange}>
                 <option value="">Sélectionner...</option>
                 {beninCities.map((c) => (
@@ -383,8 +417,8 @@ const ProviderProfileForm = () => {
               />
             </div>
             <div className="col-12">
-              <label>Photo vitrine (affichée sur votre fiche)</label>
-              <div className="d-flex align-items-center gap-3 mt-2">
+              <label className="nolva-field-label">Photo vitrine (affichée sur votre fiche)</label>
+              <div className="d-flex align-items-center gap-3 mt-2 flex-wrap">
                 <img
                   src={profilePhotoSrc}
                   alt="Photo vitrine"
@@ -403,14 +437,19 @@ const ProviderProfileForm = () => {
 
         <div className="gi-vendor-dashboard-card mb-4 p-4">
           <h5 className="mb-3">À propos</h5>
-          <Form.Control
-            as="textarea"
-            className="nolva-about-textarea"
-            name="description"
-            value={form.description}
-            onChange={onChange}
-            placeholder="Présentez votre activité, votre expérience, vos services..."
-          />
+          <div className="row g-3">
+            <div className="col-12">
+              <label className="nolva-field-label">Description de votre activité</label>
+              <Form.Control
+                as="textarea"
+                name="description"
+                value={form.description}
+                onChange={onChange}
+                rows={6}
+                placeholder="Présentez votre activité, votre expérience, vos services..."
+              />
+            </div>
+          </div>
         </div>
 
         <div className="gi-vendor-dashboard-card mb-4 p-4">
@@ -442,16 +481,16 @@ const ProviderProfileForm = () => {
           )}
           {offers.map((offer, index) => (
             <div key={offer.id ?? `new-${index}`} className="border rounded p-3 mb-3">
-              <div className="row g-2">
+              <div className="row g-3">
                 <div className="col-md-6">
-                  <label>Nom de l&apos;offre *</label>
+                  <label className="nolva-field-label">Nom de l&apos;offre *</label>
                   <Form.Control
                     value={offer.name}
                     onChange={(e) => updateOfferField(index, "name", e.target.value)}
                   />
                 </div>
                 <div className="col-md-6">
-                  <label>Durée</label>
+                  <label className="nolva-field-label">Durée</label>
                   <Form.Control
                     value={offer.duration}
                     onChange={(e) => updateOfferField(index, "duration", e.target.value)}
@@ -459,7 +498,7 @@ const ProviderProfileForm = () => {
                   />
                 </div>
                 <div className="col-md-6">
-                  <label>Prix min (FCFA)</label>
+                  <label className="nolva-field-label">Prix min (FCFA)</label>
                   <Form.Control
                     type="number"
                     value={offer.price_min}
@@ -467,7 +506,7 @@ const ProviderProfileForm = () => {
                   />
                 </div>
                 <div className="col-md-6">
-                  <label>Prix max (FCFA)</label>
+                  <label className="nolva-field-label">Prix max (FCFA)</label>
                   <Form.Control
                     type="number"
                     value={offer.price_max}
@@ -475,7 +514,7 @@ const ProviderProfileForm = () => {
                   />
                 </div>
                 <div className="col-12">
-                  <label>Éléments inclus (un par ligne)</label>
+                  <label className="nolva-field-label">Éléments inclus (un par ligne)</label>
                   <Form.Control
                     as="textarea"
                     rows={3}
@@ -503,13 +542,30 @@ const ProviderProfileForm = () => {
               {photos.length} / {MAX_PORTFOLIO_PHOTOS} photos
             </span>
           </div>
-          <Form.Control
+          <p className="small text-muted">
+            Sélectionnez jusqu&apos;à {slotsLeft} image(s) à la fois (JPG/PNG, max 3 Mo chacune).
+          </p>
+          <input
+            ref={portfolioInputRef}
             type="file"
-            accept="image/*"
-            onChange={onPortfolioFile}
-            className="mb-3"
-            disabled={photos.length >= MAX_PORTFOLIO_PHOTOS}
+            accept="image/jpeg,image/png,image/webp"
+            multiple
+            className="d-none"
+            onChange={onPortfolioFiles}
+            disabled={slotsLeft <= 0 || uploadingPortfolio}
           />
+          <button
+            type="button"
+            className="gi-btn-2 mb-3"
+            disabled={slotsLeft <= 0 || uploadingPortfolio}
+            onClick={() => portfolioInputRef.current?.click()}
+          >
+            {uploadingPortfolio
+              ? "Envoi en cours..."
+              : slotsLeft <= 0
+                ? `Portfolio complet (${MAX_PORTFOLIO_PHOTOS} photos)`
+                : `Ajouter des photos (${slotsLeft} restante${slotsLeft > 1 ? "s" : ""})`}
+          </button>
           <div className="nolva-portfolio-grid nolva-portfolio-grid--edit">
             {photos.map((photo: any) => (
               <div key={photo.id} className="nolva-portfolio-edit-item position-relative">
@@ -530,23 +586,27 @@ const ProviderProfileForm = () => {
         <div className="gi-vendor-dashboard-card mb-4 p-4">
           <h5 className="mb-3">Coordonnées de reversement</h5>
           <p className="small text-muted">
-            Réseaux pris en charge par FedaPay au Bénin (Mobile Money ou carte). L&apos;administrateur utilisera ces
-            informations pour vos versements.
+            Tous les modes de paiement FedaPay (Afrique de l&apos;Ouest + cartes internationales). Choisissez celui
+            que vous utiliserez pour recevoir vos versements.
           </p>
           <div className="row g-3">
-            <div className="col-md-6">
-              <label>Mode de paiement *</label>
+            <div className="col-12 col-md-6">
+              <label className="nolva-field-label">Mode de paiement *</label>
               <Form.Select name="momo_network" value={form.momo_network} onChange={onChange}>
-                <option value="">Choisir...</option>
-                {PAYOUT_METHOD_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>
-                    {o.label}
-                  </option>
+                <option value="">Choisir un mode...</option>
+                {PAYOUT_REGIONS.map((region) => (
+                  <optgroup key={region} label={region}>
+                    {PAYOUT_METHOD_OPTIONS.filter((o) => o.region === region).map((o) => (
+                      <option key={o.value} value={o.value}>
+                        {o.label}
+                      </option>
+                    ))}
+                  </optgroup>
                 ))}
               </Form.Select>
             </div>
-            <div className="col-md-6">
-              <label>
+            <div className="col-12 col-md-6">
+              <label className="nolva-field-label">
                 {form.momo_network
                   ? payoutDestinationLabel(form.momo_network)
                   : "Coordonnées de réception"}
@@ -561,6 +621,7 @@ const ProviderProfileForm = () => {
                     : "Sélectionnez d'abord un mode"
                 }
                 disabled={!form.momo_network}
+                type={payoutIsPhone ? "tel" : "text"}
               />
             </div>
           </div>
@@ -572,15 +633,15 @@ const ProviderProfileForm = () => {
           <h5 className="mb-3">Réseaux sociaux</h5>
           <div className="row g-3">
             <div className="col-md-4">
-              <label>Instagram (pseudo)</label>
+              <label className="nolva-field-label">Instagram (pseudo)</label>
               <Form.Control name="instagram" value={form.instagram} onChange={onChange} placeholder="sans @" />
             </div>
             <div className="col-md-4">
-              <label>Facebook</label>
+              <label className="nolva-field-label">Facebook</label>
               <Form.Control name="facebook" value={form.facebook} onChange={onChange} />
             </div>
             <div className="col-md-4">
-              <label>TikTok (pseudo)</label>
+              <label className="nolva-field-label">TikTok (pseudo)</label>
               <Form.Control name="tiktok" value={form.tiktok} onChange={onChange} placeholder="sans @" />
             </div>
           </div>

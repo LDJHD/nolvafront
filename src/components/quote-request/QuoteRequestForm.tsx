@@ -279,11 +279,12 @@ const QuoteRequestForm = () => {
                       type="number"
                       name="budget"
                       className="form-control"
-                      placeholder="Ex: 500000"
+                      placeholder="Ex: 50000"
                       value={form.budget}
                       onChange={handleChange}
                       min="0"
-                      step="1000"
+                      step="1"
+                      inputMode="numeric"
                       style={{ padding: "10px 15px", borderRadius: "8px", border: "1px solid #ddd" }}
                     />
                   </div>

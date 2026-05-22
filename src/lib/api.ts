@@ -57,6 +57,7 @@ export const providersApi = {
   myProfile: () => api.get('/provider/profile'),
   updateMyProfile: (data: any) => api.put('/provider/profile', data),
   addPhoto: (data: { url: string }) => api.post('/provider/photos', data),
+  addPhotosBatch: (data: { urls: string[] }) => api.post('/provider/photos/batch', data),
   deletePhoto: (id: number) => api.delete(`/provider/photos/${id}`),
   listPayoutMessages: (params: { provider_id: number; transaction_id?: number }) =>
     api.get('/provider/payout-messages', { params }),
@@ -102,8 +103,12 @@ export const reservationsApi = {
 // ─── Paiements (FedaPay) ──────────────────────────────────
 export const paymentsApi = {
   // Tickets
-  buyTicket: (data: { event_id: number; type: string; quantity?: number }) =>
-    api.post('/payments/ticket/buy', data),
+  buyTicket: (data: {
+    event_id: number
+    ticket_type_id?: number
+    type?: string
+    quantity?: number
+  }) => api.post('/payments/ticket/buy', data),
   confirmTicket: (data: { transaction_ref: string }) => api.post('/payments/ticket/confirm', data),
   // Réservations prestataire
   initiateReservation: (reservationId: number) => api.post(`/payments/reservation/${reservationId}/initiate`),
@@ -133,8 +138,25 @@ export const adminApi = {
     api.post('/admin/payout-messages', data),
   runEscrowRelease: () => api.post('/admin/escrow/release'),
   commissionStats: () => api.get('/admin/commissions/stats'),
-  freezeTransaction: (data: { transaction_ref: string; note?: string }) =>
+  freezeTransaction: (data: { transaction_ref: string; note: string }) =>
     api.post('/admin/transactions/freeze', data),
+  executePayout: (data: {
+    transaction_id: number
+    amount?: number
+    payout_method: string
+    payout_destination: string
+    note?: string
+  }) => api.post('/admin/payouts/execute', data),
+  disputeRepayment: (data: {
+    transaction_ref: string
+    amount: number
+    mode: 'collect_client' | 'payout_provider'
+    payout_method?: string
+    payout_destination?: string
+    note?: string
+  }) => api.post('/admin/disputes/repayment', data),
+  actionHistory: (params?: { page?: number; transaction_id?: number }) =>
+    api.get('/admin/action-history', { params }),
   resolveDispute: (data: {
     transaction_ref: string
     action: 'release' | 'refund' | 'split'
@@ -144,10 +166,11 @@ export const adminApi = {
   listCommissions: () => api.get('/admin/commissions'),
   createCommission: (data: any) => api.post('/admin/commissions', data),
   updateCommission: (id: number, data: any) => api.put(`/admin/commissions/${id}`, data),
+  deleteCommission: (id: number) => api.delete(`/admin/commissions/${id}`),
   pendingEvents: () => api.get('/admin/events/pending'),
   approveEvent: (id: number) => api.post(`/admin/events/${id}/approve`),
-  rejectEvent: (id: number, data?: { note?: string }) =>
-    api.post(`/admin/events/${id}/reject`, data || {}),
+  rejectEvent: (id: number, data: { note: string }) =>
+    api.post(`/admin/events/${id}/reject`, data),
   listEventTypes: () => api.get('/admin/catalog/event-types'),
   createEventType: (data: { label: string; slug?: string; sort_order?: number }) =>
     api.post('/admin/catalog/event-types', data),
@@ -173,6 +196,8 @@ export const adminApi = {
 export const eventsApi = {
   list: (params?: any) => api.get('/events', { params }),
   show: (id: number | string) => api.get(`/events/${id}`),
+  publishSuggestions: (params: { event_type: string; title?: string; city?: string }) =>
+    api.get('/events/publish-suggestions', { params }),
   create: (data: any) => api.post('/events', data),
   myEvents: (params?: any) => api.get('/user/events', { params }),
   myTickets: (params?: any) => api.get('/user/tickets', { params }),

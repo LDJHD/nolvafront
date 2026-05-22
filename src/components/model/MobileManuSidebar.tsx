@@ -48,9 +48,23 @@ const MobileManuSidebar = ({ isMobileMenuOpen, closeMobileManu, toggleMainMenu, 
                   </Collapse>
                 </li>
                 <li>
-                  <Link href="/evenements" onClick={closeMobileManu}>
+                  <span onClick={() => toggleMainMenu('evenements')} className="menu-toggle"></span>
+                  <Link href="/evenements" onClick={() => toggleMainMenu('evenements')}>
                     Événements
                   </Link>
+                  <Collapse in={activeMainMenu === "evenements"}>
+                    <ul style={{ display: activeMainMenu === "evenements" ? "block" : "none" }} className="sub-menu height-transition-1s-ease">
+                      <li>
+                        <Link href="/evenements" onClick={closeMobileManu}>Tous les événements</Link>
+                      </li>
+                      <li>
+                        <Link href="/evenements/publier" onClick={closeMobileManu}>Publier un événement</Link>
+                      </li>
+                      <li>
+                        <Link href="/evenements/creer" onClick={closeMobileManu}>Créer (validation admin)</Link>
+                      </li>
+                    </ul>
+                  </Collapse>
                 </li>
                 <li>
                   <Link href="/demande-devis" onClick={closeMobileManu}>

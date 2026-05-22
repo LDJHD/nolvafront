@@ -8,6 +8,7 @@ import { providersApi } from "@/lib/api";
 import { useProviderTypes } from "@/lib/useCatalog";
 import { getProviderTypeLabel } from "@/lib/providerUtils";
 import PortfolioGallery from "@/components/common/PortfolioGallery";
+import { offerPriceLabel, providerExperienceYears, toBooleanFlag } from "@/lib/providerDisplay";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 
@@ -47,14 +48,17 @@ const ProviderProfilePage = () => {
 
   // Support camelCase (backend) et snake_case
   const businessName = provider.businessName || provider.business_name || "Prestataire";
-  const isVerified = provider.isVerified ?? provider.is_verified;
-  const isAvailable = provider.isAvailable ?? provider.is_available;
-  const experienceYears = provider.experienceYears || provider.experience_years;
-  const travelPossible = provider.travelPossible ?? provider.travel_possible;
+  const isVerified = toBooleanFlag(provider.isVerified ?? provider.is_verified);
+  const isAvailable = toBooleanFlag(provider.isAvailable ?? provider.is_available);
+  const experienceYears = providerExperienceYears(provider);
+  const travelPossible = toBooleanFlag(provider.travelPossible ?? provider.travel_possible);
   const profilePhoto = provider.profilePhoto || provider.profile_photo;
   const ratingAvg = Number(provider.ratingAvg ?? provider.rating_avg ?? 0);
   const ratingCount = Number(provider.ratingCount ?? provider.rating_count ?? 0);
   const eventTypes = safeParseArray(provider.eventTypes || provider.event_types);
+  const portfolioPhotos = (provider.photos || []).filter(
+    (p: any) => p?.url && String(p.url).startsWith("data:image")
+  );
 
   return (
     <>
@@ -95,7 +99,7 @@ const ProviderProfilePage = () => {
                     <i className="fi fi-rr-star me-1"></i> {ratingAvg.toFixed(1)} ({ratingCount} avis)
                   </>
                 )}
-                {experienceYears && (
+                {experienceYears > 0 && (
                   <>&nbsp;&bull;&nbsp;<i className="fi fi-rr-star me-1"></i> {experienceYears} ans d&apos;experience</>
                 )}
               </p>
@@ -147,17 +151,14 @@ const ProviderProfilePage = () => {
                   <div className="gi-vendor-card-body">
                     <div className="row g-3">
                       {provider.offers.map((offer: any, i: number) => {
-                        const priceMin = offer.priceMin || offer.price_min;
-                        const priceMax = offer.priceMax || offer.price_max;
+                        const priceLabel = offerPriceLabel(offer);
                         const included = safeParseArray(offer.included);
 
                         return (
                           <div key={i} className="col-md-6">
                             <div className="nolva-offer-card">
                               <h6 style={{ fontWeight: 800 }}>{offer.name}</h6>
-                              <p className="offer-price">
-                                {Number(priceMin)?.toLocaleString()} - {Number(priceMax)?.toLocaleString()} FCFA
-                              </p>
+                              {priceLabel && <p className="offer-price">{priceLabel}</p>}
                               {offer.duration && <p className="text-muted" style={{ fontSize: "13px" }}>Duree : {offer.duration}</p>}
                               {included.length > 0 && (
                                 <ul style={{ fontSize: "13px", color: "#4b5966", paddingLeft: "16px" }}>
@@ -175,8 +176,8 @@ const ProviderProfilePage = () => {
                 </div>
               )}
 
-              {provider.photos && provider.photos.length > 0 && (
-                <PortfolioGallery photos={provider.photos} />
+              {portfolioPhotos.length > 0 && (
+                <PortfolioGallery photos={portfolioPhotos} />
               )}
             </div>
 

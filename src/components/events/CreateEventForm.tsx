@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Col, Form, Row } from "react-bootstrap";
 import { eventsApi } from "@/lib/api";
 import { useEventTypes } from "@/lib/useCatalog";
+import { emptyTicketRow, type TicketDraft } from "@/lib/eventPublishGuide";
 import { showErrorToast, showSuccessToast } from "../toast-popup/Toastify";
 
 const beninCities = ["Cotonou", "Calavi", "Porto-Novo", "Parakou", "Abomey", "Ouidah"];
@@ -23,10 +24,11 @@ const CreateEventForm = () => {
     event_date: "",
     location: "",
     city: "",
-    ticket_price: "0",
-    ticket_count: "0",
     image: "",
   });
+  const [tickets, setTickets] = useState<TicketDraft[]>([
+    { label: "Standard", price: "0", quantity: "0" },
+  ]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -66,7 +68,6 @@ const CreateEventForm = () => {
     reader.readAsDataURL(file);
   };
 
-  /** datetime-local → format accepté par l'API (YYYY-MM-DD HH:mm:ss) */
   const formatEventDateForApi = (local: string): string => {
     if (!local) return local;
     if (local.includes("T")) {
@@ -77,12 +78,25 @@ const CreateEventForm = () => {
     return local;
   };
 
+  const updateTicket = (index: number, field: keyof TicketDraft, value: string) => {
+    setTickets((prev) => prev.map((t, i) => (i === index ? { ...t, [field]: value } : t)));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.title.trim() || !form.event_date || !form.event_type) {
       showErrorToast("Titre, type et date sont obligatoires");
       return;
     }
+
+    const ticket_types = tickets
+      .filter((t) => t.label.trim())
+      .map((t) => ({
+        label: t.label.trim(),
+        price: Number(t.price) || 0,
+        quantity: Number(t.quantity) || 0,
+      }));
+
     setSubmitting(true);
     try {
       const res = await eventsApi.create({
@@ -92,9 +106,16 @@ const CreateEventForm = () => {
         event_date: formatEventDateForApi(form.event_date),
         location: form.location.trim() || undefined,
         city: form.city || undefined,
-        ticket_price: Number(form.ticket_price) || 0,
-        ticket_count: Number(form.ticket_count) || 0,
         image: form.image || undefined,
+        ticket_types: ticket_types.length > 0 ? ticket_types : undefined,
+        ticket_price:
+          ticket_types.length === 0
+            ? 0
+            : Math.min(...ticket_types.map((t) => t.price).filter((p) => p >= 0)),
+        ticket_count:
+          ticket_types.length === 0
+            ? 0
+            : ticket_types.reduce((s, t) => s + t.quantity, 0),
       });
       showSuccessToast(
         res.data?.message ||
@@ -134,9 +155,9 @@ const CreateEventForm = () => {
             <h5 style={{ margin: 0 }}>Créer mon événement</h5>
           </div>
           <div className="gi-vendor-card-body p-4">
-            <p style={{ color: "#666", marginBottom: "20px" }}>
-              Votre événement sera publié sur la plateforme uniquement après validation par
-              l&apos;équipe NOLVA.
+            <p style={{ color: "#666", marginBottom: "12px" }}>
+              Formulaire complet avec validation admin. Pour une publication immédiate, utilisez{" "}
+              <Link href="/evenements/publier">Publier un événement</Link>.
             </p>
             <Form onSubmit={handleSubmit}>
               <Row className="g-3">
@@ -208,25 +229,61 @@ const CreateEventForm = () => {
                     placeholder="Ex: Palais des Congrès"
                   />
                 </Col>
-                <Col md={6}>
-                  <Form.Label>Prix du billet (FCFA)</Form.Label>
-                  <Form.Control
-                    type="number"
-                    min={0}
-                    name="ticket_price"
-                    value={form.ticket_price}
-                    onChange={handleChange}
-                  />
-                </Col>
-                <Col md={6}>
-                  <Form.Label>Nombre de places</Form.Label>
-                  <Form.Control
-                    type="number"
-                    min={0}
-                    name="ticket_count"
-                    value={form.ticket_count}
-                    onChange={handleChange}
-                  />
+                <Col md={12}>
+                  <Form.Label className="fw-semibold">Types de billets</Form.Label>
+                  <p className="small text-muted mb-2">
+                    Libellé et prix pour chaque billet. Laissez vide une ligne pour l&apos;ignorer.
+                  </p>
+                  {tickets.map((t, i) => (
+                    <Row className="g-2 mb-2" key={i}>
+                      <Col md={4}>
+                        <Form.Control
+                          placeholder="Libellé (ex: VIP)"
+                          value={t.label}
+                          onChange={(e) => updateTicket(i, "label", e.target.value)}
+                        />
+                      </Col>
+                      <Col md={4}>
+                        <Form.Control
+                          type="number"
+                          min={0}
+                          step={1}
+                          placeholder="Prix FCFA"
+                          value={t.price}
+                          onChange={(e) => updateTicket(i, "price", e.target.value)}
+                        />
+                      </Col>
+                      <Col md={3}>
+                        <Form.Control
+                          type="number"
+                          min={0}
+                          placeholder="Places"
+                          value={t.quantity}
+                          onChange={(e) => updateTicket(i, "quantity", e.target.value)}
+                        />
+                      </Col>
+                      <Col md={1}>
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-outline-danger"
+                          onClick={() =>
+                            setTickets((prev) =>
+                              prev.length <= 1 ? prev : prev.filter((_, j) => j !== i)
+                            )
+                          }
+                        >
+                          ×
+                        </button>
+                      </Col>
+                    </Row>
+                  ))}
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-secondary mb-3"
+                    onClick={() => setTickets((prev) => [...prev, emptyTicketRow()])}
+                  >
+                    + Type de billet
+                  </button>
                 </Col>
                 <Col md={12}>
                   <Form.Label>Image de couverture</Form.Label>

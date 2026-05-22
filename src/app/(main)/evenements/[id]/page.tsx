@@ -14,7 +14,7 @@ const EventDetailPage = () => {
   const [event, setEvent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [ticketType, setTicketType] = useState("standard");
+  const [selectedTicketTypeId, setSelectedTicketTypeId] = useState<number | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [buying, setBuying] = useState(false);
   const isAuthenticated = useSelector(
@@ -25,11 +25,24 @@ const EventDetailPage = () => {
     if (!event) return;
     setBuying(true);
     try {
-      const res = await paymentsApi.buyTicket({
-        event_id: event.id,
-        type: ticketType,
-        quantity,
-      });
+      const ticketTypes = event.ticket_types || event.ticketTypes || [];
+      const payload: {
+        event_id: number;
+        quantity: number;
+        ticket_type_id?: number;
+        type?: string;
+      } = { event_id: event.id, quantity };
+      if (ticketTypes.length > 0) {
+        if (!selectedTicketTypeId) {
+          toast.error("Choisissez un type de billet");
+          setBuying(false);
+          return;
+        }
+        payload.ticket_type_id = selectedTicketTypeId;
+      } else {
+        payload.type = "standard";
+      }
+      const res = await paymentsApi.buyTicket(payload);
       const data = res.data;
       if (data.paymentUrl) {
         // Redirection vers FedaPay
@@ -52,7 +65,11 @@ const EventDetailPage = () => {
         if (!res.ok) throw new Error("Not found");
         return res.json();
       })
-      .then((data) => setEvent(data))
+      .then((data) => {
+        setEvent(data);
+        const types = data.ticket_types || data.ticketTypes || [];
+        if (types.length > 0) setSelectedTicketTypeId(types[0].id);
+      })
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, [id]);
@@ -80,7 +97,28 @@ const EventDetailPage = () => {
       </div>
     );
 
-  const availableTickets = event.availableTickets ?? null;
+  const ticketTypes: {
+    id: number;
+    label: string;
+    price: number;
+    available?: number;
+    quantity?: number;
+    sold?: number;
+  }[] = event.ticket_types || event.ticketTypes || [];
+
+  const selectedType = ticketTypes.find((t) => t.id === selectedTicketTypeId);
+  const unitPrice = selectedType
+    ? Number(selectedType.price)
+    : Number(event.ticketPrice || event.ticket_price || 0);
+
+  const availableTickets =
+    ticketTypes.length > 0
+      ? selectedType
+        ? selectedType.available === 999999
+          ? 999
+          : (selectedType.available ?? 0)
+        : null
+      : event.availableTickets ?? null;
   const eventDate = event.eventDate || event.event_date;
   const formattedDate = eventDate
     ? new Date(eventDate).toLocaleDateString("fr-FR", {
@@ -180,11 +218,32 @@ const EventDetailPage = () => {
                 {/* Prix et billets */}
                 <div className="nolva-event-ticket-box">
                   <div className="nolva-event-price-display">
-                    <span className="label">Prix du billet</span>
+                    <span className="label">
+                      {ticketTypes.length > 1 ? "Tarifs" : "Prix du billet"}
+                    </span>
                     <span className="price">
-                      {event.ticketPrice || event.ticket_price
-                        ? `${Number(event.ticketPrice || event.ticket_price).toLocaleString()} FCFA`
-                        : "Gratuit"}
+                      {ticketTypes.length > 0 ? (
+                        ticketTypes.length === 1 ? (
+                          Number(ticketTypes[0].price) > 0 ? (
+                            `${Number(ticketTypes[0].price).toLocaleString("fr-FR")} FCFA`
+                          ) : (
+                            "Gratuit"
+                          )
+                        ) : (
+                          <span style={{ fontSize: "14px" }}>
+                            {ticketTypes
+                              .map(
+                                (t) =>
+                                  `${t.label} : ${Number(t.price).toLocaleString("fr-FR")} FCFA`
+                              )
+                              .join(" · ")}
+                          </span>
+                        )
+                      ) : event.ticketPrice || event.ticket_price ? (
+                        `${Number(event.ticketPrice || event.ticket_price).toLocaleString("fr-FR")} FCFA`
+                      ) : (
+                        "Gratuit"
+                      )}
                     </span>
                   </div>
                   {availableTickets !== null && (
@@ -207,18 +266,30 @@ const EventDetailPage = () => {
                   {availableTickets !== 0 && isAuthenticated ? (
                     <>
                       <div className="mt-3 mb-2">
-                        <label className="form-label fw-semibold" style={{ fontSize: "13px" }}>Type de billet</label>
-                        <select
-                          className="form-select mb-2"
-                          value={ticketType}
-                          onChange={(e) => setTicketType(e.target.value)}
-                          style={{ borderRadius: "8px", fontSize: "14px" }}
-                        >
-                          <option value="standard">Standard</option>
-                          <option value="vip">VIP</option>
-                          <option value="couple">Couple</option>
-                          <option value="solo">Solo</option>
-                        </select>
+                        {ticketTypes.length > 0 ? (
+                          <>
+                            <label className="form-label fw-semibold" style={{ fontSize: "13px" }}>
+                              Type de billet *
+                            </label>
+                            <select
+                              className="form-select mb-2"
+                              value={selectedTicketTypeId ?? ""}
+                              onChange={(e) =>
+                                setSelectedTicketTypeId(Number(e.target.value) || null)
+                              }
+                              style={{ borderRadius: "8px", fontSize: "14px" }}
+                            >
+                              {ticketTypes.map((t) => (
+                                <option key={t.id} value={t.id} disabled={(t.available ?? 0) === 0}>
+                                  {t.label} — {Number(t.price).toLocaleString("fr-FR")} FCFA
+                                  {(t.available ?? 0) > 0 && t.available !== 999999
+                                    ? ` (${t.available} restants)`
+                                    : ""}
+                                </option>
+                              ))}
+                            </select>
+                          </>
+                        ) : null}
                         <label className="form-label fw-semibold" style={{ fontSize: "13px" }}>Quantité</label>
                         <input
                           type="number"
@@ -230,13 +301,10 @@ const EventDetailPage = () => {
                           style={{ borderRadius: "8px", fontSize: "14px" }}
                         />
                       </div>
-                      {event.ticketPrice || event.ticket_price ? (
+                      {unitPrice > 0 ? (
                         <p style={{ fontSize: "13px", fontWeight: 600, margin: "8px 0" }}>
-                          Total :{" "}
-                          {(
-                            Number(event.ticketPrice || event.ticket_price) * quantity
-                          ).toLocaleString()}{" "}
-                          FCFA
+                          Total : {(unitPrice * quantity).toLocaleString("fr-FR")} FCFA
+                          {selectedType?.label ? ` (${selectedType.label})` : ""}
                         </p>
                       ) : null}
                       <p style={{ fontSize: "12px", color: "var(--nolva-gray)", margin: "8px 0" }}>
@@ -247,7 +315,7 @@ const EventDetailPage = () => {
                         </Link>
                       </p>
                       <button
-                        className="gi-btn-1 w-100"
+                        className="gi-btn-1 nolva-btn-reserve w-100"
                         onClick={handleBuyTicket}
                         disabled={buying}
                       >

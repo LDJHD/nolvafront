@@ -41,9 +41,14 @@ const EventsList = () => {
         <div className="nolva-providers-filters" style={{ marginBottom: "30px", flexWrap: "wrap" }}>
           <h5 style={{ margin: 0, marginRight: "15px" }}>Evenements a venir</h5>
           {isAuthenticated ? (
-            <Link href="/evenements/creer" className="gi-btn-1" style={{ marginLeft: "auto" }}>
-              <i className="fi fi-rr-plus-small"></i> Créer mon événement
-            </Link>
+            <>
+              <Link href="/evenements/publier" className="gi-btn-1" style={{ marginLeft: "auto" }}>
+                <i className="fi fi-rr-rocket"></i> Publier un événement
+              </Link>
+              <Link href="/evenements/creer" className="gi-btn-2">
+                <i className="fi fi-rr-plus-small"></i> Créer (validation)
+              </Link>
+            </>
           ) : (
             <Link href="/login" className="gi-btn-2" style={{ marginLeft: "auto" }}>
               Se connecter pour créer un événement

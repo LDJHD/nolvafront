@@ -112,7 +112,17 @@ const ProviderQuoteRequestForm = () => {
             </div>
             <div className="mb-3">
               <label className="fw-semibold">Prix proposé (FCFA) *</label>
-              <Form.Control type="number" name="proposed_price" min={1} step={1000} value={form.proposed_price} onChange={handleChange} required placeholder="Montant que vous souhaitez payer" />
+              <Form.Control
+                type="number"
+                name="proposed_price"
+                min={0}
+                step={1}
+                inputMode="numeric"
+                value={form.proposed_price}
+                onChange={handleChange}
+                required
+                placeholder="Ex. 50000"
+              />
             </div>
             <div className="mb-3">
               <label className="fw-semibold">Description *</label>

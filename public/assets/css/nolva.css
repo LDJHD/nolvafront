@@ -1,20 +1,31 @@
 /* ============================================
    NOLVA - Theme Premium
-   Marketplace Evenementiel au Benin
-   Couleurs : Rouge / Noir / Blanc / Gris
+   Charte : Cahier des charges (contenu/)
+   Violet foncé · Or · Blanc/Gris · Vert (validé)
+   Typo : Poppins / Inter
    ============================================ */
 
-/* --- Variables globales --- */
+/* --- Variables globales (identité CDC) --- */
 :root {
-  --nolva-red: #E31E24;
-  --nolva-red-dark: #c4161b;
-  --nolva-red-light: #ff4d52;
-  --nolva-red-glow: rgba(227, 30, 36, 0.12);
-  --nolva-black: #1A1A1A;
-  --nolva-dark: #2c2c2c;
+  --nolva-primary: #3d1f6e;
+  --nolva-primary-dark: #2a1549;
+  --nolva-primary-light: #5b3a9e;
+  --nolva-gold: #c9a227;
+  --nolva-gold-dark: #a6851f;
+  --nolva-gold-light: #e5c76b;
+  --nolva-success: #22c55e;
+  --nolva-success-dark: #16a34a;
+  --nolva-success-light: #dcfce7;
+  /* Alias rétrocompatibilité (ancien rouge → violet CDC) */
+  --nolva-red: var(--nolva-primary);
+  --nolva-red-dark: var(--nolva-primary-dark);
+  --nolva-red-light: var(--nolva-primary-light);
+  --nolva-red-glow: rgba(61, 31, 110, 0.14);
+  --nolva-black: #1a1a2e;
+  --nolva-dark: #2d2d44;
   --nolva-gray: #64748b;
   --nolva-gray-light: #94a3b8;
-  --nolva-light: #f8fafc;
+  --nolva-light: #f4f4f8;
   --nolva-white: #ffffff;
   --nolva-border: #e2e8f0;
   --nolva-shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
@@ -29,7 +40,7 @@
 
 /* --- Reset and Base Typography --- */
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   color: var(--nolva-black);
   -webkit-font-smoothing: antialiased;
 }
@@ -43,8 +54,8 @@ button.gi-btn-1,
 button.gi-btn-2,
 a.gi-btn-1,
 a.gi-btn-2 {
-  background: var(--nolva-red) !important;
-  border: 2px solid var(--nolva-red) !important;
+  background: var(--nolva-primary) !important;
+  border: 2px solid var(--nolva-primary) !important;
   color: #fff !important;
   border-radius: 10px !important;
   padding: 10px 24px !important;
@@ -59,18 +70,33 @@ a.gi-btn-2 {
 }
 .gi-btn-1:hover,
 .gi-btn-2:hover {
-  background: var(--nolva-red-dark) !important;
-  border-color: var(--nolva-red-dark) !important;
+  background: var(--nolva-primary-dark) !important;
+  border-color: var(--nolva-primary-dark) !important;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(227, 30, 36, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(61, 31, 110, 0.35) !important;
 }
 .gi-btn-2 {
   background: transparent !important;
-  color: var(--nolva-red) !important;
+  color: var(--nolva-primary) !important;
+  border-color: var(--nolva-primary) !important;
 }
 .gi-btn-2:hover {
-  background: var(--nolva-red) !important;
+  background: var(--nolva-primary) !important;
   color: #fff !important;
+}
+
+/* Actions validées / réservation (CDC : vert lumineux) */
+.gi-btn-success,
+.nolva-btn-reserve {
+  background: var(--nolva-success) !important;
+  border: 2px solid var(--nolva-success) !important;
+  color: #fff !important;
+}
+.gi-btn-success:hover,
+.nolva-btn-reserve:hover {
+  background: var(--nolva-success-dark) !important;
+  border-color: var(--nolva-success-dark) !important;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35) !important;
 }
 
 /* ============================================
@@ -92,7 +118,7 @@ a.gi-btn-2 {
   font-size: 13px;
 }
 .header-top a:hover, .header-top .gi-help:hover {
-  color: var(--nolva-red) !important;
+  color: var(--nolva-gold) !important;
 }
 
 .gi-header-bottom {
@@ -108,7 +134,7 @@ a.gi-btn-2 {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--nolva-red), var(--nolva-red-light), var(--nolva-red));
+  background: linear-gradient(90deg, var(--nolva-gold), var(--nolva-gold-light), var(--nolva-primary));
 }
 
 .header-logo img {
@@ -116,12 +142,131 @@ a.gi-btn-2 {
   transition: var(--nolva-transition);
 }
 
+/* Barre de recherche en-tête — compacte, alignée à droite */
+.nolva-header-row {
+  align-items: center !important;
+  gap: 12px;
+  width: 100%;
+}
+.nolva-header-spacer {
+  flex: 1 1 auto;
+  min-width: 8px;
+}
+.nolva-header-search-slot {
+  flex: 0 1 280px;
+  max-width: 300px;
+  min-width: 0;
+  margin-left: auto;
+}
+.gi-header-bottom .gi-header-search {
+  margin: 0 !important;
+}
+.nolva-header-search-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 38px;
+  padding: 0 4px 0 12px;
+  background: var(--nolva-light);
+  border: 1px solid var(--nolva-border);
+  border-radius: 10px;
+  font-family: inherit;
+  transition: var(--nolva-transition);
+}
+.nolva-header-search-form:focus-within {
+  background: var(--nolva-white);
+  border-color: var(--nolva-primary);
+  box-shadow: 0 0 0 3px var(--nolva-red-glow);
+}
+.nolva-header-search-icon {
+  flex-shrink: 0;
+  font-size: 14px;
+  color: var(--nolva-gray-light);
+  line-height: 1;
+}
+.nolva-header-search-form:focus-within .nolva-header-search-icon {
+  color: var(--nolva-primary);
+}
+.nolva-header-search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: auto !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: var(--nolva-black) !important;
+  font-family: inherit !important;
+}
+.nolva-header-search-input::placeholder {
+  color: var(--nolva-gray-light) !important;
+  font-weight: 400 !important;
+}
+.nolva-header-search-btn {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 8px;
+  background: var(--nolva-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--nolva-transition);
+  padding: 0;
+}
+.nolva-header-search-btn i {
+  font-size: 13px;
+  line-height: 1;
+}
+.nolva-header-search-btn:hover {
+  background: var(--nolva-primary-dark);
+}
+.nolva-header-search-btn:focus-visible {
+  outline: 2px solid var(--nolva-primary);
+  outline-offset: 2px;
+}
+
+@media (max-width: 991px) {
+  .nolva-header-row {
+    flex-wrap: wrap;
+  }
+  .nolva-header-spacer {
+    display: none;
+  }
+  .nolva-header-search-slot {
+    order: 10;
+    flex: 1 1 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 575px) {
+  .nolva-header-search-form {
+    height: 36px;
+  }
+  .nolva-header-search-input {
+    font-size: 12px !important;
+  }
+}
+
+/* Anciens champs recherche (autres pages) */
 .gi-search-bar {
   border: 2px solid var(--nolva-border) !important;
   border-radius: 50px !important;
   padding: 6px 16px !important;
   transition: var(--nolva-transition);
 }
+.gi-search-bar:focus,
 .gi-search-bar:focus-within {
   border-color: var(--nolva-red) !important;
   box-shadow: 0 0 0 4px var(--nolva-red-glow) !important;
@@ -154,7 +299,7 @@ a.gi-btn-2 {
 }
 .gi-dropdown-menu .dropdown-item:hover {
   background: var(--nolva-red-glow) !important;
-  color: var(--nolva-red) !important;
+  color: var(--nolva-gold) !important;
 }
 
 /* Category menu */
@@ -186,7 +331,7 @@ a.gi-btn-2 {
 }
 .gi-main-menu ul li:hover > a,
 .gi-main-menu ul li.active > a {
-  color: var(--nolva-red) !important;
+  color: var(--nolva-gold) !important;
 }
 .gi-main-menu ul li.non-drop > a::after {
   content: '';
@@ -195,7 +340,7 @@ a.gi-btn-2 {
   left: 50%;
   width: 0;
   height: 2px;
-  background: var(--nolva-red);
+  background: var(--nolva-primary);
   transition: var(--nolva-transition);
   transform: translateX(-50%);
 }
@@ -208,10 +353,10 @@ a.gi-btn-2 {
   transition: var(--nolva-transition);
 }
 .gi-header-bottons .gi-header-btn:hover {
-  color: var(--nolva-red) !important;
+  color: var(--nolva-gold) !important;
 }
 .gi-header-bottons .gi-header-btn:hover .gi-btn-title {
-  color: var(--nolva-red) !important;
+  color: var(--nolva-gold) !important;
 }
 .gi-header-bottons .header-icon {
   width: 40px;
@@ -281,7 +426,7 @@ a.gi-btn-2 {
   content: '';
   width: 30px;
   height: 2px;
-  background: var(--nolva-red);
+  background: var(--nolva-primary);
 }
 .nolva-hero-title {
   font-size: 50px;
@@ -291,7 +436,7 @@ a.gi-btn-2 {
   margin-bottom: 20px;
   letter-spacing: -1px;
 }
-.nolva-hero-title span { color: var(--nolva-red); }
+.nolva-hero-title span { color: var(--nolva-gold); }
 .nolva-hero-subtitle {
   font-size: 17px;
   color: rgba(255,255,255,0.65);
@@ -356,7 +501,7 @@ a.gi-btn-2 {
   gap: 8px;
   cursor: pointer;
   transition: var(--nolva-transition);
-  box-shadow: 0 4px 15px rgba(227, 30, 36, 0.35);
+  box-shadow: 0 4px 15px rgba(61, 31, 110, 0.35);
 }
 .nolva-search-btn:hover {
   background: var(--nolva-red-dark) !important;
@@ -439,7 +584,7 @@ a.gi-btn-2 {
   border-radius: 50%;
   overflow: hidden;
   border: 3px solid rgba(255,255,255,0.2);
-  background: var(--nolva-red);
+  background: var(--nolva-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -474,7 +619,10 @@ a.gi-btn-2 {
   align-items: center;
   gap: 4px;
 }
-.nolva-status.available { background: #dbeafe; color: #2563eb; }
+.nolva-status.available {
+  background: var(--nolva-success-light);
+  color: var(--nolva-success-dark);
+}
 .nolva-status.busy { background: #fee2e2; color: #dc2626; }
 
 .nolva-provider-body {
@@ -580,12 +728,12 @@ a.gi-btn-2 {
 }
 .nolva-role-card p { font-size: 13px; color: var(--nolva-gray); margin: 0; }
 .nolva-role-card:hover {
-  border-color: var(--nolva-red);
+  border-color: var(--nolva-primary);
   box-shadow: var(--nolva-shadow-md);
   transform: translateY(-2px);
 }
 .nolva-role-card.active {
-  border-color: var(--nolva-red);
+  border-color: var(--nolva-primary);
   background: linear-gradient(135deg, rgba(227,30,36,0.04), rgba(227,30,36,0.08));
   box-shadow: 0 0 0 4px var(--nolva-red-glow);
 }
@@ -733,7 +881,7 @@ input:focus, select:focus, textarea:focus {
   left: 0;
   width: 30px;
   height: 2px;
-  background: var(--nolva-red);
+  background: var(--nolva-primary);
 }
 .gi-footer-logo {
   max-width: 120px !important;
@@ -822,7 +970,7 @@ input:focus, select:focus, textarea:focus {
 }
 .gi-vendor-dashboard-sort-card:hover {
   box-shadow: var(--nolva-shadow-md);
-  border-color: var(--nolva-red);
+  border-color: var(--nolva-primary);
 }
 .gi-vendor-dashboard-sort-card h5 {
   font-size: 13px;
@@ -887,7 +1035,7 @@ input:focus, select:focus, textarea:focus {
   background: var(--nolva-white);
 }
 .nolva-offer-card:hover {
-  border-color: var(--nolva-red);
+  border-color: var(--nolva-primary);
   box-shadow: var(--nolva-shadow-md);
   transform: translateY(-2px);
 }
@@ -907,7 +1055,7 @@ input:focus, select:focus, textarea:focus {
   letter-spacing: -0.5px;
 }
 .section-title-2 .gi-title span {
-  color: var(--nolva-red) !important;
+  color: var(--nolva-gold) !important;
 }
 
 /* ============================================
@@ -992,7 +1140,7 @@ a:hover { color: var(--nolva-red) !important; text-decoration: none !important; 
 
 /* Selection */
 ::selection {
-  background: var(--nolva-red);
+  background: var(--nolva-primary);
   color: #fff;
 }
 
@@ -1132,14 +1280,14 @@ html { scroll-behavior: smooth; }
   position: absolute;
   bottom: 12px;
   right: 12px;
-  background: var(--nolva-red);
+  background: var(--nolva-primary);
   color: #fff;
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.3px;
-  box-shadow: 0 2px 8px rgba(227, 30, 36, 0.4);
+  box-shadow: 0 2px 8px rgba(61, 31, 110, 0.4);
 }
 
 .nolva-event-price-tag.free {
@@ -1278,7 +1426,7 @@ html { scroll-behavior: smooth; }
 
 .nolva-event-status-badge {
   display: inline-block;
-  background: rgba(227, 30, 36, 0.1);
+  background: rgba(61, 31, 110, 0.1);
   color: var(--nolva-red);
   padding: 4px 14px;
   border-radius: 20px;
@@ -1422,7 +1570,7 @@ html { scroll-behavior: smooth; }
 .nolva-providers-filters select:focus,
 .nolva-providers-filters input:focus {
   outline: none;
-  border-color: var(--nolva-red);
+  border-color: var(--nolva-primary);
   box-shadow: 0 0 0 3px var(--nolva-red-glow);
 }
 
@@ -1510,9 +1658,9 @@ html { scroll-behavior: smooth; }
 
 .nolva-carousel-btn:hover,
 .nolva-carousel-btn:active {
-  background: var(--nolva-red);
+  background: var(--nolva-primary);
   color: var(--nolva-white);
-  box-shadow: 0 4px 12px rgba(227, 30, 36, 0.3);
+  box-shadow: 0 4px 12px rgba(61, 31, 110, 0.3);
 }
 
 .nolva-carousel-btn.swiper-button-disabled {
@@ -1530,18 +1678,33 @@ html { scroll-behavior: smooth; }
   justify-content: center;
 }
 
-/* À propos — zone responsive */
-.nolva-about-textarea {
-  width: 100%;
-  min-height: 160px;
+/* Formulaire profil prestataire — champs pleine largeur, même hauteur */
+.nolva-provider-profile-form .nolva-field-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #4b5966;
+  font-size: 15px;
+  font-weight: 500;
+}
+.nolva-provider-profile-form .form-control,
+.nolva-provider-profile-form .form-select {
+  width: 100% !important;
+  min-height: 48px !important;
+  box-sizing: border-box;
+  border: 2px solid var(--nolva-border) !important;
+  border-radius: 10px !important;
+  padding: 11px 16px !important;
+  font-size: 14px !important;
+}
+.nolva-provider-profile-form textarea.form-control {
+  min-height: 160px !important;
   resize: vertical;
   line-height: 1.6;
-  font-size: 15px;
 }
-@media (min-width: 768px) {
-  .nolva-about-textarea {
-    min-height: 200px;
-  }
+.nolva-provider-profile-form .form-control:focus,
+.nolva-provider-profile-form .form-select:focus {
+  border-color: var(--nolva-red) !important;
+  box-shadow: 0 0 0 4px var(--nolva-red-glow) !important;
 }
 
 /* Portfolio grille responsive */
@@ -1651,4 +1814,15 @@ html { scroll-behavior: smooth; }
   align-self: flex-end;
   background: #fff5f5;
   border: 1px solid #f5d0d0;
+}
+
+/* Bannière tableau de bord prestataire — logo NOLVA */
+.gi-vendor-dashboard .gi-vendor-cover.nolva-vendor-cover,
+.gi-vendor-profile .gi-vendor-cover.nolva-vendor-cover {
+  background-image: url("/assets/img/logo/nolva-logo.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 200px auto;
+  background-color: #f8f8f8;
+  background-blend-mode: normal;
 }

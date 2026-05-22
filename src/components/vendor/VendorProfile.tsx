@@ -62,7 +62,7 @@ const VendorProfile = () => {
             <div className="col-lg-9 col-md-12 mb-24">
               <div className="row">
                 <div className="container">
-                  <div className="gi-vendor-cover">
+                  <div className="gi-vendor-cover nolva-vendor-cover">
                     <span
                       style={{ float: "inline-end", margin: "15px" }}
                       className="gi-register-wrap"

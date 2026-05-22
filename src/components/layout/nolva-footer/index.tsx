@@ -9,7 +9,7 @@ export default function NolvaFooter() {
           {/* Logo + description */}
           <div className="col-lg-4 col-md-6">
             <div style={{ fontWeight: 800, fontSize: "28px", marginBottom: "16px" }}>
-              NOL<span style={{ color: "#E31E24" }}>VA</span>
+              NOL<span style={{ color: "var(--nolva-gold)" }}>VA</span>
             </div>
             <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "14px", lineHeight: "1.8" }}>
               La plateforme de référence pour trouver les meilleurs prestataires
@@ -31,7 +31,7 @@ export default function NolvaFooter() {
 
           {/* Liens rapides */}
           <div className="col-lg-2 col-md-6">
-            <h6 style={{ fontWeight: 700, marginBottom: "20px", color: "#E31E24" }}>Plateforme</h6>
+            <h6 style={{ fontWeight: 700, marginBottom: "20px", color: "var(--nolva-gold)" }}>Plateforme</h6>
             <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
               {[
                 { label: "Trouver un prestataire", href: "/prestataires" },
@@ -41,7 +41,7 @@ export default function NolvaFooter() {
               ].map((link) => (
                 <li key={link.href} style={{ marginBottom: "10px" }}>
                   <Link href={link.href} style={{ color: "rgba(255,255,255,0.6)", textDecoration: "none", fontSize: "14px" }}
-                    onMouseEnter={e => (e.currentTarget.style.color = "#E31E24")}
+                    onMouseEnter={e => (e.currentTarget.style.color = "var(--nolva-gold)")}
                     onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.6)")}>
                     {link.label}
                   </Link>
@@ -52,7 +52,7 @@ export default function NolvaFooter() {
 
           {/* Prestataires */}
           <div className="col-lg-2 col-md-6">
-            <h6 style={{ fontWeight: 700, marginBottom: "20px", color: "#E31E24" }}>Prestataires</h6>
+            <h6 style={{ fontWeight: 700, marginBottom: "20px", color: "var(--nolva-gold)" }}>Prestataires</h6>
             <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
               {[
                 { label: "DJs", href: "/prestataires?type=dj" },
@@ -64,7 +64,7 @@ export default function NolvaFooter() {
               ].map((link) => (
                 <li key={link.href} style={{ marginBottom: "10px" }}>
                   <Link href={link.href} style={{ color: "rgba(255,255,255,0.6)", textDecoration: "none", fontSize: "14px" }}
-                    onMouseEnter={e => (e.currentTarget.style.color = "#E31E24")}
+                    onMouseEnter={e => (e.currentTarget.style.color = "var(--nolva-gold)")}
                     onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.6)")}>
                     {link.label}
                   </Link>
@@ -75,7 +75,7 @@ export default function NolvaFooter() {
 
           {/* Contact */}
           <div className="col-lg-4 col-md-6">
-            <h6 style={{ fontWeight: 700, marginBottom: "20px", color: "#E31E24" }}>Contact</h6>
+            <h6 style={{ fontWeight: 700, marginBottom: "20px", color: "var(--nolva-gold)" }}>Contact</h6>
             <div style={{ color: "rgba(255,255,255,0.6)", fontSize: "14px", lineHeight: "2" }}>
               <p>📍 Cotonou, Bénin</p>
               <p>📞 +229 XX XX XX XX</p>
@@ -93,7 +93,7 @@ export default function NolvaFooter() {
                     color: "#fff", fontSize: "13px"
                   }} />
                 <button style={{
-                  background: "#E31E24", border: "none", color: "#fff",
+                  background: "var(--nolva-gold)", border: "none", color: "#fff",
                   borderRadius: "8px", padding: "10px 16px", cursor: "pointer", fontWeight: 600, fontSize: "13px"
                 }}>
                   OK

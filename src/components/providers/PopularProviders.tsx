@@ -6,6 +6,7 @@ import Spinner from "../button/Spinner";
 import Link from "next/link";
 import { useProviderTypes } from "@/lib/useCatalog";
 import { getProviderTypeLabel } from "@/lib/providerUtils";
+import { lowestOfferPrice, toBooleanFlag } from "@/lib/providerDisplay";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
@@ -19,8 +20,8 @@ const ProviderCard = ({
   typeCatalog: { slug: string; label: string }[];
 }) => {
   const name = provider.business_name || provider.businessName || "Prestataire";
-  const verified = provider.is_verified ?? provider.isVerified;
-  const available = provider.is_available ?? provider.isAvailable;
+  const verified = toBooleanFlag(provider.is_verified ?? provider.isVerified);
+  const available = toBooleanFlag(provider.is_available ?? provider.isAvailable);
   const firstName = provider.first_name || provider.user?.first_name || provider.user?.firstName || "";
   const lastName = provider.last_name || provider.user?.last_name || provider.user?.lastName || "";
   const displayName = name || `${firstName} ${lastName}`.trim() || "?";
@@ -57,16 +58,16 @@ const ProviderCard = ({
           <i className="fi fi-rr-briefcase"></i> {getProviderTypeLabel(provider, typeCatalog)}
         </p>
         {ratingCount > 0 && (
-          <p className="nolva-provider-rating" style={{ fontSize: "13px", color: "#E31E24", margin: "4px 0" }}>
+          <p className="nolva-provider-rating" style={{ fontSize: "13px", color: "var(--nolva-gold)", margin: "4px 0" }}>
             <i className="fi fi-rr-star"></i> {ratingAvg.toFixed(1)} ({ratingCount} avis)
           </p>
         )}
         <p className="nolva-provider-city">
           <i className="fi fi-rr-marker"></i> {provider.city}
         </p>
-        {offers.length > 0 && (
+        {lowestOfferPrice(offers) > 0 && (
           <p className="nolva-provider-price">
-            A partir de <strong>{(offers[0].price_min || offers[0].priceMin)?.toLocaleString()} FCFA</strong>
+            A partir de <strong>{lowestOfferPrice(offers).toLocaleString("fr-FR")} FCFA</strong>
           </p>
         )}
       </div>

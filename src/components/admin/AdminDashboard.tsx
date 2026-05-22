@@ -12,6 +12,7 @@ import AdminQuoteActivities from "./AdminQuoteActivities";
 import AdminPayoutsPanel from "./AdminPayoutsPanel";
 import { showErrorToast, showSuccessToast } from "../toast-popup/Toastify";
 import { Col, Form, Row } from "react-bootstrap";
+import { PAYOUT_METHOD_OPTIONS, payoutDestinationHint } from "@/lib/payoutMethods";
 
 type Tab =
   | "overview"
@@ -53,6 +54,16 @@ const AdminDashboard = () => {
     target_value: "",
     rate: 12,
   });
+  const [editingCommission, setEditingCommission] = useState<any | null>(null);
+  const [editRate, setEditRate] = useState(0);
+  const [freezeRef, setFreezeRef] = useState<string | null>(null);
+  const [freezeNote, setFreezeNote] = useState("");
+  const [freezing, setFreezing] = useState(false);
+  const [repayMode, setRepayMode] = useState<"collect_client" | "payout_provider">("payout_provider");
+  const [repayAmount, setRepayAmount] = useState("");
+  const [repayMethod, setRepayMethod] = useState("bj_mtn");
+  const [repayDestination, setRepayDestination] = useState("");
+  const [repaying, setRepaying] = useState(false);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -96,13 +107,76 @@ const AdminDashboard = () => {
   const disputed = transactions.filter((t) => t.status === "disputed");
   const formatMoney = (n: number) => Number(n || 0).toLocaleString("fr-FR") + " FCFA";
 
-  const handleFreeze = async (ref: string) => {
+  const submitFreeze = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!freezeRef || freezeNote.trim().length < 5) {
+      showErrorToast("Motif requis (5 caractères minimum)");
+      return;
+    }
+    setFreezing(true);
     try {
-      await adminApi.freezeTransaction({ transaction_ref: ref, note: "Gelé depuis le tableau de bord" });
-      showSuccessToast("Paiement gelé");
+      await adminApi.freezeTransaction({ transaction_ref: freezeRef, note: freezeNote.trim() });
+      showSuccessToast("Paiement gelé — client et prestataire notifiés");
+      setFreezeRef(null);
+      setFreezeNote("");
       loadData();
-    } catch (e: any) {
-      showErrorToast(e.response?.data?.message || "Erreur");
+    } catch (err: any) {
+      showErrorToast(err.response?.data?.message || "Erreur");
+    } finally {
+      setFreezing(false);
+    }
+  };
+
+  const submitDisputeRepayment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resolveRef || !repayAmount) return;
+    setRepaying(true);
+    try {
+      const res = await adminApi.disputeRepayment({
+        transaction_ref: resolveRef,
+        amount: Number(repayAmount),
+        mode: repayMode,
+        payout_method: repayMode === "payout_provider" ? repayMethod : undefined,
+        payout_destination:
+          repayMode === "payout_provider" ? repayDestination.trim() : undefined,
+        note: resolveNote || undefined,
+      });
+      showSuccessToast(res.data?.message || "Opération FedaPay lancée");
+      if (res.data?.paymentUrl) {
+        window.open(res.data.paymentUrl, "_blank");
+      }
+      loadData();
+    } catch (err: any) {
+      showErrorToast(err.response?.data?.message || "Erreur");
+    } finally {
+      setRepaying(false);
+    }
+  };
+
+  const saveCommissionEdit = async () => {
+    if (!editingCommission) return;
+    try {
+      await adminApi.updateCommission(editingCommission.id, { rate: editRate });
+      showSuccessToast("Taux mis à jour");
+      setEditingCommission(null);
+      loadData();
+    } catch (err: any) {
+      showErrorToast(err.response?.data?.message || "Erreur");
+    }
+  };
+
+  const removeCommission = async (c: any) => {
+    if (c.is_default || c.isDefault) {
+      showErrorToast("Les taux par défaut (billets / prestations) se modifient, pas se suppriment.");
+      return;
+    }
+    if (!window.confirm(`Supprimer la commission « ${c.label} » ?`)) return;
+    try {
+      await adminApi.deleteCommission(c.id);
+      showSuccessToast("Commission supprimée");
+      loadData();
+    } catch (err: any) {
+      showErrorToast(err.response?.data?.message || "Erreur");
     }
   };
 
@@ -191,7 +265,7 @@ const AdminDashboard = () => {
                 <Col md={4} className="mb-3">
                   <div className="gi-vendor-dashboard-sort-card">
                     <h5>Volume total</h5>
-                    <h3 style={{ color: "#E31E24" }}>{formatMoney(stats?.total_volume || 0)}</h3>
+                    <h3 style={{ color: "var(--nolva-gold)" }}>{formatMoney(stats?.total_volume || 0)}</h3>
                   </div>
                 </Col>
                 <Col md={4} className="mb-3">
@@ -288,7 +362,10 @@ const AdminDashboard = () => {
                                 <button
                                   type="button"
                                   className="btn btn-sm btn-outline-warning"
-                                  onClick={() => handleFreeze(t.reference)}
+                                  onClick={() => {
+                                    setFreezeRef(t.reference);
+                                    setFreezeNote("");
+                                  }}
                                 >
                                   Geler
                                 </button>
@@ -380,7 +457,7 @@ const AdminDashboard = () => {
                             />
                           </Form.Group>
                         )}
-                        <Form.Group className="mb-3">
+                        <Form.Group className="mb-2">
                           <Form.Label>Note admin</Form.Label>
                           <Form.Control
                             as="textarea"
@@ -389,8 +466,68 @@ const AdminDashboard = () => {
                             onChange={(e) => setResolveNote(e.target.value)}
                           />
                         </Form.Group>
-                        <button type="submit" className="gi-btn-1 w-100">
+                        <button type="submit" className="gi-btn-1 w-100 mb-3">
                           Appliquer la décision
+                        </button>
+                      </Form>
+                      <hr />
+                      <h6 className="fw-semibold">Paiement FedaPay après litige</h6>
+                      <p className="small text-muted">
+                        Choisissez librement le montant et le moyen (encaisser le client ou payer le
+                        prestataire).
+                      </p>
+                      <Form onSubmit={submitDisputeRepayment}>
+                        <Form.Group className="mb-2">
+                          <Form.Label>Montant (FCFA)</Form.Label>
+                          <Form.Control
+                            type="number"
+                            min={1}
+                            step={1}
+                            value={repayAmount}
+                            onChange={(e) => setRepayAmount(e.target.value)}
+                            required
+                          />
+                        </Form.Group>
+                        <Form.Group className="mb-2">
+                          <Form.Label>Opération</Form.Label>
+                          <Form.Select
+                            value={repayMode}
+                            onChange={(e) =>
+                              setRepayMode(e.target.value as typeof repayMode)
+                            }
+                          >
+                            <option value="payout_provider">Payer le prestataire (reversement)</option>
+                            <option value="collect_client">Faire payer le client (lien FedaPay)</option>
+                          </Form.Select>
+                        </Form.Group>
+                        {repayMode === "payout_provider" && (
+                          <>
+                            <Form.Group className="mb-2">
+                              <Form.Label>Mode de versement</Form.Label>
+                              <Form.Select
+                                value={repayMethod}
+                                onChange={(e) => setRepayMethod(e.target.value)}
+                              >
+                                {PAYOUT_METHOD_OPTIONS.map((o) => (
+                                  <option key={o.value} value={o.value}>
+                                    {o.label}
+                                  </option>
+                                ))}
+                              </Form.Select>
+                            </Form.Group>
+                            <Form.Group className="mb-2">
+                              <Form.Label>Coordonnées</Form.Label>
+                              <Form.Control
+                                value={repayDestination}
+                                onChange={(e) => setRepayDestination(e.target.value)}
+                                placeholder={payoutDestinationHint(repayMethod)}
+                                required
+                              />
+                            </Form.Group>
+                          </>
+                        )}
+                        <button type="submit" className="gi-btn-2 w-100" disabled={repaying || !resolveRef}>
+                          {repaying ? "Traitement..." : "Lancer via FedaPay"}
                         </button>
                       </Form>
                     </div>
@@ -412,6 +549,7 @@ const AdminDashboard = () => {
                             <th>Type</th>
                             <th>Cible</th>
                             <th>Taux</th>
+                            <th></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -420,7 +558,63 @@ const AdminDashboard = () => {
                               <td>{c.label}</td>
                               <td>{c.target_type || c.targetType}</td>
                               <td>{c.target_value || c.targetValue || "Défaut"}</td>
-                              <td>{c.rate}%</td>
+                              <td>
+                                {editingCommission?.id === c.id ? (
+                                  <Form.Control
+                                    type="number"
+                                    min={0}
+                                    max={100}
+                                    className="form-control-sm"
+                                    style={{ width: 80 }}
+                                    value={editRate}
+                                    onChange={(e) => setEditRate(Number(e.target.value))}
+                                  />
+                                ) : (
+                                  `${c.rate}%`
+                                )}
+                              </td>
+                              <td className="text-nowrap">
+                                {editingCommission?.id === c.id ? (
+                                  <>
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-success me-1"
+                                      onClick={saveCommissionEdit}
+                                    >
+                                      OK
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-secondary"
+                                      onClick={() => setEditingCommission(null)}
+                                    >
+                                      Annuler
+                                    </button>
+                                  </>
+                                ) : (
+                                  <>
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-outline-primary me-1"
+                                      onClick={() => {
+                                        setEditingCommission(c);
+                                        setEditRate(Number(c.rate));
+                                      }}
+                                    >
+                                      Modifier
+                                    </button>
+                                    {!(c.is_default || c.isDefault) && (
+                                      <button
+                                        type="button"
+                                        className="btn btn-sm btn-outline-danger"
+                                        onClick={() => removeCommission(c)}
+                                      >
+                                        Supprimer
+                                      </button>
+                                    )}
+                                  </>
+                                )}
+                              </td>
                             </tr>
                           ))}
                         </tbody>
@@ -500,6 +694,42 @@ const AdminDashboard = () => {
 
             {tab === "payouts" && <AdminPayoutsPanel />}
           </>
+        )}
+
+        {freezeRef && (
+          <div className="modal d-block" style={{ background: "rgba(0,0,0,0.45)" }} role="dialog">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Geler la transaction</h5>
+                  <button type="button" className="btn-close" onClick={() => setFreezeRef(null)} />
+                </div>
+                <Form onSubmit={submitFreeze}>
+                  <div className="modal-body">
+                    <p className="small text-muted mb-2">Réf. {freezeRef}</p>
+                    <Form.Label>Motif * (envoyé au client et au prestataire)</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={4}
+                      value={freezeNote}
+                      onChange={(e) => setFreezeNote(e.target.value)}
+                      required
+                      minLength={5}
+                      placeholder="Expliquez la raison du gel des fonds…"
+                    />
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" onClick={() => setFreezeRef(null)}>
+                      Annuler
+                    </button>
+                    <button type="submit" className="btn btn-warning" disabled={freezing}>
+                      {freezing ? "Gel en cours..." : "Geler et notifier"}
+                    </button>
+                  </div>
+                </Form>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </section>

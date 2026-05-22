@@ -49,10 +49,25 @@ function HeaderManu() {
                             Prestataires
                           </Link>
                         </li>
-                        <li className="non-drop">
-                          <Link href="/evenements">
+                        <li className="dropdown drop-list">
+                          <Link href="/evenements" className="dropdown-arrow">
                             Événements
+                            <i
+                              className="fi-rr-angle-small-right"
+                              style={{ marginLeft: "4px" }}
+                            ></i>
                           </Link>
+                          <ul className="sub-menu">
+                            <li>
+                              <Link href="/evenements">Tous les événements</Link>
+                            </li>
+                            <li>
+                              <Link href="/evenements/publier">Publier un événement</Link>
+                            </li>
+                            <li>
+                              <Link href="/evenements/creer">Créer (validation admin)</Link>
+                            </li>
+                          </ul>
                         </li>
                         <li className="non-drop">
                           <Link href="/demande-devis">
