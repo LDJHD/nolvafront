@@ -33,7 +33,7 @@ const AdminPayoutsPanel = () => {
       const [pendRes, payRes, histRes] = await Promise.all([
         adminApi.pendingPayouts(),
         adminApi.payouts({ limit: 20 }),
-        adminApi.actionHistory({ limit: 30 }),
+        adminApi.actionHistory(),
       ]);
       setPending(pendRes.data || []);
       const d = payRes.data;
