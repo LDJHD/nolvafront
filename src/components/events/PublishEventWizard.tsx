@@ -225,7 +225,7 @@ const PublishEventWizard = () => {
                 {form.event_type && tips.length > 0 && (
                   <div
                     className="mt-3 p-3"
-                    style={{ background: "#f8f9fa", borderRadius: "8px", borderLeft: "4px solid var(--nolva-primary)" }}
+                    style={{ background: "#f8f9fa", borderRadius: "8px", borderLeft: "4px solid #E31E24" }}
                   >
                     <strong>
                       <i className="fi fi-rr-bulb me-1" /> Conseils NOLVA

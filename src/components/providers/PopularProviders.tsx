@@ -58,7 +58,7 @@ const ProviderCard = ({
           <i className="fi fi-rr-briefcase"></i> {getProviderTypeLabel(provider, typeCatalog)}
         </p>
         {ratingCount > 0 && (
-          <p className="nolva-provider-rating" style={{ fontSize: "13px", color: "var(--nolva-gold)", margin: "4px 0" }}>
+          <p className="nolva-provider-rating" style={{ fontSize: "13px", color: "#E31E24", margin: "4px 0" }}>
             <i className="fi fi-rr-star"></i> {ratingAvg.toFixed(1)} ({ratingCount} avis)
           </p>
         )}

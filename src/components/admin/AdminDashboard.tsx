@@ -265,7 +265,7 @@ const AdminDashboard = () => {
                 <Col md={4} className="mb-3">
                   <div className="gi-vendor-dashboard-sort-card">
                     <h5>Volume total</h5>
-                    <h3 style={{ color: "var(--nolva-gold)" }}>{formatMoney(stats?.total_volume || 0)}</h3>
+                    <h3 style={{ color: "#E31E24" }}>{formatMoney(stats?.total_volume || 0)}</h3>
                   </div>
                 </Col>
                 <Col md={4} className="mb-3">

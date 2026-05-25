@@ -31,7 +31,7 @@ function HeroSlider() {
       <div className="nolva-hero-overlay">
         <div className="container">
           <div className="nolva-hero-content">
-            <p className="nolva-hero-tagline">Bénin • Événements • Excellence</p>
+            <p className="nolva-hero-tagline text-red-500">Bénin • Événements • Excellence</p>
             <h1 className="nolva-hero-title">
               Trouvez le prestataire idéal<br />
               <span>pour votre événement</span>

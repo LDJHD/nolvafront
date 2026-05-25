@@ -1,0 +1,37 @@
+
+> grabit-next@0.1.0 dev
+> next dev -p 3001
+
+   ▲ Next.js 15.1.6
+   - Local:        http://localhost:3001
+   - Network:      http://192.168.100.74:3001
+   - Environments: .env.local, .env.development
+   - Experiments (use with caution):
+     · cpus
+
+ ✓ Starting...
+ ✓ Ready in 8.2s
+ ○ Compiling /src/middleware ...
+ ✓ Compiled /src/middleware in 1511ms (98 modules)
+ ○ Compiling /home ...
+ ✓ Compiled /home in 30.2s (1765 modules)
+ GET /home/ 200 in 31780ms
+ GET /home/ 200 in 314ms
+ ○ Compiling /api/catalog/provider-types ...
+ ✓ Compiled /api/catalog/provider-types in 3.6s (1730 modules)
+ GET /api/catalog/provider-types/ 200 in 4174ms
+ GET /api/catalog/provider-types/ 200 in 3676ms
+ GET /api/catalog/provider-types/ 200 in 4187ms
+ GET /api/catalog/provider-types/ 200 in 4104ms
+ GET /api/providers/popular/ 200 in 4199ms
+ GET /api/events/upcoming/ 200 in 4212ms
+ GET /api/catalog/provider-types/ 200 in 93ms
+ GET /api/catalog/provider-types/ 200 in 150ms
+ GET /api/catalog/provider-types/ 200 in 155ms
+ GET /api/catalog/provider-types/ 200 in 164ms
+ GET /api/catalog/provider-types/ 200 in 167ms
+ GET /api/catalog/provider-types/ 200 in 175ms
+ GET /api/catalog/provider-types/ 200 in 178ms
+ GET /api/catalog/provider-types/ 200 in 186ms
+ GET /api/events/upcoming/ 200 in 110ms
+ GET /api/providers/popular/ 200 in 114ms

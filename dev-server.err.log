@@ -1,0 +1,2 @@
+redux-persist failed to create sync storage. falling back to noop storage.
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Users\hp\Desktop\nova\front\.next\cache\webpack\edge-server-development\0.pack.gz_' -> 'C:\Users\hp\Desktop\nova\front\.next\cache\webpack\edge-server-development\0.pack.gz'
