@@ -45,7 +45,6 @@ function HeaderTwo() {
                 <Link href="/">
                   <img
                     src={
-                      process.env.NEXT_PUBLIC_URL +
                       "/assets/img/logo/nolva-logo.png"
                     }
                     alt="NOLVA"

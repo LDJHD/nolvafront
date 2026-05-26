@@ -17,9 +17,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Women's wallet Hand Purse",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/48_1.jpg",
+    image: "/assets/img/product-images/48_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/48_1.jpg",
+      "/assets/img/product-images/48_1.jpg",
     category: "wallet",
     newPrice: 50.0,
     oldPrice: 70.0,
@@ -32,9 +32,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Men's Leather Belt",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/49_1.jpg",
+    image: "/assets/img/product-images/49_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/49_1.jpg",
+      "/assets/img/product-images/49_1.jpg",
     category: "Belt",
     newPrice: 15.0,
     oldPrice: 17.0,
@@ -47,9 +47,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Long lasting perfume",
     sale: "Sale",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/50_1.jpg",
+    image: "/assets/img/product-images/50_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/50_1.jpg",
+      "/assets/img/product-images/50_1.jpg",
     category: "perfume",
     newPrice: 25.0,
     oldPrice: 30.0,
@@ -62,9 +62,9 @@ const allproduct: AllProducts[] = [
   {
     title: "anti dandruff shampoo",
     sale: "New",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/51_1.jpg",
+    image: "/assets/img/product-images/51_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/51_1.jpg",
+      "/assets/img/product-images/51_1.jpg",
     category: "shampoo",
     newPrice: 5.0,
     oldPrice: 7.0,
@@ -77,9 +77,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Body Lotion for Dry Skin",
     sale: "New",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/52_1.jpg",
+    image: "/assets/img/product-images/52_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/52_1.jpg",
+      "/assets/img/product-images/52_1.jpg",
     category: "Body Lotion",
     newPrice: 2.0,
     oldPrice: 3.0,
@@ -92,9 +92,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Rose Gold Earring",
     sale: "Sale",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/53_1.jpg",
+    image: "/assets/img/product-images/53_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/53_1.jpg",
+      "/assets/img/product-images/53_1.jpg",
     category: "jewellery",
     newPrice: 60.0,
     oldPrice: 80.0,
@@ -107,9 +107,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Liquid Matte Lipstick",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/54_1.jpg",
+    image: "/assets/img/product-images/54_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/54_1.jpg",
+      "/assets/img/product-images/54_1.jpg",
     category: "Lipstick",
     newPrice: 20.0,
     oldPrice: 30.0,
@@ -122,9 +122,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Compact makeup kit",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/55_1.jpg",
+    image: "/assets/img/product-images/55_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/55_1.jpg",
+      "/assets/img/product-images/55_1.jpg",
     category: "makeup kit",
     newPrice: 78.0,
     oldPrice: 85.0,
@@ -137,9 +137,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Men's stylish printed shirt",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/32_1.jpg",
+    image: "/assets/img/product-images/32_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/32_2.jpg",
+      "/assets/img/product-images/32_2.jpg",
     category: "men's wear",
     newPrice: 59.0,
     oldPrice: 87.0,
@@ -152,9 +152,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Rose Gold Earring",
     sale: "Sale",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/53_1.jpg",
+    image: "/assets/img/product-images/53_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/53_1.jpg",
+      "/assets/img/product-images/53_1.jpg",
     category: "jewellery",
     rating: 1,
     newPrice: 60.0,
@@ -167,9 +167,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Liquid Matte Lipstick",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/54_1.jpg",
+    image: "/assets/img/product-images/54_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/54_1.jpg",
+      "/assets/img/product-images/54_1.jpg",
     category: "Lipstick",
     newPrice: 20.0,
     oldPrice: 30.0,
@@ -182,9 +182,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Stylish printed women's dress",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/33_1.jpg",
+    image: "/assets/img/product-images/33_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/33_1.jpg",
+      "/assets/img/product-images/33_1.jpg",
     category: "women's wear",
     newPrice: 78.0,
     oldPrice: 85.0,
@@ -197,9 +197,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Printed Round Neck Tshirt",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/39_1.jpg",
+    image: "/assets/img/product-images/39_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/39_2.jpg",
+      "/assets/img/product-images/39_2.jpg",
     category: "Unisex",
     newPrice: 32.0,
     oldPrice: 45.0,
@@ -212,9 +212,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Long lasting perfume",
     sale: "Sale",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/50_1.jpg",
+    image: "/assets/img/product-images/50_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/50_1.jpg",
+      "/assets/img/product-images/50_1.jpg",
     category: "perfume",
     newPrice: 25.0,
     oldPrice: 30.0,
@@ -227,9 +227,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Women's sport shoes",
     sale: "Sale",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/45_1.jpg",
+    image: "/assets/img/product-images/45_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/45_1.jpg",
+      "/assets/img/product-images/45_1.jpg",
     category: "Sports",
     newPrice: 500.0,
     oldPrice: 600.0,
@@ -242,9 +242,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Men's Leather Belt",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/49_1.jpg",
+    image: "/assets/img/product-images/49_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/49_1.jpg",
+      "/assets/img/product-images/49_1.jpg",
     category: "Belt",
     newPrice: 15.0,
     oldPrice: 17.0,
@@ -257,9 +257,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Mixed Nuts Berries Pack",
     sale: "Sale",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/35_1.jpg",
+    image: "/assets/img/product-images/35_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/35_2.jpg",
+      "/assets/img/product-images/35_2.jpg",
     category: "Fashion",
     newPrice: 45.0,
     oldPrice: 56.0,
@@ -272,9 +272,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Princess Look fashion Dress",
     sale: "Sale",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/34_1.jpg",
+    image: "/assets/img/product-images/34_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/34_2.jpg",
+      "/assets/img/product-images/34_2.jpg",
     category: "women's wear",
     newPrice: 58.0,
     oldPrice: 65.0,
@@ -287,9 +287,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Women's casual shoes",
     sale: "Sale",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/45_1.jpg",
+    image: "/assets/img/product-images/45_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/45_1.jpg",
+      "/assets/img/product-images/45_1.jpg",
     category: "Sports",
     newPrice: 500.0,
     oldPrice: 600.0,
@@ -302,9 +302,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Body Lotion for Dry Skin",
     sale: "New",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/52_1.jpg",
+    image: "/assets/img/product-images/52_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/52_1.jpg",
+      "/assets/img/product-images/52_1.jpg",
     category: "Body Lotion",
     newPrice: 2.0,
     oldPrice: 3.0,
@@ -317,9 +317,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Liquid Matte Lipstick",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/54_1.jpg",
+    image: "/assets/img/product-images/54_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/54_1.jpg",
+      "/assets/img/product-images/54_1.jpg",
     category: "Lipstick",
     newPrice: 20.0,
     oldPrice: 30.0,
@@ -332,9 +332,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Women's wallet Hand Purse",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/48_1.jpg",
+    image: "/assets/img/product-images/48_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/48_1.jpg",
+      "/assets/img/product-images/48_1.jpg",
     category: "wallet",
     newPrice: 50.0,
     oldPrice: 70.0,
@@ -347,9 +347,9 @@ const allproduct: AllProducts[] = [
   {
     title: "anti dandruff shampoo",
     sale: "New",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/51_1.jpg",
+    image: "/assets/img/product-images/51_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/51_1.jpg",
+      "/assets/img/product-images/51_1.jpg",
     category: "shampoo",
     newPrice: 5.0,
     oldPrice: 7.0,
@@ -362,9 +362,9 @@ const allproduct: AllProducts[] = [
   {
     title: "men's wear printed shirt",
     sale: "New",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/35_1.jpg",
+    image: "/assets/img/product-images/35_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/35_2.jpg",
+      "/assets/img/product-images/35_2.jpg",
     category: "men's wear",
     newPrice: 59.0,
     oldPrice: 87.0,
@@ -377,9 +377,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Princess Look fashion Dress",
     sale: "Sale",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/34_1.jpg",
+    image: "/assets/img/product-images/34_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/34_2.jpg",
+      "/assets/img/product-images/34_2.jpg",
     category: "women's wear",
     newPrice: 58.0,
     oldPrice: 65.0,
@@ -392,9 +392,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Men's stylish printed shirt",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/32_1.jpg",
+    image: "/assets/img/product-images/32_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/32_1.jpg",
+      "/assets/img/product-images/32_1.jpg",
     category: "men's wear",
     newPrice: 59.0,
     oldPrice: 87.0,
@@ -407,9 +407,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Stylish printed women's dress",
     sale: "Sale",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/33_1.jpg",
+    image: "/assets/img/product-images/33_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/33_1.jpg",
+      "/assets/img/product-images/33_1.jpg",
     category: "women's wear",
     newPrice: 78.0,
     oldPrice: 85.0,
@@ -422,9 +422,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Men's wear printed shirt",
     sale: "New",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/36_1.jpg",
+    image: "/assets/img/product-images/36_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/36_2.jpg",
+      "/assets/img/product-images/36_2.jpg",
     category: "men's wear",
     newPrice: 25.0,
     oldPrice: 35.0,
@@ -437,9 +437,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Cotton Clothes Sets for Boys",
     sale: "Sale",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/37_1.jpg",
+    image: "/assets/img/product-images/37_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/37_2.jpg",
+      "/assets/img/product-images/37_2.jpg",
     category: "Baby Wear",
     newPrice: 45.0,
     oldPrice: 56.0,
@@ -452,9 +452,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Men's Jacket Fashion Coat",
     sale: "Sale",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/38_1.jpg",
+    image: "/assets/img/product-images/38_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/38_2.jpg",
+      "/assets/img/product-images/38_2.jpg",
     category: "Winter Wear",
     newPrice: 49.0,
     oldPrice: 65.0,
@@ -467,9 +467,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Printed Round Neck Tshirt",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/39_1.jpg",
+    image: "/assets/img/product-images/39_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/39_2.jpg",
+      "/assets/img/product-images/39_2.jpg",
     category: "Unisex",
     newPrice: 32.0,
     oldPrice: 45.0,
@@ -482,9 +482,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Mixed Nuts Berries Pack",
     sale: "Sale",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/6_1.jpg",
+    image: "/assets/img/product-images/6_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/6_2.jpg",
+      "/assets/img/product-images/6_2.jpg",
     category: "Dried Fruits",
     newPrice: 45.0,
     oldPrice: 56.0,
@@ -497,9 +497,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Multi Grain Combo Cookies",
     sale: "Sale",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/3_1.jpg",
+    image: "/assets/img/product-images/3_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/3_1.jpg",
+      "/assets/img/product-images/3_1.jpg",
     category: "Cookies",
     newPrice: 25.0,
     oldPrice: 30.0,
@@ -512,9 +512,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Fresh Mango juice pack",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/9_1.jpg",
+    image: "/assets/img/product-images/9_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/9_2.jpg",
+      "/assets/img/product-images/9_2.jpg",
     category: "Foods",
     newPrice: 46.0,
     oldPrice: 65.0,
@@ -527,9 +527,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Dates Value Fresh Pouch",
     sale: "Sale",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/2_1.jpg",
+    image: "/assets/img/product-images/2_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/2_2.jpg",
+      "/assets/img/product-images/2_2.jpg",
     category: "Dried Fruits",
     newPrice: 78.0,
     oldPrice: 85.0,
@@ -542,9 +542,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Stick Fiber Masala Magic",
     sale: "New",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/1_1.jpg",
+    image: "/assets/img/product-images/1_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/1_2.jpg",
+      "/assets/img/product-images/1_2.jpg",
     category: "Foods",
     newPrice: 45.0,
     oldPrice: 50.0,
@@ -557,9 +557,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Natural Hub Cherry Karonda",
     sale: "New",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/24_1.jpg",
+    image: "/assets/img/product-images/24_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/24_1.jpg",
+      "/assets/img/product-images/24_1.jpg",
     category: "Fresh Fruit",
     newPrice: 49.0,
     oldPrice: 65.0,
@@ -572,9 +572,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Fresh Mango juice pack",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/9_1.jpg",
+    image: "/assets/img/product-images/9_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/9_2.jpg",
+      "/assets/img/product-images/9_2.jpg",
     category: "Foods",
     newPrice: 20.0,
     oldPrice: 21.0,
@@ -587,9 +587,9 @@ const allproduct: AllProducts[] = [
   {
     title: "Fresh Organic Ginger Pack",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/17_1.jpg",
+    image: "/assets/img/product-images/17_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/17_1.jpg",
+      "/assets/img/product-images/17_1.jpg",
     category: "Tuber root",
     newPrice: 2.0,
     oldPrice: 3.0,

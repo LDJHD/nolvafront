@@ -157,7 +157,7 @@ const BlogDetail = ({ order = "" }: any) => {
                   <a href="#">
                     <img
                       src={
-                        process.env.NEXT_PUBLIC_URL + "/assets/img/blog/8.jpg"
+                        "/assets/img/blog/8.jpg"
                       }
                       alt="news imag"
                     />
@@ -197,7 +197,6 @@ const BlogDetail = ({ order = "" }: any) => {
                       <div className="col-md-6">
                         <img
                           src={
-                            process.env.NEXT_PUBLIC_URL +
                             "/assets/img/blog/3.jpg"
                           }
                           alt="blog"
@@ -206,7 +205,6 @@ const BlogDetail = ({ order = "" }: any) => {
                       <div className="col-md-6">
                         <img
                           src={
-                            process.env.NEXT_PUBLIC_URL +
                             "/assets/img/blog/4.jpg"
                           }
                           alt="blog"
@@ -254,8 +252,7 @@ const BlogDetail = ({ order = "" }: any) => {
                             <img
                               src={
                                 data.profilePhoto ||
-                                process.env.NEXT_PUBLIC_URL +
-                                  "/assets/img/avatar/placeholder.jpg"
+                                "/assets/img/avatar/placeholder.jpg"
                               }
                               alt="blog image"
                             />
@@ -294,8 +291,7 @@ const BlogDetail = ({ order = "" }: any) => {
                               <img
                                 src={
                                   reply.profilePhoto ||
-                                  process.env.NEXT_PUBLIC_URL +
-                                    "/assets/img/avatar/placeholder.jpg"
+                                  "/assets/img/avatar/placeholder.jpg"
                                 }
                                 alt="blog image"
                               />

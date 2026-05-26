@@ -90,7 +90,6 @@ const EmailOfferFour = () => {
                             title="Alternate text"
                             alt="Alternate text"
                             src={
-                              process.env.NEXT_PUBLIC_URL +
                               "/assets/img/logo/logo.png"
                             }
                             width="189"
@@ -157,7 +156,6 @@ const EmailOfferFour = () => {
                             title="Alternate text"
                             alt="Alternate text"
                             src={
-                              process.env.NEXT_PUBLIC_URL +
                               "/assets/img/product-images/11_1.jpg"
                             }
                             width="700"
@@ -309,7 +307,6 @@ const EmailOfferFour = () => {
                             title="Alternate text"
                             alt="Alternate text"
                             src={
-                              process.env.NEXT_PUBLIC_URL +
                               "/assets/img/product-images/17_1.jpg"
                             }
                             width="700"

@@ -84,7 +84,7 @@ const VendorProfile = () => {
                       <img
                         src={
                           userData.profilePhoto ||
-                          process.env.NEXT_PUBLIC_URL + "/assets/img/avatar/placeholder.jpg"
+                          "/assets/img/avatar/placeholder.jpg"
                         }
                         alt="vendor"
                       />

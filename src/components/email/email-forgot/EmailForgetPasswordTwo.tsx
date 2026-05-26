@@ -49,7 +49,6 @@ const EmailForgetPasswordTwo = () => {
                             <td width="100%" align="center">
                               <img
                                 src={
-                                  process.env.NEXT_PUBLIC_URL +
                                   "/assets/img/logo/logo.png"
                                 }
                                 alt="CodeWiz Logo"
@@ -110,7 +109,6 @@ const EmailForgetPasswordTwo = () => {
                               </table>
                               <img
                                 src={
-                                  process.env.NEXT_PUBLIC_URL +
                                   "/assets/img/email/5.jpg"
                                 }
                                 alt="Forgot your password?"

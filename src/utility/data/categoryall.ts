@@ -19,9 +19,9 @@ const categoryall: Category[] = [
   {
     title: "Men's stylish printed shirt",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/32_1.jpg",
+    image: "/assets/img/product-images/32_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/32_2.jpg",
+      "/assets/img/product-images/32_2.jpg",
     category: "men's wear",
     newPrice: 59.0,
     oldPrice: 87.0,
@@ -37,9 +37,9 @@ const categoryall: Category[] = [
   {
     title: "Rose Gold Earring",
     sale: "Sale",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/53_1.jpg",
+    image: "/assets/img/product-images/53_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/53_1.jpg",
+      "/assets/img/product-images/53_1.jpg",
     category: "jewellery",
     rating: 1,
     newPrice: 60.0,
@@ -54,9 +54,9 @@ const categoryall: Category[] = [
   {
     title: "Liquid Matte Lipstick",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/54_1.jpg",
+    image: "/assets/img/product-images/54_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/54_1.jpg",
+      "/assets/img/product-images/54_1.jpg",
     category: "Lipstick",
     newPrice: 20.0,
     oldPrice: 30.0,
@@ -71,9 +71,9 @@ const categoryall: Category[] = [
   {
     title: "Stylish printed women's dress",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/33_1.jpg",
+    image: "/assets/img/product-images/33_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/33_1.jpg",
+      "/assets/img/product-images/33_1.jpg",
     category: "women's wear",
     newPrice: 78.0,
     oldPrice: 85.0,
@@ -88,9 +88,9 @@ const categoryall: Category[] = [
   {
     title: "Printed Round Neck Tshirt",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/39_1.jpg",
+    image: "/assets/img/product-images/39_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/39_2.jpg",
+      "/assets/img/product-images/39_2.jpg",
     category: "Unisex",
     newPrice: 32.0,
     oldPrice: 45.0,
@@ -105,9 +105,9 @@ const categoryall: Category[] = [
   {
     title: "Long lasting perfume",
     sale: "Sale",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/50_1.jpg",
+    image: "/assets/img/product-images/50_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/50_1.jpg",
+      "/assets/img/product-images/50_1.jpg",
     category: "perfume",
     newPrice: 25.0,
     oldPrice: 30.0,
@@ -122,9 +122,9 @@ const categoryall: Category[] = [
   {
     title: "Women's sport shoes",
     sale: "Sale",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/45_1.jpg",
+    image: "/assets/img/product-images/45_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/45_1.jpg",
+      "/assets/img/product-images/45_1.jpg",
     category: "Sports",
     newPrice: 500.0,
     oldPrice: 600.0,
@@ -139,9 +139,9 @@ const categoryall: Category[] = [
   {
     title: "Men's Leather Belt",
     sale: "",
-    image: process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/49_1.jpg",
+    image: "/assets/img/product-images/49_1.jpg",
     imageTwo:
-      process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/49_1.jpg",
+      "/assets/img/product-images/49_1.jpg",
     category: "Belt",
     newPrice: 15.0,
     oldPrice: 17.0,

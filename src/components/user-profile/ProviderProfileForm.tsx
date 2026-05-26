@@ -336,7 +336,7 @@ const ProviderProfileForm = () => {
   const profilePhotoSrc =
     previewProfilePhoto ||
     form.profile_photo ||
-    `${process.env.NEXT_PUBLIC_URL || ""}/assets/img/avatar/placeholder.jpg`;
+    `/assets/img/avatar/placeholder.jpg`;
 
   const slotsLeft = MAX_PORTFOLIO_PHOTOS - photos.length;
   const payoutIsPhone = form.momo_network ? payoutNeedsPhone(form.momo_network) : true;

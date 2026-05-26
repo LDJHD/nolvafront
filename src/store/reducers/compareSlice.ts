@@ -29,9 +29,9 @@ const initialState: CounterState = {
       id: 63,
       title: "Long lasting perfume",
       image:
-        process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/50_1.jpg",
+        "/assets/img/product-images/50_1.jpg",
       imageTwo:
-        process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/50_1.jpg",
+        "/assets/img/product-images/50_1.jpg",
       category: "perfume",
       newPrice: 25.0,
       oldPrice: 30.0,
@@ -49,9 +49,9 @@ const initialState: CounterState = {
       title: "Men's stylish printed shirt",
       date: "",
       image:
-        process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/32_1.jpg",
+        "/assets/img/product-images/32_1.jpg",
       imageTwo:
-        process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/32_2.jpg",
+        "/assets/img/product-images/32_2.jpg",
       category: "men's wear",
       newPrice: 59.0,
       oldPrice: 87.0,
@@ -68,9 +68,9 @@ const initialState: CounterState = {
       title: "Blue berry",
       date: "",
       image:
-        process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/23_1.jpg",
+        "/assets/img/product-images/23_1.jpg",
       imageTwo:
-        process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/23_1.jpg",
+        "/assets/img/product-images/23_1.jpg",
       category: "Fresh Fruits",
       newPrice: 11.0,
       oldPrice: 12.0,

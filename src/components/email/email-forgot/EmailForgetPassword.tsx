@@ -97,7 +97,6 @@ const EmailForgetPassword = () => {
                           title="Image"
                           alt="Image"
                           src={
-                            process.env.NEXT_PUBLIC_URL +
                             "/assets/img/logo/logo.png"
                           }
                           width={174}
@@ -127,7 +126,6 @@ const EmailForgetPassword = () => {
                               <div style={{ paddingBottom: "15px" }}>
                                 <img
                                   src={
-                                    process.env.NEXT_PUBLIC_URL +
                                     "/assets/img/email/4.jpg"
                                   }
                                   alt="forgot-email"

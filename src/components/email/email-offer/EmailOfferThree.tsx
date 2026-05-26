@@ -87,7 +87,6 @@ const EmailOfferThree = () => {
                             title="Alternate text"
                             alt="Alternate text"
                             src={
-                              process.env.NEXT_PUBLIC_URL +
                               "/assets/img/logo/logo.png"
                             }
                             width="189"
@@ -374,7 +373,6 @@ const EmailOfferThree = () => {
                               title="Alternate text"
                               alt="Alternate text"
                               src={
-                                process.env.NEXT_PUBLIC_URL +
                                 "/assets/img/product-images/10_1.jpg"
                               }
                               width="350"
@@ -771,7 +769,6 @@ const EmailOfferThree = () => {
                             title="I'm an image"
                             alt="I'm an image"
                             src={
-                              process.env.NEXT_PUBLIC_URL +
                               "/assets/img/product-images/14_1.jpg"
                             }
                             width="350"
@@ -839,7 +836,6 @@ const EmailOfferThree = () => {
                               title="Alternate text"
                               alt="Alternate text"
                               src={
-                                process.env.NEXT_PUBLIC_URL +
                                 "/assets/img/product-images/19_1.jpg"
                               }
                               width="350"

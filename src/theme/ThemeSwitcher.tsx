@@ -128,7 +128,7 @@ const ThemeSwitcher = () => {
                 className={`mode-primary gi-tools-item rtl-mode mode ltr ${direction === 'RTL' ? "" : "active-mode"}`}
                 data-gi-mode-tool="ltr"
               >
-                <img src={process.env.NEXT_PUBLIC_URL + "/assets/img/tools/ltr.png"} alt="ltr" />
+                <img src={"/assets/img/tools/ltr.png"} alt="ltr" />
                 <p>LTR</p>
               </div>
               <div
@@ -136,7 +136,7 @@ const ThemeSwitcher = () => {
                 className={`gi-tools-item rtl-mode mode rtl ${direction === 'RTL' ? "active-mode" : ""} `}
                 data-gi-mode-tool="rtl"
               >
-                <img src={process.env.NEXT_PUBLIC_URL + "/assets/img/tools/rtl.png"} alt="rtl" />
+                <img src={"/assets/img/tools/rtl.png"} alt="rtl" />
                 <p>RTL</p>
               </div>
             </div>
@@ -151,7 +151,7 @@ const ThemeSwitcher = () => {
                 } `}
                 data-gi-mode-dark="light"
               >
-                <img src={process.env.NEXT_PUBLIC_URL + "/assets/img/tools/light.png"} alt="light" />
+                <img src={"/assets/img/tools/light.png"} alt="light" />
                 <p>Light</p>
               </div>
               <div
@@ -159,7 +159,7 @@ const ThemeSwitcher = () => {
                 className={`gi-tools-item mode-dark dark ${mode === 'dark' ? "active-mode" : ""}`}
                 data-gi-mode-dark="dark"
               >
-                <img src={process.env.NEXT_PUBLIC_URL + "/assets/img/tools/dark.png"} alt="dark" />
+                <img src={"/assets/img/tools/dark.png"} alt="dark" />
                 <p>Dark</p>
               </div>
             </div>

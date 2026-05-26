@@ -109,7 +109,7 @@ const NewsletterModal = () => {
           <div className="col-md-6 disp-no-767">
             <img
               src={
-                process.env.NEXT_PUBLIC_URL + "/assets/img/bg/newsletter.png"
+                "/assets/img/bg/newsletter.png"
               }
               alt="newsletter"
               style={{ width: "100%", borderRadius: "5px" }}

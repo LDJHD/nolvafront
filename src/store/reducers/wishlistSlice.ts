@@ -29,9 +29,9 @@ const initialState: CounterState = {
       id: 1,
       title: "Women's wallet Hand Purse",
       image:
-        process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/48_1.jpg",
+        "/assets/img/product-images/48_1.jpg",
       imageTwo:
-        process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/48_1.jpg",
+        "/assets/img/product-images/48_1.jpg",
       newPrice: 50.0,
       oldPrice: 70.0,
       date: "",
@@ -49,9 +49,9 @@ const initialState: CounterState = {
       title: "Rose Gold Earring",
       date: "",
       image:
-        process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/53_1.jpg",
+        "/assets/img/product-images/53_1.jpg",
       imageTwo:
-        process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/53_1.jpg",
+        "/assets/img/product-images/53_1.jpg",
       rating: 4,
       newPrice: 60.0,
       oldPrice: 80.0,
@@ -67,9 +67,9 @@ const initialState: CounterState = {
       id: 3,
       title: "Apple",
       image:
-        process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/21_1.jpg",
+        "/assets/img/product-images/21_1.jpg",
       imageTwo:
-        process.env.NEXT_PUBLIC_URL + "/assets/img/product-images/21_1.jpg",
+        "/assets/img/product-images/21_1.jpg",
       newPrice: 10.0,
       oldPrice: 12.0,
       date: "",

@@ -65,7 +65,6 @@ const Footer = ({
                     <div className="gi-footer-widget gi-footer-company">
                       <img
                         src={
-                          process.env.NEXT_PUBLIC_URL +
                           "/assets/img/logo/logo.png"
                         }
                         className="gi-footer-logo"
@@ -79,7 +78,6 @@ const Footer = ({
                         <a href="#" className="app-img">
                           <img
                             src={
-                              process.env.NEXT_PUBLIC_URL +
                               "/assets/img/app/android.png"
                             }
                             className="adroid"
@@ -89,7 +87,6 @@ const Footer = ({
                         <a href="#" className="app-img">
                           <img
                             src={
-                              process.env.NEXT_PUBLIC_URL +
                               "/assets/img/app/apple.png"
                             }
                             className="apple"
@@ -421,7 +418,6 @@ const Footer = ({
                       <div className="payment-link">
                         <img
                           src={
-                            process.env.NEXT_PUBLIC_URL +
                             "/assets/img/hero-bg/payment.png"
                           }
                           alt="payment"

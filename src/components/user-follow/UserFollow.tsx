@@ -51,7 +51,6 @@ const UserFollow = () => {
                               <img
                                 className="prod-img"
                                 src={
-                                  process.env.NEXT_PUBLIC_URL +
                                   "/assets/img/vendor/1.jpg"
                                 }
                                 alt="product image"
@@ -84,7 +83,6 @@ const UserFollow = () => {
                               <img
                                 className="prod-img"
                                 src={
-                                  process.env.NEXT_PUBLIC_URL +
                                   "/assets/img/vendor/2.jpg"
                                 }
                                 alt="product image"
@@ -117,7 +115,6 @@ const UserFollow = () => {
                               <img
                                 className="prod-img"
                                 src={
-                                  process.env.NEXT_PUBLIC_URL +
                                   "/assets/img/vendor/3.jpg"
                                 }
                                 alt="product image"
@@ -150,7 +147,6 @@ const UserFollow = () => {
                               <img
                                 className="prod-img"
                                 src={
-                                  process.env.NEXT_PUBLIC_URL +
                                   "/assets/img/vendor/4.jpg"
                                 }
                                 alt="product image"

@@ -261,7 +261,6 @@ const Header = ({
                     <Link href="/">
                       <img
                         src={
-                          process.env.NEXT_PUBLIC_URL +
                           "/assets/img/logo/logo-2.png"
                         }
                         alt="Site Logo"

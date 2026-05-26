@@ -187,7 +187,7 @@ const DiscountContent = () => {
                   <span>
                     <img
                       src={
-                        process.env.NEXT_PUBLIC_URL + "/assets/img/vendor/3.jpg"
+                        "/assets/img/vendor/3.jpg"
                       }
                       alt="vendor"
                     />
@@ -258,8 +258,7 @@ const DiscountContent = () => {
                           <img
                             src={
                               data.avatar ||
-                              process.env.NEXT_PUBLIC_URL +
-                                "/assets/img/avatar/placeholder.jpg"
+                              "/assets/img/avatar/placeholder.jpg"
                             }
                             alt="user"
                           />

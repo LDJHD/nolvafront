@@ -108,7 +108,7 @@ const ForgotPassword = () => {
               <div className="gi-login-img">
                 <img
                   src={
-                    process.env.NEXT_PUBLIC_URL + "/assets/img/common/login.png"
+                    "/assets/img/common/login.png"
                   }
                   alt="login"
                 />

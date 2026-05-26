@@ -37,7 +37,6 @@ const UserInvoice = () => {
                   <div className="gi-Track-image-inner">
                     <img
                       src={
-                        process.env.NEXT_PUBLIC_URL +
                         "/assets/img/logo/logo.png"
                       }
                       alt="Site Logo"

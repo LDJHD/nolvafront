@@ -11,14 +11,13 @@ const About = () => {
               <div className="gi-about-img">
                 <img
                   src={
-                    process.env.NEXT_PUBLIC_URL + "/assets/img/common/about.png"
+                    "/assets/img/common/about.png"
                   }
                   className="v-img"
                   alt="about"
                 />
                 <img
                   src={
-                    process.env.NEXT_PUBLIC_URL +
                     "/assets/img/common/about-2.png"
                   }
                   className="h-img"
@@ -26,7 +25,6 @@ const About = () => {
                 />
                 <img
                   src={
-                    process.env.NEXT_PUBLIC_URL +
                     "/assets/img/common/about-3.png"
                   }
                   className="h-img"

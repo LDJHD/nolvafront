@@ -68,7 +68,6 @@ const HeaderManu = () => {
                           >
                             <img
                               src={
-                                process.env.NEXT_PUBLIC_URL +
                                 "/assets/img/category/c-1.png"
                               }
                               alt="category"
@@ -96,7 +95,6 @@ const HeaderManu = () => {
                           >
                             <img
                               src={
-                                process.env.NEXT_PUBLIC_URL +
                                 "/assets/img/category/c-2.png"
                               }
                               alt="category"
@@ -124,7 +122,6 @@ const HeaderManu = () => {
                           >
                             <img
                               src={
-                                process.env.NEXT_PUBLIC_URL +
                                 "/assets/img/category/c-3.png"
                               }
                               alt="category"
@@ -152,7 +149,6 @@ const HeaderManu = () => {
                           >
                             <img
                               src={
-                                process.env.NEXT_PUBLIC_URL +
                                 "/assets/img/category/c-4.png"
                               }
                               alt="category"

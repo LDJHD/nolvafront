@@ -180,9 +180,6 @@ const EmailTemplateOne = (opts: TextOptions): any => {
                                                                           "center",
                                                                       }}
                                                                       src={
-                                                                        process
-                                                                          .env
-                                                                          .NEXT_PUBLIC_URL +
                                                                         "/assets/img/logo/logo.png"
                                                                       }
                                                                       alt=""
@@ -735,9 +732,6 @@ const EmailTemplateOne = (opts: TextOptions): any => {
                                                                         "auto",
                                                                     }}
                                                                     src={
-                                                                      process
-                                                                        .env
-                                                                        .NEXT_PUBLIC_URL +
                                                                       "/assets/img/email/1.jpg"
                                                                     }
                                                                     alt=""

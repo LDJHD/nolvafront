@@ -132,7 +132,7 @@ const LoginPage = () => {
             <div className="gi-login-box d-n-991">
               <div className="gi-login-img">
                 <img
-                  src={process.env.NEXT_PUBLIC_URL + "/assets/img/common/login.png"}
+                  src={"/assets/img/common/login.png"}
                   alt="connexion nolva"
                 />
               </div>

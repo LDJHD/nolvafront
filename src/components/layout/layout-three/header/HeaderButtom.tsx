@@ -70,7 +70,6 @@ const HeaderButtom = ({ cartItems, wishlistItems }) => {
                   <Link href="/">
                     <img
                       src={
-                        process.env.NEXT_PUBLIC_URL +
                         "/assets/img/logo/logo.png"
                       }
                       alt="Site Logo"

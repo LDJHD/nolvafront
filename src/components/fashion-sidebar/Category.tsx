@@ -141,7 +141,6 @@ const Category = ({
                           <div className="gi-bnr-img">
                             <img
                               src={
-                                process.env.NEXT_PUBLIC_URL +
                                 "/assets/img/banner/8.jpg"
                               }
                               alt="banner"
@@ -172,7 +171,6 @@ const Category = ({
                           <div className="gi-bnr-img">
                             <img
                               src={
-                                process.env.NEXT_PUBLIC_URL +
                                 "/assets/img/banner/9.jpg"
                               }
                               alt="banner"

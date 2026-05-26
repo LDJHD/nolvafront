@@ -187,9 +187,6 @@ const EmailForgetPasswordFour = () => {
                                                                       title="your logo"
                                                                       alt="your logo"
                                                                       src={
-                                                                        process
-                                                                          .env
-                                                                          .NEXT_PUBLIC_URL +
                                                                         "/assets/img/logo/logo.png"
                                                                       }
                                                                       width="130"
@@ -357,9 +354,6 @@ const EmailForgetPasswordFour = () => {
                                                                       title="Forgot your password?"
                                                                       alt="Forgot your password?"
                                                                       src={
-                                                                        process
-                                                                          .env
-                                                                          .NEXT_PUBLIC_URL +
                                                                         "/assets/img/email/5.jpg"
                                                                       }
                                                                       width="325"

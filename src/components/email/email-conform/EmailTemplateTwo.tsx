@@ -155,8 +155,6 @@ const EmailTemplateTwo = () => {
                                                                 </div>
                                                                 <img
                                                                   src={
-                                                                    process.env
-                                                                      .NEXT_PUBLIC_URL +
                                                                     "/assets/img/logo/logo.png"
                                                                   }
                                                                   alt="Generic logo with ''Your Logo'' text"
@@ -1049,9 +1047,6 @@ const EmailTemplateTwo = () => {
                                                                   </div>
                                                                   <img
                                                                     src={
-                                                                      process
-                                                                        .env
-                                                                        .NEXT_PUBLIC_URL +
                                                                       "/assets/img/email/2.jpg"
                                                                     }
                                                                     alt="Mobile mockup with meditation app on screen"

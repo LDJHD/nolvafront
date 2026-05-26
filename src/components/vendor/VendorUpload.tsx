@@ -207,7 +207,6 @@ const VendorUpload = () => {
                                   <img
                                     className="gi-image-preview"
                                     src={
-                                      process.env.NEXT_PUBLIC_URL +
                                       "/assets/img/product-images/10_1.jpg"
                                     }
                                     alt="product"
@@ -235,7 +234,6 @@ const VendorUpload = () => {
                                   <img
                                     className="gi-image-preview"
                                     src={
-                                      process.env.NEXT_PUBLIC_URL +
                                       "/assets/img/product-images/6_1.jpg"
                                     }
                                     alt="product"
@@ -263,7 +261,6 @@ const VendorUpload = () => {
                                   <img
                                     className="gi-image-preview"
                                     src={
-                                      process.env.NEXT_PUBLIC_URL +
                                       "/assets/img/product-images/7_1.jpg"
                                     }
                                     alt="product"
@@ -291,7 +288,6 @@ const VendorUpload = () => {
                                   <img
                                     className="gi-image-preview"
                                     src={
-                                      process.env.NEXT_PUBLIC_URL +
                                       "/assets/img/product-images/8_1.jpg"
                                     }
                                     alt="product"

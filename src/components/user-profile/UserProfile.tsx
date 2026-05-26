@@ -60,7 +60,7 @@ const UserProfile = () => {
     () =>
       previewAvatar ||
       form.avatar ||
-      `${process.env.NEXT_PUBLIC_URL || ""}/assets/img/avatar/placeholder.jpg`,
+      `/assets/img/avatar/placeholder.jpg`,
     [previewAvatar, form.avatar]
   );
 

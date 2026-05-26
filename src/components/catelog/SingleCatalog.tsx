@@ -10,7 +10,7 @@ const SingleCatelog = () => {
             <Col lg={12}>
               <div className="gi-page-description">
                 <img
-                  src={process.env.NEXT_PUBLIC_URL + "/assets/img/vendor/1.jpg"}
+                  src={"/assets/img/vendor/1.jpg"}
                   alt="vendor"
                 />
                 <div className="detail">

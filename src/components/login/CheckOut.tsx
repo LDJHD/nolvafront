@@ -723,7 +723,6 @@ const CheckOut = ({
                         <div className="gi-check-pay-img">
                           <img
                             src={
-                              process.env.NEXT_PUBLIC_URL +
                               "/assets/img/hero-bg/payment.png"
                             }
                             alt="payment"

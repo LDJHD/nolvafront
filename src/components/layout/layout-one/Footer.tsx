@@ -31,7 +31,6 @@ function Footer() {
                     <div className="gi-footer-widget gi-footer-company">
                       <img
                         src={
-                          process.env.NEXT_PUBLIC_URL +
                           "/assets/img/logo/nolva-logo.png"
                         }
                         className="gi-footer-logo"

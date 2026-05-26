@@ -83,7 +83,6 @@ const EmailTemplateFour = () => {
                         title="Image"
                         alt="Image"
                         src={
-                          process.env.NEXT_PUBLIC_URL +
                           "/assets/img/logo/logo.png"
                         }
                         width="101"
@@ -394,7 +393,6 @@ const EmailTemplateFour = () => {
                                 title="#StopAsianHate"
                                 alt="#StopAsianHate"
                                 src={
-                                  process.env.NEXT_PUBLIC_URL +
                                   "/assets/img/email/3.jpg"
                                 }
                                 width="240"

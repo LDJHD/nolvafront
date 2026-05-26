@@ -23,7 +23,7 @@ const OfferBanners = () => {
                     <span className="lbl">70% Off</span>
                     <img
                       src={
-                        process.env.NEXT_PUBLIC_URL + "/assets/img/banner/2.jpg"
+                        "/assets/img/banner/2.jpg"
                       }
                       alt="banner"
                     />
@@ -51,7 +51,7 @@ const OfferBanners = () => {
                     <span className="lbl">50% Off</span>
                     <img
                       src={
-                        process.env.NEXT_PUBLIC_URL + "/assets/img/banner/3.jpg"
+                        "/assets/img/banner/3.jpg"
                       }
                       alt="banner"
                     />
