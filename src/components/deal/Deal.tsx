@@ -6,6 +6,7 @@ import ItemCard from "../product-item/ItemCard";
 import { Fade } from "react-awesome-reveal";
 import { useEffect, useState } from "react";
 import { getAllTypesComptes, TypeCompte } from '@/services/typecompteservices';
+import { toBackendAssetUrl } from "@/lib/apiConfig";
 import Spinner from "../button/Spinner";
 import DealendTimer from "../dealend-timer/DealendTimer";
 import { showErrorToast } from "../toast-popup/Toastify";
@@ -79,7 +80,7 @@ const Deal = ({
     if (hasPaginate) return types;
     else return types.map(type => {
       const imagePath = type.image
-        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/${type.image}`
+        ? toBackendAssetUrl(type.image)
         : "/assets/images/subscription.jpg";
   
       return {

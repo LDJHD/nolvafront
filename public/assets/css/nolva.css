@@ -1097,6 +1097,36 @@ a:hover { color: var(--nolva-red) !important; text-decoration: none !important; 
   color: var(--nolva-red) !important;
   background: var(--nolva-red-glow);
 }
+.header-top-res .nolva-mobile-account-btn .header-icon {
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.22);
+}
+.header-top-res .nolva-mobile-account-btn .header-icon i {
+  color: #fff !important;
+}
+.header-top-res .nolva-mobile-account-btn:hover .header-icon {
+  background: var(--nolva-gold);
+  border-color: var(--nolva-gold);
+}
+.header-top-res .nolva-mobile-account-btn:hover .header-icon i {
+  color: var(--nolva-primary-dark) !important;
+}
+.nolva-mobile-menu-action {
+  width: 100%;
+  padding: 10px 16px;
+  border: 0;
+  border-bottom: 1px solid var(--nolva-border);
+  background: transparent;
+  color: var(--nolva-black);
+  font: inherit;
+  font-weight: 500;
+  text-align: left;
+  transition: var(--nolva-transition);
+}
+.nolva-mobile-menu-action:hover {
+  color: var(--nolva-red);
+  background: var(--nolva-red-glow);
+}
 
 /* ============================================
    PAGINATION
@@ -1622,6 +1652,7 @@ html { scroll-behavior: smooth; }
 .nolva-mobile-carousel {
   position: relative;
   padding-bottom: 60px;
+  overflow: hidden;
 }
 
 .nolva-mobile-carousel .swiper {

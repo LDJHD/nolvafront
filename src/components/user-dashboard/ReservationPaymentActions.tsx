@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { paymentsApi } from "@/lib/api";
+import { paymentsApi, reservationsApi } from "@/lib/api";
 import { showErrorToast, showSuccessToast } from "../toast-popup/Toastify";
 
 type Props = {
@@ -28,11 +28,24 @@ const ReservationPaymentActions = ({ reservation, onUpdated }: Props) => {
   };
 
   const handleValidate = async () => {
-    if (!confirm("Confirmer que la prestation est terminée ? Le paiement sera libéré.")) return;
+    if (!confirm("Confirmer que la prestation est terminee ? Le paiement sera libere.")) return;
     setLoading(true);
     try {
       await paymentsApi.validateService({ reservation_id: reservation.id });
-      showSuccessToast("Service validé — paiement en cours de libération");
+      showSuccessToast("Service valide - paiement en cours de liberation");
+      onUpdated?.();
+    } catch (e: any) {
+      showErrorToast(e.response?.data?.message || "Erreur");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAwardPoints = async (points: 0 | 3 | 5) => {
+    setLoading(true);
+    try {
+      await reservationsApi.awardProviderPoints(reservation.id, points);
+      showSuccessToast(`${points} point(s) attribue(s) au prestataire`);
       onUpdated?.();
     } catch (e: any) {
       showErrorToast(e.response?.data?.message || "Erreur");
@@ -43,7 +56,7 @@ const ReservationPaymentActions = ({ reservation, onUpdated }: Props) => {
 
   const handleDispute = async () => {
     if (reason.length < 10) {
-      showErrorToast("Décrivez le problème (10 caractères minimum)");
+      showErrorToast("Decrivez le probleme (10 caracteres minimum)");
       return;
     }
     setLoading(true);
@@ -51,7 +64,7 @@ const ReservationPaymentActions = ({ reservation, onUpdated }: Props) => {
       const txRes = await paymentsApi.getReservationTransaction(reservation.id);
       const ref = txRes.data.reference;
       await paymentsApi.openDispute({ transaction_ref: ref, reason });
-      showSuccessToast("Litige ouvert — NOLVA va examiner votre demande");
+      showSuccessToast("Litige ouvert - NOLVA va examiner votre demande");
       setShowDispute(false);
       setReason("");
       onUpdated?.();
@@ -64,6 +77,10 @@ const ReservationPaymentActions = ({ reservation, onUpdated }: Props) => {
 
   const ps = reservation.payment_status || reservation.paymentStatus;
   const st = reservation.status;
+  const pointsAwardedAt =
+    reservation.provider_points_awarded_at || reservation.providerPointsAwardedAt;
+  const pointsAwarded =
+    reservation.provider_points_awarded ?? reservation.providerPointsAwarded;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "6px", minWidth: "140px" }}>
@@ -74,8 +91,29 @@ const ReservationPaymentActions = ({ reservation, onUpdated }: Props) => {
       )}
       {ps === "fully_paid" && st === "confirmed" && (
         <button type="button" className="btn btn-sm btn-success" disabled={loading} onClick={handleValidate}>
-          Service terminé
+          Service termine
         </button>
+      )}
+      {ps === "fully_paid" && st === "completed" && !pointsAwardedAt && (
+        <div className="nolva-points-actions">
+          <span className="small text-muted">Attribuer des points</span>
+          <div className="d-flex gap-1">
+            {[0, 3, 5].map((points) => (
+              <button
+                key={points}
+                type="button"
+                className="btn btn-sm btn-outline-danger"
+                disabled={loading}
+                onClick={() => handleAwardPoints(points as 0 | 3 | 5)}
+              >
+                {points}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      {pointsAwardedAt && (
+        <span className="small text-muted">{pointsAwarded ?? 0} point(s) attribue(s)</span>
       )}
       {ps === "fully_paid" && st !== "disputed" && st !== "completed" && (
         <button
@@ -92,7 +130,7 @@ const ReservationPaymentActions = ({ reservation, onUpdated }: Props) => {
           <textarea
             className="form-control form-control-sm"
             rows={2}
-            placeholder="Décrivez le problème..."
+            placeholder="Decrivez le probleme..."
             value={reason}
             onChange={(e) => setReason(e.target.value)}
           />

@@ -1,6 +1,7 @@
 import axios from 'axios'
+import { getApiUrl } from './apiConfig'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333/api'
+const API_URL = getApiUrl()
 
 const api = axios.create({
   baseURL: API_URL,
@@ -98,6 +99,8 @@ export const reservationsApi = {
   myReservations: (params?: any) => api.get('/user/reservations', { params }),
   show: (id: number) => api.get(`/user/reservations/${id}`),
   providerReservations: (params?: any) => api.get('/provider/reservations', { params }),
+  awardProviderPoints: (id: number, points: 0 | 3 | 5) =>
+    api.post(`/user/reservations/${id}/provider-points`, { points }),
 }
 
 // ─── Paiements (FedaPay) ──────────────────────────────────

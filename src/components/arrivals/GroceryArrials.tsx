@@ -6,6 +6,7 @@ import { Fade } from "react-awesome-reveal";
 import Spinner from "../button/Spinner";
 import { useState, useEffect } from "react";
 import { getAllproduit, Produit } from "@/services/produitcompteservice";
+import { toBackendAssetUrl } from "@/lib/apiConfig";
 import { showErrorToast } from "../toast-popup/Toastify";
 
 interface GroceryArrialsProps {
@@ -62,7 +63,7 @@ const GroceryArrials = ({
     if (hasPaginate) return produits;
     else return produits.map(produit => {
       const imagePath = produit.image
-        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/${produit.image}`
+        ? toBackendAssetUrl(produit.image)
         : "/assets/img/product-images/6_2.jpg";
   
       return {

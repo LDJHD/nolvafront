@@ -1,6 +1,7 @@
 import axios from 'axios'
+import { getApiUrl } from '@/lib/apiConfig'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333/api/v1'
+const API_URL = `${getApiUrl()}/v1`
 
 export interface TypeCompte {
   id: number

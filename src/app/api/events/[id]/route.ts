@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerApiUrl } from "@/lib/apiConfig";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333/api";
+const API_URL = getServerApiUrl();
 
 export async function GET(
   req: NextRequest,

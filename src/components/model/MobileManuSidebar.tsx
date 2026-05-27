@@ -1,11 +1,29 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Collapse from 'react-bootstrap/Collapse';
+import { useDispatch, useSelector } from "react-redux";
 import { useProviderTypes } from "@/lib/useCatalog";
+import { RootState } from "@/store";
+import { initFromStorage, logout } from "@/store/reducers/authSlice";
 
 const MobileManuSidebar = ({ isMobileMenuOpen, closeMobileManu, toggleMainMenu, activeMainMenu }) => {
+  const dispatch = useDispatch();
+  const router = useRouter();
   const { types: providerTypes } = useProviderTypes();
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  useEffect(() => {
+    dispatch(initFromStorage());
+  }, [dispatch]);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    closeMobileManu();
+    router.push("/");
+  };
 
   return (
     <>
@@ -32,7 +50,7 @@ const MobileManuSidebar = ({ isMobileMenuOpen, closeMobileManu, toggleMainMenu, 
                 </li>
                 <li>
                   <span onClick={() => toggleMainMenu('prestataires')} className="menu-toggle"></span>
-                  <Link href="/prestataires" onClick={() => toggleMainMenu('prestataires')}>
+                  <Link href="/prestataires" onClick={closeMobileManu}>
                     Prestataires
                   </Link>
                   <Collapse in={activeMainMenu === "prestataires"}>
@@ -49,7 +67,7 @@ const MobileManuSidebar = ({ isMobileMenuOpen, closeMobileManu, toggleMainMenu, 
                 </li>
                 <li>
                   <span onClick={() => toggleMainMenu('evenements')} className="menu-toggle"></span>
-                  <Link href="/evenements" onClick={() => toggleMainMenu('evenements')}>
+                  <Link href="/evenements" onClick={closeMobileManu}>
                     Événements
                   </Link>
                   <Collapse in={activeMainMenu === "evenements"}>
@@ -82,9 +100,49 @@ const MobileManuSidebar = ({ isMobileMenuOpen, closeMobileManu, toggleMainMenu, 
                   </Link>
                 </li>
                 <li>
-                  <Link href="/login" onClick={closeMobileManu}>
-                    Connexion
+                  <span onClick={() => toggleMainMenu('connexion')} className="menu-toggle"></span>
+                  <Link
+                    href={isAuthenticated ? "/user-profile" : "/login"}
+                    onClick={closeMobileManu}
+                  >
+                    {isAuthenticated ? user?.firstName || "Mon compte" : "Connexion"}
                   </Link>
+                  <Collapse in={activeMainMenu === "connexion"}>
+                    <ul style={{ display: activeMainMenu === "connexion" ? "block" : "none" }} className="sub-menu height-transition-1s-ease">
+                      {isAuthenticated ? (
+                        <>
+                          {user?.role === "provider" && (
+                            <li>
+                              <Link href="/vendor-dashboard" onClick={closeMobileManu}>Tableau de bord</Link>
+                            </li>
+                          )}
+                          <li>
+                            <Link href="/user-profile" onClick={closeMobileManu}>Mon profil</Link>
+                          </li>
+                          <li>
+                            <Link href="/user-dashboard" onClick={closeMobileManu}>Mes réservations</Link>
+                          </li>
+                          <li>
+                            <button type="button" className="nolva-mobile-menu-action" onClick={handleLogout}>
+                              Déconnexion
+                            </button>
+                          </li>
+                        </>
+                      ) : (
+                        <>
+                          <li>
+                            <Link href="/login" onClick={closeMobileManu}>Se connecter</Link>
+                          </li>
+                          <li>
+                            <Link href="/register" onClick={closeMobileManu}>Créer un compte</Link>
+                          </li>
+                          <li>
+                            <Link href="/mot-de-passe/oublie" onClick={closeMobileManu}>Mot de passe oublié</Link>
+                          </li>
+                        </>
+                      )}
+                    </ul>
+                  </Collapse>
                 </li>
               </ul>
             </div>

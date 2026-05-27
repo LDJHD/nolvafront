@@ -68,7 +68,7 @@ function HeaderOne() {
             <div className="col header-top-res d-lg-none">
               <div className="gi-header-bottons gi-header-buttons">
                 <div className="right-icons">
-                  <Link href={isAuthenticated ? "/user-profile" : "/login"} className="gi-header-btn gi-header-user gi-header-rtl-btn">
+                  <Link href={isAuthenticated ? "/user-profile" : "/login"} className="gi-header-btn gi-header-user gi-header-rtl-btn nolva-mobile-account-btn">
                     <div className="header-icon">
                       <i className="fi-rr-user"></i>
                     </div>

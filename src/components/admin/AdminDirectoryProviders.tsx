@@ -18,6 +18,7 @@ const AdminDirectoryProviders = () => {
   const [rows, setRows] = useState<any[]>([]);
   const [meta, setMeta] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [pointInputs, setPointInputs] = useState<Record<number, string>>({});
 
   const load = useCallback(
     async (pageOverride?: number) => {
@@ -126,6 +127,7 @@ const AdminDirectoryProviders = () => {
                   <th>Type</th>
                   <th>Statut</th>
                   <th>Vérifié</th>
+                  <th>Points</th>
                   <th>Disponible</th>
                   <th>Actions</th>
                 </tr>
@@ -133,7 +135,7 @@ const AdminDirectoryProviders = () => {
               <tbody>
                 {rows.length === 0 ? (
                   <tr>
-                    <td colSpan={7}>Aucun prestataire</td>
+                    <td colSpan={8}>Aucun prestataire</td>
                   </tr>
                 ) : (
                   rows.map((p: any) => {
@@ -155,6 +157,7 @@ const AdminDirectoryProviders = () => {
                         <td>{getProviderTypeLabel(p, catalog)}</td>
                         <td>{st}</td>
                         <td>{ver ? "Oui" : "Non"}</td>
+                        <td><strong>{Number(p.ratingPoints ?? p.rating_points ?? 0)}</strong></td>
                         <td>{av ? "Oui" : "Non"}</td>
                         <td className="text-nowrap">
                           {st !== "active" && (
@@ -200,6 +203,34 @@ const AdminDirectoryProviders = () => {
                           >
                             {av ? "Indispo" : "Dispo"}
                           </button>
+                          <div className="d-inline-flex align-items-center gap-1 ms-1">
+                            <input
+                              type="number"
+                              min={1}
+                              className="form-control form-control-sm"
+                              style={{ width: 82 }}
+                              placeholder="Pts"
+                              value={pointInputs[p.id] || ""}
+                              onChange={(e) =>
+                                setPointInputs((prev) => ({ ...prev, [p.id]: e.target.value }))
+                              }
+                            />
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-outline-danger"
+                              onClick={() => {
+                                const value = Number(pointInputs[p.id] || 0);
+                                if (!value) {
+                                  showErrorToast("Renseignez un nombre de points");
+                                  return;
+                                }
+                                updateRow(p.id, { rating_points_delta: value });
+                                setPointInputs((prev) => ({ ...prev, [p.id]: "" }));
+                              }}
+                            >
+                              Ajouter
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );

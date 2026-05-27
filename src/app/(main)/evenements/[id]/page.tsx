@@ -110,6 +110,7 @@ const EventDetailPage = () => {
   const unitPrice = selectedType
     ? Number(selectedType.price)
     : Number(event.ticketPrice || event.ticket_price || 0);
+  const isFreeTicket = unitPrice <= 0;
 
   const availableTickets =
     ticketTypes.length > 0
@@ -234,7 +235,9 @@ const EventDetailPage = () => {
                             {ticketTypes
                               .map(
                                 (t) =>
-                                  `${t.label} : ${Number(t.price).toLocaleString("fr-FR")} FCFA`
+                                  Number(t.price) > 0
+                                    ? `${t.label} : ${Number(t.price).toLocaleString("fr-FR")} FCFA`
+                                    : `${t.label} : Gratuit`
                               )
                               .join(" · ")}
                           </span>
@@ -307,13 +310,15 @@ const EventDetailPage = () => {
                           {selectedType?.label ? ` (${selectedType.label})` : ""}
                         </p>
                       ) : null}
-                      <p style={{ fontSize: "12px", color: "var(--nolva-gray)", margin: "8px 0" }}>
-                        <i className="fi fi-rr-shield-check" style={{ color: "#059669" }}></i>{" "}
-                        Paiement sécurisé via NOLVA (FedaPay).{" "}
-                        <Link href="/politique-nolva" style={{ fontSize: "12px" }}>
-                          En savoir plus
-                        </Link>
-                      </p>
+                      {!isFreeTicket ? (
+                        <p style={{ fontSize: "12px", color: "var(--nolva-gray)", margin: "8px 0" }}>
+                          <i className="fi fi-rr-shield-check" style={{ color: "#059669" }}></i>{" "}
+                          Paiement securise via NOLVA (FedaPay).{" "}
+                          <Link href="/politique-nolva" style={{ fontSize: "12px" }}>
+                            En savoir plus
+                          </Link>
+                        </p>
+                      ) : null}
                       <button
                         className="gi-btn-1 nolva-btn-reserve w-100"
                         onClick={handleBuyTicket}
@@ -322,7 +327,7 @@ const EventDetailPage = () => {
                         {buying ? (
                           <><Spinner /> Traitement...</>
                         ) : (
-                          <><i className="fi fi-rr-ticket"></i> Acheter un billet</>
+                          <><i className="fi fi-rr-ticket"></i> {isFreeTicket ? "Obtenir un billet gratuit" : "Acheter un billet"}</>
                         )}
                       </button>
                     </>

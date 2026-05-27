@@ -334,6 +334,7 @@ const AdminDirectoryEvents = () => {
                       <th>Type</th>
                       <th>Validé</th>
                       <th>Statut</th>
+                      <th>Avant</th>
                       <th>Date</th>
                       <th>Actions</th>
                     </tr>
@@ -341,13 +342,14 @@ const AdminDirectoryEvents = () => {
                   <tbody>
                     {rows.length === 0 ? (
                       <tr>
-                        <td colSpan={7}>Aucun résultat</td>
+                        <td colSpan={8}>Aucun résultat</td>
                       </tr>
                     ) : (
                       rows.map((ev: any) => {
                         const dateStr = ev.eventDate || ev.event_date;
                         const slug = ev.eventType || ev.event_type;
                         const ok = toBooleanFlag(ev.isApproved ?? ev.is_approved);
+                        const featured = toBooleanFlag(ev.isFeatured ?? ev.is_featured);
                         return (
                           <tr key={ev.id}>
                             <td>{ev.id}</td>
@@ -364,6 +366,7 @@ const AdminDirectoryEvents = () => {
                             <td>{slug ? getTypeLabel(eventTypes, slug) : "—"}</td>
                             <td>{ok ? "Oui" : "Non"}</td>
                             <td>{ev.status}</td>
+                            <td>{featured ? "Oui" : "Non"}</td>
                             <td>{dateStr ? new Date(dateStr).toLocaleDateString("fr-FR") : "—"}</td>
                             <td className="text-nowrap">
                               {!ok && ev.status !== "cancelled" && (
@@ -419,6 +422,26 @@ const AdminDirectoryEvents = () => {
                                   }}
                                 >
                                   Masquer
+                                </button>
+                              )}
+                              {ok && (
+                                <button
+                                  type="button"
+                                  className={`btn btn-sm ${featured ? "btn-outline-secondary" : "btn-outline-danger"} me-1`}
+                                  onClick={async () => {
+                                    try {
+                                      await adminApi.updateManageEvent(ev.id, {
+                                        is_featured: !featured,
+                                        featured_order: featured ? 0 : 100,
+                                      });
+                                      showSuccessToast(featured ? "Mise en avant retiree" : "Evenement mis en avant");
+                                      loadAll();
+                                    } catch (e: any) {
+                                      showErrorToast(e.response?.data?.message || "Erreur");
+                                    }
+                                  }}
+                                >
+                                  {featured ? "Retirer avant" : "Mettre avant"}
                                 </button>
                               )}
                               <button

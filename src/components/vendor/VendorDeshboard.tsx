@@ -4,12 +4,13 @@ import { Col, Row } from "react-bootstrap";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 import VendorSidebar from "../vendor-sidebar/VendorSidebar";
-import { quoteRequestsApi, reservationsApi } from "@/lib/api";
+import { providersApi, quoteRequestsApi, reservationsApi } from "@/lib/api";
 import Link from "next/link";
 
 const VendorDeshboard = () => {
   const [quoteRequests, setQuoteRequests] = useState<any[]>([]);
   const [reservations, setReservations] = useState<any[]>([]);
+  const [providerProfile, setProviderProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   const user = useSelector((state: RootState) => state.auth.user);
@@ -19,12 +20,14 @@ const VendorDeshboard = () => {
     if (!isAuthenticated || user?.role !== "provider") return;
     const fetchData = async () => {
       try {
-        const [qRes, rRes] = await Promise.all([
+        const [qRes, rRes, pRes] = await Promise.all([
           quoteRequestsApi.providerRequests({ limit: 5 }),
           reservationsApi.providerReservations({ limit: 5 }),
+          providersApi.myProfile(),
         ]);
         setQuoteRequests(Array.isArray(qRes.data) ? qRes.data : qRes.data?.data || []);
         setReservations(Array.isArray(rRes.data) ? rRes.data : rRes.data?.data || []);
+        setProviderProfile(pRes.data);
       } catch {
         // silent
       } finally {
@@ -42,7 +45,7 @@ const VendorDeshboard = () => {
     );
   }
 
-  const provider = user?.serviceProvider;
+  const provider = providerProfile || user?.serviceProvider;
   const pendingQuotes = quoteRequests.filter((q: any) => q.status === "pending").length;
   const confirmedReservations = reservations.filter((r: any) => r.status === "confirmed").length;
   const totalRevenue = reservations
@@ -104,8 +107,8 @@ const VendorDeshboard = () => {
                 </Col>
                 <Col lg={3} md={6} className="mb-3">
                   <div className="gi-vendor-dashboard-sort-card">
-                    <h5>Total demandes</h5>
-                    <h3>{loading ? "..." : quoteRequests.length}</h3>
+                    <h5>Points prestataire</h5>
+                    <h3>{loading ? "..." : Number(provider?.ratingPoints ?? provider?.rating_points ?? 0)}</h3>
                   </div>
                 </Col>
               </Row>
