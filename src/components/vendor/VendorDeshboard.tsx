@@ -5,6 +5,7 @@ import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 import VendorSidebar from "../vendor-sidebar/VendorSidebar";
 import { providersApi, quoteRequestsApi, reservationsApi } from "@/lib/api";
+import { downloadPaymentProof } from "@/lib/downloadPaymentProof";
 import Link from "next/link";
 
 const VendorDeshboard = () => {
@@ -51,6 +52,26 @@ const VendorDeshboard = () => {
   const totalRevenue = reservations
     .filter((r: any) => r.payment_status === "paid")
     .reduce((sum: number, r: any) => sum + (r.total_amount || 0), 0);
+
+  const downloadReservationProof = (reservation: any) => {
+    const transaction = reservation.payment_transaction || reservation.paymentTransaction;
+    downloadPaymentProof({
+      title: "Trace paiement prestation NOLVA",
+      subtitle: `${reservation.user?.first_name || reservation.user?.firstName || ""} ${reservation.user?.last_name || reservation.user?.lastName || ""}`.trim(),
+      fileName: transaction?.proofCode || transaction?.proof_code || `prestation-${reservation.id}`,
+      qrCode: transaction?.proofQrCode || transaction?.proof_qr_code,
+      fields: [
+        { label: "Justificatif unique", value: transaction?.proofCode || transaction?.proof_code },
+        { label: "Numero de transaction", value: transaction?.reference },
+        { label: "Client", value: `${reservation.user?.first_name || reservation.user?.firstName || ""} ${reservation.user?.last_name || reservation.user?.lastName || ""}`.trim() },
+        { label: "Email client", value: reservation.user?.email },
+        { label: "Montant", value: reservation.total_amount ? `${Number(reservation.total_amount).toLocaleString("fr-FR")} FCFA` : null },
+        { label: "Paiement", value: reservation.payment_status },
+        { label: "Statut", value: reservation.status },
+        { label: "QR code unique", value: transaction?.proofQrCode || transaction?.proof_qr_code },
+      ],
+    });
+  };
 
   return (
     <>
@@ -185,6 +206,7 @@ const VendorDeshboard = () => {
                             <th>Acompte 30%</th>
                             <th>Paiement</th>
                             <th>Statut</th>
+                            <th>Actions</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -205,6 +227,18 @@ const VendorDeshboard = () => {
                                    r.status === "completed" ? "Terminee" :
                                    r.status === "cancelled" ? "Annulee" : "En attente"}
                                 </span>
+                              </td>
+                              <td>
+                                {((r.payment_transaction || r.paymentTransaction)?.proofCode ||
+                                  (r.payment_transaction || r.paymentTransaction)?.proof_code) ? (
+                                  <button
+                                    type="button"
+                                    className="btn btn-outline-primary btn-sm"
+                                    onClick={() => downloadReservationProof(r)}
+                                  >
+                                    Telecharger
+                                  </button>
+                                ) : "-"}
                               </td>
                             </tr>
                           ))}

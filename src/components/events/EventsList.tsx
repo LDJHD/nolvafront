@@ -128,6 +128,12 @@ const EventsList = () => {
                           {getTypeLabel(eventTypesCatalog, event.eventType || event.event_type)}
                         </span>
                       )}
+                      <div className="nolva-event-social-proof">
+                        {(event.ticketCount || event.ticket_count) &&
+                        Number(event.ticketCount || event.ticket_count) - Number(event.ticketsSold || event.tickets_sold || 0) <= 20
+                          ? "Places limitées"
+                          : `${Math.max(Number(event.ticketsSold || event.tickets_sold || 0), Number(event.ticketCount || event.ticket_count || 80))} participants attendus`}
+                      </div>
                       <div className="nolva-event-meta">
                         <span>
                           <i className="fi fi-rr-marker"></i>
@@ -157,7 +163,7 @@ const EventsList = () => {
                           {price > 0 ? `${price.toLocaleString()} FCFA` : "Gratuit"}
                         </span>
                         <Link href={`/evenements/${event.id}`} className="nolva-event-btn">
-                          Voir details <i className="fi fi-rr-arrow-small-right"></i>
+                          Découvrir <i className="fi fi-rr-arrow-small-right"></i>
                         </Link>
                       </div>
                     </div>

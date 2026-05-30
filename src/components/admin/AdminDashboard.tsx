@@ -64,6 +64,11 @@ const AdminDashboard = () => {
   const [repayMethod, setRepayMethod] = useState("bj_mtn");
   const [repayDestination, setRepayDestination] = useState("");
   const [repaying, setRepaying] = useState(false);
+  const [refundAmount, setRefundAmount] = useState("");
+  const [refundMethod, setRefundMethod] = useState("bj_mtn");
+  const [refundDestination, setRefundDestination] = useState("");
+  const [contactingOrganizer, setContactingOrganizer] = useState(false);
+  const [refundingClient, setRefundingClient] = useState(false);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -105,6 +110,7 @@ const AdminDashboard = () => {
   }
 
   const disputed = transactions.filter((t) => t.status === "disputed");
+  const selectedDispute = disputed.find((t) => t.reference === resolveRef);
   const formatMoney = (n: number) => Number(n || 0).toLocaleString("fr-FR") + " FCFA";
 
   const submitFreeze = async (e: React.FormEvent) => {
@@ -153,6 +159,46 @@ const AdminDashboard = () => {
     }
   };
 
+  const contactRefundOrganizer = async () => {
+    if (!resolveRef) return;
+    setContactingOrganizer(true);
+    try {
+      await adminApi.contactRefundOrganizer({
+        transaction_ref: resolveRef,
+        note: resolveNote || undefined,
+      });
+      showSuccessToast("Organisateur notifie pour confirmation");
+    } catch (err: any) {
+      showErrorToast(err.response?.data?.message || "Erreur");
+    } finally {
+      setContactingOrganizer(false);
+    }
+  };
+
+  const submitClientRefund = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resolveRef || !refundDestination.trim()) return;
+    setRefundingClient(true);
+    try {
+      await adminApi.refundClient({
+        transaction_ref: resolveRef,
+        amount: refundAmount ? Number(refundAmount) : undefined,
+        payout_method: refundMethod,
+        payout_destination: refundDestination.trim(),
+        note: resolveNote || undefined,
+      });
+      showSuccessToast("Remboursement envoye au client");
+      setResolveRef("");
+      setRefundAmount("");
+      setRefundDestination("");
+      loadData();
+    } catch (err: any) {
+      showErrorToast(err.response?.data?.message || "Erreur");
+    } finally {
+      setRefundingClient(false);
+    }
+  };
+
   const saveCommissionEdit = async () => {
     if (!editingCommission) return;
     try {
@@ -193,6 +239,8 @@ const AdminDashboard = () => {
       showSuccessToast("Litige résolu");
       setResolveRef("");
       setResolveNote("");
+      setRefundAmount("");
+      setRefundDestination("");
       loadData();
     } catch (err: any) {
       showErrorToast(err.response?.data?.message || "Erreur");
@@ -402,7 +450,10 @@ const AdminDashboard = () => {
                               <tr
                                 key={t.id}
                                 style={{ cursor: "pointer" }}
-                                onClick={() => setResolveRef(t.reference)}
+                                onClick={() => {
+                                  setResolveRef(t.reference);
+                                  setRefundAmount(String(t.amount || ""));
+                                }}
                               >
                                 <td>{t.reference}</td>
                                 <td>{t.dispute_reason || t.disputeReason || "-"}</td>
@@ -466,8 +517,74 @@ const AdminDashboard = () => {
                             onChange={(e) => setResolveNote(e.target.value)}
                           />
                         </Form.Group>
+                        {selectedDispute?.type === "ticket_purchase" && (
+                          <div className="alert alert-warning py-2 small mb-2">
+                            Avant remboursement, l&apos;admin peut demander confirmation a
+                            l&apos;organisateur que le client avait bien paye.
+                          </div>
+                        )}
+                        {selectedDispute?.type === "ticket_purchase" && (
+                          <button
+                            type="button"
+                            className="btn btn-outline-primary w-100 mb-2"
+                            disabled={contactingOrganizer || !resolveRef}
+                            onClick={contactRefundOrganizer}
+                          >
+                            {contactingOrganizer
+                              ? "Envoi..."
+                              : "Ecrire a l'organisateur pour confirmation"}
+                          </button>
+                        )}
                         <button type="submit" className="gi-btn-1 w-100 mb-3">
                           Appliquer la décision
+                        </button>
+                      </Form>
+                      <hr />
+                      <h6 className="fw-semibold">Remboursement client</h6>
+                      <p className="small text-muted">
+                        Apres validation admin, ce bouton verifie le paiement et envoie le
+                        remboursement via FedaPay.
+                      </p>
+                      <Form onSubmit={submitClientRefund} className="mb-3">
+                        <Form.Group className="mb-2">
+                          <Form.Label>Montant a rembourser (FCFA)</Form.Label>
+                          <Form.Control
+                            type="number"
+                            min={1}
+                            step={1}
+                            value={refundAmount}
+                            onChange={(e) => setRefundAmount(e.target.value)}
+                            placeholder={selectedDispute ? String(selectedDispute.amount || "") : ""}
+                          />
+                        </Form.Group>
+                        <Form.Group className="mb-2">
+                          <Form.Label>Mode de remboursement</Form.Label>
+                          <Form.Select
+                            value={refundMethod}
+                            onChange={(e) => setRefundMethod(e.target.value)}
+                          >
+                            {PAYOUT_METHOD_OPTIONS.map((o) => (
+                              <option key={o.value} value={o.value}>
+                                {o.label}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </Form.Group>
+                        <Form.Group className="mb-2">
+                          <Form.Label>Coordonnees client</Form.Label>
+                          <Form.Control
+                            value={refundDestination}
+                            onChange={(e) => setRefundDestination(e.target.value)}
+                            placeholder={payoutDestinationHint(refundMethod)}
+                            required
+                          />
+                        </Form.Group>
+                        <button
+                          type="submit"
+                          className="btn btn-danger w-100"
+                          disabled={refundingClient || !resolveRef}
+                        >
+                          {refundingClient ? "Remboursement..." : "Valider et rembourser via FedaPay"}
                         </button>
                       </Form>
                       <hr />

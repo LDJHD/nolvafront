@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/store";
 import { logout, initFromStorage } from "@/store/reducers/authSlice";
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 function HeaderTwo() {
   const dispatch = useDispatch();
@@ -80,6 +81,7 @@ function HeaderTwo() {
 
             <div className="gi-header-action align-self-center">
               <div className="gi-header-bottons">
+                <NotificationBell />
                 <div className="gi-acc-drop">
                   <Link
                     href=""

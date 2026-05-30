@@ -5,6 +5,7 @@ import { useState } from "react";
 import MobileManuSidebar from "../../../model/MobileManuSidebar";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 function HeaderOne() {
   const [activeMainMenu, setActiveMainMenu] = useState<string | null>(null);
@@ -68,6 +69,7 @@ function HeaderOne() {
             <div className="col header-top-res d-lg-none">
               <div className="gi-header-bottons gi-header-buttons">
                 <div className="right-icons">
+                  <NotificationBell mobile />
                   <Link href={isAuthenticated ? "/user-profile" : "/login"} className="gi-header-btn gi-header-user gi-header-rtl-btn nolva-mobile-account-btn">
                     <div className="header-icon">
                       <i className="fi-rr-user"></i>

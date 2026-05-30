@@ -1127,6 +1127,99 @@ a:hover { color: var(--nolva-red) !important; text-decoration: none !important; 
   color: var(--nolva-red);
   background: var(--nolva-red-glow);
 }
+.nolva-notification {
+  position: relative;
+}
+.nolva-notification-btn {
+  position: relative;
+  padding: 0;
+  background: transparent;
+}
+.nolva-notification-count {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 18px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.35);
+}
+.nolva-notification-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 30;
+  width: min(340px, 92vw);
+  background: var(--nolva-white);
+  border: 1px solid var(--nolva-border);
+  border-radius: 10px;
+  box-shadow: var(--nolva-shadow-lg);
+  overflow: hidden;
+}
+.nolva-notification-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--nolva-border);
+}
+.nolva-notification-head strong {
+  font-size: 14px;
+  color: var(--nolva-black);
+}
+.nolva-notification-head button {
+  color: var(--nolva-red);
+  font-size: 12px;
+  font-weight: 700;
+}
+.nolva-notification-panel ul {
+  max-height: 360px;
+  overflow-y: auto;
+}
+.nolva-notification-panel li a {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--nolva-border);
+  color: var(--nolva-black);
+}
+.nolva-notification-panel li.unread a {
+  background: var(--nolva-red-glow);
+}
+.nolva-notification-panel li span {
+  font-size: 13px;
+  font-weight: 800;
+}
+.nolva-notification-panel li small {
+  color: var(--nolva-gray);
+  line-height: 1.4;
+}
+.nolva-notification-panel li em {
+  color: var(--nolva-gray-light);
+  font-size: 11px;
+  font-style: normal;
+}
+.nolva-notification-empty {
+  margin: 0;
+  padding: 18px 14px;
+  color: var(--nolva-gray);
+  font-size: 13px;
+}
+.header-top-res .nolva-notification-mobile .header-icon {
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.22);
+}
+.header-top-res .nolva-notification-mobile .header-icon i {
+  color: #fff !important;
+}
 
 /* ============================================
    PAGINATION
@@ -1334,6 +1427,32 @@ html { scroll-behavior: smooth; }
 .nolva-event-price-tag.free {
   background: var(--nolva-black);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+.nolva-event-corner-badge,
+.nolva-event-type-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border-radius: 999px;
+  background: var(--nolva-gold-glow);
+  color: var(--nolva-gold-dark) !important;
+  padding: 4px 10px;
+  font-size: 11px !important;
+  font-weight: 800;
+}
+.nolva-event-corner-badge {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--nolva-primary) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+.nolva-event-social-proof {
+  margin-top: 8px;
+  color: var(--nolva-gray);
+  font-size: 12px;
+  font-weight: 700;
 }
 
 /* --- Event Content --- */
@@ -1856,6 +1975,156 @@ html { scroll-behavior: smooth; }
   align-self: flex-end;
   background: #fff5f5;
   border: 1px solid #f5d0d0;
+}
+.nolva-phone-field {
+  display: grid;
+  grid-template-columns: minmax(130px, 0.42fr) 1fr;
+  gap: 8px;
+}
+.nolva-password-field {
+  position: relative;
+}
+.nolva-password-field button {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  color: var(--nolva-gray);
+  z-index: 2;
+}
+.nolva-password-field input {
+  padding-right: 46px !important;
+}
+.nolva-welcome-message {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 28px;
+  border: 1px solid var(--nolva-border);
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fff, var(--nolva-primary-soft));
+  box-shadow: var(--nolva-shadow-md);
+}
+.nolva-welcome-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--nolva-gold-glow);
+  color: var(--nolva-gold-dark);
+  font-size: 24px;
+  margin-bottom: 14px;
+}
+.nolva-welcome-message h4 {
+  font-weight: 900;
+  color: var(--nolva-black);
+}
+.nolva-welcome-message ul {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 18px;
+}
+.nolva-welcome-message li {
+  color: var(--nolva-gray);
+  list-style: disc;
+  margin-left: 18px;
+}
+.nolva-welcome-message small {
+  display: block;
+  margin-top: 16px;
+  color: var(--nolva-gray);
+}
+.nolva-sidebar-alert {
+  float: right;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 20px;
+  text-align: center;
+}
+.nolva-ai-shell {
+  max-width: 980px;
+  margin: 0 auto;
+}
+.nolva-ai-card {
+  background: var(--nolva-white);
+  border: 1px solid var(--nolva-border);
+  border-radius: 10px;
+  padding: 22px;
+  box-shadow: var(--nolva-shadow-sm);
+}
+.nolva-ai-card h4 {
+  font-weight: 900;
+  color: var(--nolva-black);
+  margin-bottom: 10px;
+}
+.nolva-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.nolva-choice-grid button {
+  min-height: 46px;
+  border: 1px solid var(--nolva-border);
+  border-radius: 8px;
+  background: var(--nolva-light);
+  color: var(--nolva-black);
+  font-weight: 700;
+}
+.nolva-choice-grid button.active {
+  border-color: var(--nolva-red);
+  background: var(--nolva-red-glow);
+  color: var(--nolva-red);
+}
+.nolva-ai-result {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  gap: 18px;
+}
+.nolva-ai-card ul {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 16px;
+}
+.nolva-ai-card li {
+  list-style: disc;
+  margin-left: 18px;
+  color: var(--nolva-gray);
+}
+.nolva-ai-provider-list {
+  display: grid;
+  gap: 10px;
+}
+.nolva-ai-provider-list a {
+  display: grid;
+  gap: 3px;
+  padding: 12px;
+  border: 1px solid var(--nolva-border);
+  border-radius: 8px;
+  color: var(--nolva-black);
+}
+.nolva-ai-provider-list span,
+.nolva-ai-provider-list small {
+  color: var(--nolva-gray);
+}
+@media (max-width: 767px) {
+  .nolva-choice-grid,
+  .nolva-ai-result {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 575px) {
+  .nolva-phone-field {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Bannière tableau de bord prestataire — logo NOLVA */

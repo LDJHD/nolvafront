@@ -15,6 +15,7 @@ const beninCities = [
 function HeroSlider() {
   const router = useRouter();
   const { types: providerTypes } = useProviderTypes();
+  const [searchScope, setSearchScope] = useState("prestataires");
   const [selectedType, setSelectedType] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
 
@@ -23,7 +24,7 @@ function HeroSlider() {
     const params = new URLSearchParams();
     if (selectedType) params.set("type", selectedType);
     if (selectedCity) params.set("city", selectedCity);
-    router.push(`/prestataires${params.toString() ? "?" + params.toString() : ""}`);
+    router.push(`/${searchScope}${params.toString() ? "?" + params.toString() : ""}`);
   };
 
   return (
@@ -31,7 +32,7 @@ function HeroSlider() {
       <div className="nolva-hero-overlay">
         <div className="container">
           <div className="nolva-hero-content">
-            <p className="nolva-hero-tagline text-red-500">Bénin • Événements • Excellence</p>
+            <p className="nolva-hero-tagline text-red-500">CONNECTER - VIVRE - EXPÉRIENCER</p>
             <h1 className="nolva-hero-title">
               Trouvez le prestataire idéal<br />
               <span>pour votre événement</span>
@@ -42,6 +43,19 @@ function HeroSlider() {
             </p>
 
             <form onSubmit={handleSearch} className="nolva-search-bar">
+              <div className="nolva-search-field nolva-search-scope">
+                <i className="fi fi-rr-apps"></i>
+                <select
+                  value={searchScope}
+                  onChange={(e) => setSearchScope(e.target.value)}
+                  className="nolva-search-select"
+                  aria-label="Type de recherche"
+                >
+                  <option value="prestataires">Prestataires</option>
+                  <option value="evenements">Événements</option>
+                </select>
+              </div>
+              <div className="nolva-search-divider"></div>
               <div className="nolva-search-field">
                 <i className="fi fi-rr-search"></i>
                 <select

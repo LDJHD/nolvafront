@@ -389,18 +389,20 @@ const ProviderProfileForm = () => {
             </div>
             <div className="col-md-6">
               <label className="nolva-field-label">Ville</label>
-              <Form.Select name="city" value={form.city} onChange={onChange}>
-                <option value="">Sélectionner...</option>
-                {beninCities.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </Form.Select>
+              <Form.Control
+                list="nolva-provider-cities"
+                name="city"
+                value={form.city}
+                onChange={onChange}
+                placeholder="Sélectionnez ou écrivez votre ville"
+              />
+              <datalist id="nolva-provider-cities">
+                {beninCities.map((c) => <option key={c} value={c} />)}
+              </datalist>
             </div>
             <div className="col-md-6 d-flex align-items-end gap-4">
               <Form.Check
-                type="checkbox"
+                type="switch"
                 id="is_available"
                 name="is_available"
                 label="Disponible"
@@ -408,7 +410,7 @@ const ProviderProfileForm = () => {
                 onChange={onChange}
               />
               <Form.Check
-                type="checkbox"
+                type="switch"
                 id="travel_possible"
                 name="travel_possible"
                 label="Déplacement possible"
@@ -458,7 +460,7 @@ const ProviderProfileForm = () => {
             {eventTypes.map((et) => (
               <div key={et.slug} className="col-md-4 col-6">
                 <Form.Check
-                  type="checkbox"
+                  type="switch"
                   id={`et-${et.slug}`}
                   label={et.label}
                   checked={form.event_types.includes(et.slug)}

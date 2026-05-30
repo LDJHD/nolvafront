@@ -10,8 +10,16 @@ import { authApi } from "@/lib/api";
 import { parseRegisterError } from "@/lib/registerErrors";
 import { useProviderTypes } from "@/lib/useCatalog";
 import Link from "next/link";
+import WelcomeMessage from "./WelcomeMessage";
 
 const beninCities = ["Cotonou", "Calavi", "Porto-Novo", "Parakou", "Abomey", "Natitingou", "Ouidah"];
+const phoneCountries = [
+  { code: "+229", label: "Bénin (+229)" },
+  { code: "+228", label: "Togo (+228)" },
+  { code: "+225", label: "Côte d'Ivoire (+225)" },
+  { code: "+226", label: "Burkina Faso (+226)" },
+  { code: "+234", label: "Nigeria (+234)" },
+];
 
 // Backward-compatible exports for template components (ProfileEdit, VandorEdit, etc.)
 export const getRegistrationData = () => {
@@ -40,11 +48,14 @@ const RegisterPage = () => {
   const [role, setRole] = useState("user");
   const [loading, setLoading] = useState(false);
   const [validated, setValidated] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [registeredUser, setRegisteredUser] = useState<any>(null);
 
   const [form, setForm] = useState({
     first_name: "",
     last_name: "",
     email: "",
+    phone_country: "+229",
     phone: "",
     password: "",
     confirmPassword: "",
@@ -74,7 +85,7 @@ const RegisterPage = () => {
         first_name: form.first_name,
         last_name: form.last_name,
         email: form.email,
-        phone: form.phone,
+        phone: `${form.phone_country}${form.phone.replace(/^\+?\d{1,4}/, "").replace(/\s+/g, "")}`,
         password: form.password,
         role,
         city: form.city,
@@ -87,8 +98,8 @@ const RegisterPage = () => {
       const res = await authApi.register(payload);
       const { token, user } = res.data;
       dispatch(setCredentials({ user, token: token.value || token }));
-      showSuccessToast("Compte cree ! Bienvenue sur NOLVA.");
-      router.push(user.role === "provider" ? "/vendor-dashboard" : "/home");
+      setRegisteredUser(user);
+      showSuccessToast("Compte créé ! Bienvenue sur NOLVA.");
     } catch (err: any) {
       showErrorToast(parseRegisterError(err));
     } finally {
@@ -140,6 +151,9 @@ const RegisterPage = () => {
             <div className="gi-register-wrapper">
               <div className="gi-register-container">
                 <div className="gi-register-form">
+                  {registeredUser ? (
+                    <WelcomeMessage firstName={registeredUser.firstName || registeredUser.first_name} />
+                  ) : (
                   <Form noValidate validated={validated} onSubmit={handleSubmit} className="nolva-register-form">
 
                     <div className="row g-3">
@@ -176,8 +190,13 @@ const RegisterPage = () => {
                       <div className="col-md-6">
                         <div className="nolva-register-field">
                           <label htmlFor="reg-phone">Téléphone *</label>
-                          <Form.Group controlId="reg-phone">
-                            <Form.Control type="tel" name="phone" placeholder="+229 XX XX XX XX"
+                          <Form.Group controlId="reg-phone" className="nolva-phone-field">
+                            <Form.Select name="phone_country" value={form.phone_country} onChange={handleChange} aria-label="Pays">
+                              {phoneCountries.map((country) => (
+                                <option key={country.code} value={country.code}>{country.label}</option>
+                              ))}
+                            </Form.Select>
+                            <Form.Control type="tel" name="phone" placeholder="XX XX XX XX"
                               value={form.phone} onChange={handleChange} required />
                             <Form.Control.Feedback type="invalid">Numéro requis.</Form.Control.Feedback>
                           </Form.Group>
@@ -186,9 +205,12 @@ const RegisterPage = () => {
                       <div className="col-md-6">
                         <div className="nolva-register-field">
                           <label htmlFor="reg-password">Mot de passe *</label>
-                          <Form.Group controlId="reg-password">
-                            <Form.Control type="password" name="password" placeholder="Au moins 8 caractères"
+                          <Form.Group controlId="reg-password" className="nolva-password-field">
+                            <Form.Control type={showPassword ? "text" : "password"} name="password" placeholder="Au moins 8 caractères"
                               value={form.password} onChange={handleChange} required minLength={8} />
+                            <button type="button" onClick={() => setShowPassword((value) => !value)} aria-label="Afficher le mot de passe">
+                              <i className={showPassword ? "fi fi-rr-eye-crossed" : "fi fi-rr-eye"}></i>
+                            </button>
                             <Form.Control.Feedback type="invalid">Au moins 8 caractères.</Form.Control.Feedback>
                           </Form.Group>
                         </div>
@@ -197,7 +219,7 @@ const RegisterPage = () => {
                         <div className="nolva-register-field">
                           <label htmlFor="reg-confirmPassword">Confirmer le mot de passe *</label>
                           <Form.Group controlId="reg-confirmPassword">
-                            <Form.Control type="password" name="confirmPassword" placeholder="Répétez le mot de passe"
+                            <Form.Control type={showPassword ? "text" : "password"} name="confirmPassword" placeholder="Répétez le mot de passe"
                               value={form.confirmPassword} onChange={handleChange} required />
                             <Form.Control.Feedback type="invalid">Confirmation requise.</Form.Control.Feedback>
                           </Form.Group>
@@ -206,14 +228,18 @@ const RegisterPage = () => {
                       <div className="col-md-6">
                         <div className="nolva-register-field">
                           <label htmlFor="reg-city">Ville *</label>
-                          <Form.Group controlId="reg-city" className="gi-rg-select-inner">
-                            <Form.Select name="city" value={form.city} onChange={handleChange}
-                              required className="gi-register-select">
-                              <option value="">Sélectionnez votre ville</option>
-                              {beninCities.map((c) => (
-                                <option key={c} value={c.toLowerCase()}>{c}</option>
-                              ))}
-                            </Form.Select>
+                          <Form.Group controlId="reg-city">
+                            <Form.Control
+                              list="nolva-benin-cities"
+                              name="city"
+                              value={form.city}
+                              onChange={handleChange}
+                              placeholder="Sélectionnez ou écrivez votre ville"
+                              required
+                            />
+                            <datalist id="nolva-benin-cities">
+                              {beninCities.map((c) => <option key={c} value={c} />)}
+                            </datalist>
                             <Form.Control.Feedback type="invalid">Ville requise.</Form.Control.Feedback>
                           </Form.Group>
                         </div>
@@ -274,6 +300,7 @@ const RegisterPage = () => {
                       </button>
                     </span>
                   </Form>
+                  )}
                 </div>
               </div>
             </div>

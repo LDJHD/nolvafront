@@ -32,6 +32,7 @@ const PublishEventWizard = () => {
   const [providerTypes, setProviderTypes] = useState<{ slug: string; label: string }[]>([]);
   const [showProvidersModal, setShowProvidersModal] = useState(false);
   const [publishedEventId, setPublishedEventId] = useState<number | null>(null);
+  const [isFreeEvent, setIsFreeEvent] = useState(false);
 
   const [form, setForm] = useState({
     event_type: "",
@@ -56,7 +57,7 @@ const PublishEventWizard = () => {
       });
       const d = res.data;
       setTips(d.tips || []);
-      if (step === 2 && d.suggested_tickets?.length) {
+      if (!isFreeEvent && step === 2 && d.suggested_tickets?.length) {
         setTickets(
           d.suggested_tickets.map((s: { label: string; priceHint: number }) => ({
             label: s.label,
@@ -68,7 +69,7 @@ const PublishEventWizard = () => {
     } catch {
       setTips([]);
     }
-  }, [form.event_type, form.title, form.city, step]);
+  }, [form.event_type, form.title, form.city, isFreeEvent, step]);
 
   useEffect(() => {
     void loadSuggestions();
@@ -124,20 +125,22 @@ const PublishEventWizard = () => {
     if (step === 1)
       return !!form.title.trim() && !!form.event_date && !!form.city;
     if (step === 2)
-      return tickets.some((t) => t.label.trim() && Number(t.quantity) >= 0);
+      return isFreeEvent || tickets.some((t) => t.label.trim() && Number(t.quantity) >= 0);
     return true;
   };
 
   const handlePublish = async () => {
-    const ticket_types = tickets
-      .filter((t) => t.label.trim())
-      .map((t) => ({
-        label: t.label.trim(),
-        price: Number(t.price) || 0,
-        quantity: Number(t.quantity) || 0,
-      }));
+    const ticket_types = isFreeEvent
+      ? []
+      : tickets
+          .filter((t) => t.label.trim())
+          .map((t) => ({
+            label: t.label.trim(),
+            price: Number(t.price) || 0,
+            quantity: Number(t.quantity) || 0,
+          }));
 
-    if (ticket_types.length === 0) {
+    if (!isFreeEvent && ticket_types.length === 0) {
       showErrorToast("Ajoutez au moins un type de billet");
       return;
     }
@@ -153,6 +156,8 @@ const PublishEventWizard = () => {
         city: form.city,
         image: form.image || undefined,
         ticket_types,
+        ticket_price: isFreeEvent ? 0 : undefined,
+        ticket_count: isFreeEvent ? 0 : undefined,
         auto_publish: true,
       });
       const d = res.data;
@@ -199,7 +204,7 @@ const PublishEventWizard = () => {
           <div className="gi-vendor-card-body p-4">
             <p style={{ color: "#666", marginBottom: "20px" }}>
               Assistant NOLVA : nous vous guidons étape par étape. Votre événement sera publié
-              directement sur la plateforme (sans validation admin).
+              a la validation administrateur avant sa mise en ligne.
             </p>
 
             {step === 0 && (
@@ -307,11 +312,24 @@ const PublishEventWizard = () => {
 
             {step === 2 && (
               <>
+                <Form.Check
+                  className="mb-3"
+                  type="switch"
+                  id="wizard-free-event"
+                  label="Evenement gratuit"
+                  checked={isFreeEvent}
+                  onChange={(e) => setIsFreeEvent(e.target.checked)}
+                />
+                {isFreeEvent && (
+                  <div className="alert alert-light border">
+                    Aucun billet payant ne sera cree. L&apos;evenement restera gratuit.
+                  </div>
+                )}
                 <p className="small text-muted mb-3">
                   Définissez un libellé et un prix pour chaque type de billet (ex: Standard, VIP).
                   Quantité 0 = places illimitées.
                 </p>
-                {tickets.map((t, i) => (
+                {!isFreeEvent && tickets.map((t, i) => (
                   <Row className="g-2 mb-3 align-items-end" key={i}>
                     <Col md={4}>
                       <Form.Label>Libellé</Form.Label>
@@ -352,9 +370,9 @@ const PublishEventWizard = () => {
                     </Col>
                   </Row>
                 ))}
-                <button type="button" className="btn btn-outline-secondary btn-sm" onClick={addTicketRow}>
+                {!isFreeEvent && <button type="button" className="btn btn-outline-secondary btn-sm" onClick={addTicketRow}>
                   + Ajouter un type de billet
-                </button>
+                </button>}
               </>
             )}
 
@@ -364,14 +382,18 @@ const PublishEventWizard = () => {
                   <strong>{form.title}</strong> — {form.city}
                 </p>
                 <p>
-                  Billets :{" "}
-                  {tickets
-                    .filter((t) => t.label.trim())
-                    .map((t) => `${t.label} (${Number(t.price).toLocaleString("fr-FR")} FCFA)`)
-                    .join(", ")}
+                  Acces :{" "}
+                  {isFreeEvent
+                    ? "Gratuit"
+                    : tickets
+                        .filter((t) => t.label.trim())
+                        .map((t) => `${t.label} (${Number(t.price).toLocaleString("fr-FR")} FCFA)`)
+                        .join(", ")}
                 </p>
                 <p className="text-muted mb-0">
-                  Paiement des participants via FedaPay (séquestre NOLVA). Publication immédiate.
+                  {isFreeEvent
+                    ? "Aucun paiement billet ne sera demande. Soumission a validation administrateur."
+                    : "Paiement des participants via FedaPay (sequestre NOLVA). Soumission a validation administrateur."}
                 </p>
               </div>
             )}
@@ -420,7 +442,7 @@ const PublishEventWizard = () => {
         </Modal.Header>
         <Modal.Body>
           <p>
-            Votre événement est en ligne. Pour le réussir, vous aurez probablement besoin de ces
+            Votre evenement a ete soumis a la validation administrateur. Pour le reussir, vous aurez probablement besoin de ces
             types de prestataires sur NOLVA :
           </p>
           <ul>

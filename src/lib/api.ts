@@ -125,6 +125,12 @@ export const paymentsApi = {
 }
 
 // ─── Catalogue (types) ────────────────────────────────────
+export const notificationsApi = {
+  list: (params?: { limit?: number }) => api.get('/notifications', { params }),
+  markRead: (id: number) => api.post(`/notifications/${id}/read`),
+  markAllRead: () => api.post('/notifications/read-all'),
+}
+
 export const catalogApi = {
   eventTypes: () => api.get('/catalog/event-types'),
   providerTypes: () => api.get('/catalog/provider-types'),
@@ -158,6 +164,15 @@ export const adminApi = {
     payout_destination?: string
     note?: string
   }) => api.post('/admin/disputes/repayment', data),
+  contactRefundOrganizer: (data: { transaction_ref: string; note?: string }) =>
+    api.post('/admin/disputes/contact-organizer', data),
+  refundClient: (data: {
+    transaction_ref: string
+    amount?: number
+    payout_method: string
+    payout_destination: string
+    note?: string
+  }) => api.post('/admin/disputes/refund-client', data),
   actionHistory: (params?: { page?: number; transaction_id?: number }) =>
     api.get('/admin/action-history', { params }),
   resolveDispute: (data: {
@@ -203,5 +218,12 @@ export const eventsApi = {
     api.get('/events/publish-suggestions', { params }),
   create: (data: any) => api.post('/events', data),
   myEvents: (params?: any) => api.get('/user/events', { params }),
+  cancelMine: (id: number | string, data?: { reason?: string }) =>
+    api.post(`/user/events/${id}/cancel`, data || {}),
+  rescheduleMine: (
+    id: number | string,
+    data: { event_date: string; location?: string; city?: string }
+  ) => api.post(`/user/events/${id}/reschedule`, data),
+  ticketSales: (id: number | string) => api.get(`/user/events/${id}/ticket-sales`),
   myTickets: (params?: any) => api.get('/user/tickets', { params }),
 }

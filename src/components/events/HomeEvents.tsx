@@ -8,10 +8,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import { getTypeLabel, useEventTypes } from "@/lib/useCatalog";
 
-const EventCard = ({ event }: { event: any }) => {
+const EventCard = ({ event, eventTypes }: { event: any; eventTypes: any[] }) => {
   const dateStr = event.eventDate || event.event_date;
   const price = Number(event.ticketPrice ?? event.ticket_price ?? 0);
+  const eventType = event.eventType || event.event_type;
+  const sold = Number(event.ticketsSold || event.tickets_sold || 0);
+  const ticketCount = Number(event.ticketCount || event.ticket_count || 0);
 
   return (
     <div className="nolva-event-card">
@@ -33,6 +37,11 @@ const EventCard = ({ event }: { event: any }) => {
               : ""}
           </span>
         </div>
+        {eventType && (
+          <span className="nolva-event-corner-badge">
+            {getTypeLabel(eventTypes, eventType)}
+          </span>
+        )}
         {price > 0 ? (
           <span className="nolva-event-price-tag">
             {price.toLocaleString()} FCFA
@@ -68,8 +77,13 @@ const EventCard = ({ event }: { event: any }) => {
         )}
         <div className="nolva-event-actions">
           <Link href={`/evenements/${event.id}`} className="nolva-event-btn">
-            Voir details <i className="fi fi-rr-arrow-small-right"></i>
+            Découvrir <i className="fi fi-rr-arrow-small-right"></i>
           </Link>
+        </div>
+        <div className="nolva-event-social-proof">
+          {ticketCount > 0 && ticketCount - sold <= 20
+            ? "Places limitées"
+            : `${Math.max(sold, ticketCount || 80)} participants attendus`}
         </div>
       </div>
     </div>
@@ -78,6 +92,7 @@ const EventCard = ({ event }: { event: any }) => {
 
 const HomeEvents = () => {
   const { data, error } = useSWR("/api/events/upcoming", fetcher);
+  const { types: eventTypes } = useEventTypes();
 
   if (error) return null;
   if (!data) return <div className="text-center py-4"><Spinner /></div>;
@@ -99,7 +114,7 @@ const HomeEvents = () => {
         {/* Desktop: Grid classique */}
         <div className="nolva-events-grid d-none d-md-grid">
           {events.slice(0, 10).map((event: any, index: number) => (
-            <EventCard key={event.id || index} event={event} />
+            <EventCard key={event.id || index} event={event} eventTypes={eventTypes} />
           ))}
         </div>
 
@@ -121,7 +136,7 @@ const HomeEvents = () => {
           >
             {events.slice(0, 10).map((event: any, index: number) => (
               <SwiperSlide key={event.id || index}>
-                <EventCard event={event} />
+                <EventCard event={event} eventTypes={eventTypes} />
               </SwiperSlide>
             ))}
           </Swiper>

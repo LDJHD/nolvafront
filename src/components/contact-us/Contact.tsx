@@ -76,13 +76,13 @@ const Contact = () => {
                       <i className="fa fa-mobile" aria-hidden="true">
                         <FaMobileAlt />
                       </i>{" "}
-                      &nbsp; (+229) 90 00 00 00
+                      &nbsp; 0195676714
                     </p>
                     <p>
                       <i className="fa fa-mobile" aria-hidden="true">
                         <FaMobileAlt />
                       </i>{" "}
-                      &nbsp; WhatsApp: (+229) 90 00 00 00
+                      &nbsp; WhatsApp: 0195676714
                     </p>
                   </div>
                 </div>
@@ -104,7 +104,7 @@ const Contact = () => {
                       <i className="fa fa-map-marker" aria-hidden="true">
                         <FaMapMarkerAlt />
                       </i>{" "}
-                      &nbsp; Cotonou, Benin
+                      &nbsp; Abomey-Calavi, Togou
                     </p>
                   </div>
                 </div>
