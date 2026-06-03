@@ -6,11 +6,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
 import { logout, initFromStorage } from "@/store/reducers/authSlice";
 import { authApi } from "@/lib/api";
+import { accountDisplayName } from "@/lib/accountDisplay";
 
 export default function NolvaHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const displayName = accountDisplayName(user);
 
   useEffect(() => {
     dispatch(initFromStorage());
@@ -42,7 +44,7 @@ export default function NolvaHeader() {
               </>
             ) : (
               <span style={{ color: "rgba(255,255,255,0.8)", fontSize: "13px" }}>
-                Bonjour, {user?.firstName}
+                Bonjour, {displayName}
               </span>
             )}
           </div>
@@ -116,7 +118,7 @@ export default function NolvaHeader() {
                     borderRadius: "8px", padding: "8px 18px", fontWeight: 600, fontSize: "14px", cursor: "pointer"
                   }}
                   data-bs-toggle="dropdown">
-                  {user?.firstName} ▾
+                  {displayName} ▾
                 </button>
                 <ul className="dropdown-menu dropdown-menu-end">
                   {user?.role === "admin" ? (

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { paymentsApi } from "@/lib/api";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import NolvaContractDownloadButton from "@/components/legal/NolvaContractDownloadButton";
 
 const PaymentConfirmationPage = () => {
   const searchParams = useSearchParams();
@@ -198,6 +199,11 @@ const PaymentConfirmationPage = () => {
                       )}
 
                       <div className="d-flex gap-2 justify-content-center mt-3">
+                        <NolvaContractDownloadButton
+                          actorLabel="client"
+                          className="gi-btn-2"
+                          label="Télécharger le contrat"
+                        />
                         {type === "ticket" ? (
                           <Link href="/evenements" className="gi-btn-1">
                             <i className="fi fi-rr-calendar"></i> Mes evenements

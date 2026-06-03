@@ -33,13 +33,13 @@ function HeaderOne() {
               <div className="header-top-social">
                 <ul className="mb-0">
                   <li className="list-inline-item">
-                    <Link href="tel:+22990000000">
+                    <Link href="tel:+2290195676714">
                       <i className="fi fi-rr-phone-call"></i>
                     </Link>
-                    +229 90 00 00 00
+                    +229 01 95 67 67 14
                   </li>
                   <li className="list-inline-item">
-                    <Link href="https://wa.me/22990000000" target="_blank">
+                    <Link href="https://wa.me/2290195676714" target="_blank">
                       <i className="fi fi-brands-whatsapp"></i>
                     </Link>
                     WhatsApp

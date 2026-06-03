@@ -12,8 +12,8 @@ import {
 import PayoutMessagesPanel from "../vendor/PayoutMessagesPanel";
 import { useEventTypes, useProviderTypes } from "@/lib/useCatalog";
 import { showErrorToast, showSuccessToast } from "../toast-popup/Toastify";
+import { BENIN_CITY_DATALIST_ID, beninCities } from "@/lib/beninCities";
 
-const beninCities = ["Cotonou", "Calavi", "Porto-Novo", "Parakou", "Abomey", "Bohicon", "Natitingou", "Ouidah"];
 const MAX_PORTFOLIO_PHOTOS = 7;
 
 const safeParseArray = (val: unknown): string[] => {
@@ -77,6 +77,7 @@ const ProviderProfileForm = () => {
   const [previewProfilePhoto, setPreviewProfilePhoto] = useState<string | null>(null);
   const [form, setForm] = useState({
     business_name: "",
+    company_position: "",
     type: "",
     specialty: "",
     experience_years: "",
@@ -100,6 +101,7 @@ const ProviderProfileForm = () => {
       const p = res.data;
       setForm({
         business_name: p.businessName || p.business_name || "",
+        company_position: p.companyPosition || p.company_position || "",
         type: p.type || "",
         specialty: p.specialty || "",
         experience_years: p.experienceYears || p.experience_years || "",
@@ -301,6 +303,7 @@ const ProviderProfileForm = () => {
     try {
       const payload: Record<string, unknown> = {
         business_name: form.business_name.trim(),
+        company_position: form.company_position || undefined,
         type: form.type,
         specialty: form.specialty || undefined,
         experience_years: form.experience_years || undefined,
@@ -364,6 +367,15 @@ const ProviderProfileForm = () => {
               />
             </div>
             <div className="col-md-6">
+              <label className="nolva-field-label">Poste occupé dans l&apos;entreprise</label>
+              <Form.Control
+                name="company_position"
+                value={form.company_position}
+                onChange={onChange}
+                placeholder="Ex: Gérant, Directeur artistique"
+              />
+            </div>
+            <div className="col-md-6">
               <label className="nolva-field-label">Type de prestation *</label>
               <Form.Select name="type" value={form.type} onChange={onChange} required>
                 <option value="">Choisir...</option>
@@ -390,13 +402,13 @@ const ProviderProfileForm = () => {
             <div className="col-md-6">
               <label className="nolva-field-label">Ville</label>
               <Form.Control
-                list="nolva-provider-cities"
+                list={BENIN_CITY_DATALIST_ID}
                 name="city"
                 value={form.city}
                 onChange={onChange}
                 placeholder="Sélectionnez ou écrivez votre ville"
               />
-              <datalist id="nolva-provider-cities">
+              <datalist id={BENIN_CITY_DATALIST_ID}>
                 {beninCities.map((c) => <option key={c} value={c} />)}
               </datalist>
             </div>

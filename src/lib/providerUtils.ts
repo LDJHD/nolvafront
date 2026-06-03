@@ -3,6 +3,7 @@ export function getProviderTypeLabel(
   typeCatalog?: { slug: string; label: string }[]
 ): string {
   const slug = provider?.type
+  if (String(slug || '').toLowerCase() === 'shooter') return 'ESPACE/Salle des fêtes'
   if (typeCatalog && slug) {
     const found = typeCatalog.find((t) => t.slug === slug)
     if (found) return found.label

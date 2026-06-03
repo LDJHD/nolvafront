@@ -19,7 +19,7 @@ const NOLVA_SERVICES = [
     title: "Demandez un devis personnalisé en quelques clics.",
   },
   {
-    icon: "fi fi-rr-calendar-star",
+    icon: "fi fi-rr-calendar",
     name: "Événements",
     title: "Découvrez et publiez des événements au Bénin.",
   },

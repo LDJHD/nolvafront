@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useProviderTypes } from "@/lib/useCatalog";
 import { RootState } from "@/store";
 import { initFromStorage, logout } from "@/store/reducers/authSlice";
+import { accountDisplayName } from "@/lib/accountDisplay";
 
 const MobileManuSidebar = ({ isMobileMenuOpen, closeMobileManu, toggleMainMenu, activeMainMenu }) => {
   const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const MobileManuSidebar = ({ isMobileMenuOpen, closeMobileManu, toggleMainMenu, 
   const { types: providerTypes } = useProviderTypes();
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const user = useSelector((state: RootState) => state.auth.user);
+  const displayName = accountDisplayName(user);
 
   useEffect(() => {
     dispatch(initFromStorage());
@@ -95,6 +97,25 @@ const MobileManuSidebar = ({ isMobileMenuOpen, closeMobileManu, toggleMainMenu, 
                   </Link>
                 </li>
                 <li>
+                  <span onClick={() => toggleMainMenu('infos')} className="menu-toggle"></span>
+                  <Link href="/politique-nolva" onClick={closeMobileManu}>
+                    Infos utiles
+                  </Link>
+                  <Collapse in={activeMainMenu === "infos"}>
+                    <ul style={{ display: activeMainMenu === "infos" ? "block" : "none" }} className="sub-menu height-transition-1s-ease">
+                      <li>
+                        <Link href="/politique-nolva" onClick={closeMobileManu}>Comment ça marche</Link>
+                      </li>
+                      <li>
+                        <Link href="/terms-condition" onClick={closeMobileManu}>CGU</Link>
+                      </li>
+                      <li>
+                        <Link href="/confidentialite" onClick={closeMobileManu}>Confidentialité</Link>
+                      </li>
+                    </ul>
+                  </Collapse>
+                </li>
+                <li>
                   <Link href="/contact-us" onClick={closeMobileManu}>
                     Contact
                   </Link>
@@ -105,7 +126,7 @@ const MobileManuSidebar = ({ isMobileMenuOpen, closeMobileManu, toggleMainMenu, 
                     href={isAuthenticated ? "/user-profile" : "/login"}
                     onClick={closeMobileManu}
                   >
-                    {isAuthenticated ? user?.firstName || "Mon compte" : "Connexion"}
+                    {isAuthenticated ? displayName : "Connexion"}
                   </Link>
                   <Collapse in={activeMainMenu === "connexion"}>
                     <ul style={{ display: activeMainMenu === "connexion" ? "block" : "none" }} className="sub-menu height-transition-1s-ease">

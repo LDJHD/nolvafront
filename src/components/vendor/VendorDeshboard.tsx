@@ -7,6 +7,7 @@ import VendorSidebar from "../vendor-sidebar/VendorSidebar";
 import { providersApi, quoteRequestsApi, reservationsApi } from "@/lib/api";
 import { downloadPaymentProof } from "@/lib/downloadPaymentProof";
 import Link from "next/link";
+import NolvaContractDownloadButton from "@/components/legal/NolvaContractDownloadButton";
 
 const VendorDeshboard = () => {
   const [quoteRequests, setQuoteRequests] = useState<any[]>([]);
@@ -229,16 +230,25 @@ const VendorDeshboard = () => {
                                 </span>
                               </td>
                               <td>
-                                {((r.payment_transaction || r.paymentTransaction)?.proofCode ||
-                                  (r.payment_transaction || r.paymentTransaction)?.proof_code) ? (
-                                  <button
-                                    type="button"
-                                    className="btn btn-outline-primary btn-sm"
-                                    onClick={() => downloadReservationProof(r)}
-                                  >
-                                    Telecharger
-                                  </button>
-                                ) : "-"}
+                                <div className="d-flex flex-column gap-1">
+                                  {["paid", "deposit_paid", "fully_paid"].includes(r.payment_status) && (
+                                    <NolvaContractDownloadButton
+                                      actorLabel="prestataire"
+                                      className="btn btn-outline-secondary btn-sm"
+                                      label="Contrat"
+                                    />
+                                  )}
+                                  {((r.payment_transaction || r.paymentTransaction)?.proofCode ||
+                                    (r.payment_transaction || r.paymentTransaction)?.proof_code) && (
+                                    <button
+                                      type="button"
+                                      className="btn btn-outline-primary btn-sm"
+                                      onClick={() => downloadReservationProof(r)}
+                                    >
+                                      Telecharger
+                                    </button>
+                                  )}
+                                </div>
                               </td>
                             </tr>
                           ))}

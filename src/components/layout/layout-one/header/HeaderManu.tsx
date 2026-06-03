@@ -80,6 +80,26 @@ function HeaderManu() {
                             À propos
                           </Link>
                         </li>
+                        <li className="dropdown drop-list">
+                          <Link href="/politique-nolva" className="dropdown-arrow">
+                            Infos utiles
+                            <i
+                              className="fi-rr-angle-small-right"
+                              style={{ marginLeft: "4px" }}
+                            ></i>
+                          </Link>
+                          <ul className="sub-menu">
+                            <li>
+                              <Link href="/politique-nolva">Comment ça marche</Link>
+                            </li>
+                            <li>
+                              <Link href="/terms-condition">CGU</Link>
+                            </li>
+                            <li>
+                              <Link href="/confidentialite">Confidentialité</Link>
+                            </li>
+                          </ul>
+                        </li>
                         <li className="non-drop">
                           <Link href="/contact-us">
                             Contact

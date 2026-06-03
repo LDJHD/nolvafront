@@ -37,7 +37,7 @@ export default function NolvaFooter() {
                 { label: "Trouver un prestataire", href: "/prestataires" },
                 { label: "Événements", href: "/evenements" },
                 { label: "Devenir prestataire", href: "/inscription?role=provider" },
-                { label: "Comment ça marche", href: "/comment-ca-marche" },
+                { label: "Comment ça marche", href: "/politique-nolva" },
               ].map((link) => (
                 <li key={link.href} style={{ marginBottom: "10px" }}>
                   <Link href={link.href} style={{ color: "rgba(255,255,255,0.6)", textDecoration: "none", fontSize: "14px" }}

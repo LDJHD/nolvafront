@@ -9,6 +9,8 @@ import { quoteRequestsApi } from "@/lib/api";
 import { useEventTypes, getTypeLabel } from "@/lib/useCatalog";
 import { showErrorToast, showSuccessToast } from "../toast-popup/Toastify";
 import ReservationPaymentActions from "../user-dashboard/ReservationPaymentActions";
+import NolvaContractModal from "@/components/legal/NolvaContractModal";
+import NolvaContractDownloadButton from "@/components/legal/NolvaContractDownloadButton";
 
 const statusLabels: Record<string, string> = {
   pending: "En attente",
@@ -30,6 +32,8 @@ const QuoteDetailPage = () => {
   const [messageText, setMessageText] = useState("");
   const [sending, setSending] = useState(false);
   const [agreedPrice, setAgreedPrice] = useState("");
+  const [accepting, setAccepting] = useState(false);
+  const [showProviderContract, setShowProviderContract] = useState(false);
 
   const load = useCallback(async () => {
     if (!id) return;
@@ -72,15 +76,19 @@ const QuoteDetailPage = () => {
   };
 
   const acceptQuote = async () => {
+    setAccepting(true);
     try {
       const res = await quoteRequestsApi.updateStatus(Number(id), {
         status: "accepted",
         agreed_price: agreedPrice ? Number(agreedPrice) : undefined,
       });
       showSuccessToast(res.data?.message || "Devis validé");
+      setShowProviderContract(false);
       void load();
     } catch (e: any) {
       showErrorToast(e.response?.data?.message || "Erreur");
+    } finally {
+      setAccepting(false);
     }
   };
 
@@ -144,12 +152,22 @@ const QuoteDetailPage = () => {
                     onChange={(e) => setAgreedPrice(e.target.value)}
                     placeholder="Ex. 50000"
                   />
-                  <button type="button" className="gi-btn-1 w-100 mb-2" onClick={acceptQuote}>
+                  <button type="button" className="gi-btn-1 w-100 mb-2" onClick={() => setShowProviderContract(true)}>
                     Valider le devis
                   </button>
                   <button type="button" className="btn btn-outline-danger w-100" onClick={declineQuote}>
                     Refuser
                   </button>
+                </div>
+              )}
+
+              {isProvider && ["accepted", "paid", "completed"].includes(quote.status) && (
+                <div className="mt-3 border-top pt-3">
+                  <NolvaContractDownloadButton
+                    actorLabel="prestataire"
+                    className="btn btn-outline-secondary w-100"
+                    label="Télécharger le contrat NOLVA"
+                  />
                 </div>
               )}
 
@@ -207,6 +225,14 @@ const QuoteDetailPage = () => {
           </div>
         </div>
       </div>
+      <NolvaContractModal
+        show={showProviderContract}
+        actorLabel="prestataire"
+        actionLabel="J'accepte et je valide le devis"
+        loading={accepting}
+        onClose={() => setShowProviderContract(false)}
+        onAccept={acceptQuote}
+      />
     </section>
   );
 };

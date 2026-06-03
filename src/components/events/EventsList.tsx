@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { eventsApi } from "@/lib/api";
@@ -11,12 +12,18 @@ import { Col, Row } from "react-bootstrap";
 const cities = ["", "Cotonou", "Calavi", "Porto-Novo", "Parakou", "Abomey", "Ouidah"];
 
 const EventsList = () => {
+  const searchParams = useSearchParams();
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const { types: eventTypesCatalog } = useEventTypes();
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [cityFilter, setCityFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
+  const [searchFilter, setSearchFilter] = useState(searchParams.get("search") || "");
+
+  useEffect(() => {
+    setSearchFilter(searchParams.get("search") || "");
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -24,6 +31,7 @@ const EventsList = () => {
         const params: any = {};
         if (cityFilter) params.city = cityFilter;
         if (typeFilter) params.type = typeFilter;
+        if (searchFilter) params.search = searchFilter;
         const res = await eventsApi.list(params);
         setEvents(normalizeList(res.data));
       } catch {
@@ -33,13 +41,16 @@ const EventsList = () => {
       }
     };
     fetchEvents();
-  }, [cityFilter, typeFilter]);
+  }, [cityFilter, typeFilter, searchFilter]);
 
   return (
     <section className="padding-tb-40">
       <div className="container">
         <div className="nolva-providers-filters" style={{ marginBottom: "30px", flexWrap: "wrap" }}>
           <h5 style={{ margin: 0, marginRight: "15px" }}>Evenements a venir</h5>
+          {searchFilter ? (
+            <span className="text-muted small">Recherche : « {searchFilter} »</span>
+          ) : null}
           {isAuthenticated ? (
             <>
               <Link href="/evenements/publier" className="gi-btn-1" style={{ marginLeft: "auto" }}>
@@ -84,7 +95,7 @@ const EventsList = () => {
           <div className="nolva-empty-state">
             <i className="fi fi-rr-calendar"></i>
             <h5>Aucun evenement pour le moment</h5>
-            <p>Les prochains evenements seront affiches ici.</p>
+            <p>{searchFilter ? "Aucun evenement ne correspond a cette recherche." : "Les prochains evenements seront affiches ici."}</p>
           </div>
         ) : (
           <Row>

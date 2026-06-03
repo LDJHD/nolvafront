@@ -129,7 +129,7 @@ function Footer() {
                             <Link href="/evenements">Événements</Link>
                           </li>
                           <li className="gi-footer-link">
-                            <Link href="/faq">Comment ça marche</Link>
+                            <Link href="/politique-nolva">Comment ça marche</Link>
                           </li>
                           <li className="gi-footer-link">
                             <Link href="/terms-condition">CGU</Link>
@@ -234,7 +234,7 @@ function Footer() {
                               <span>
                                 <i className="fi fi-brands-whatsapp svg_img foo_svg"></i>
                               </span>
-                              <a href="tel:+22990000000">+229 90 00 00 00</a>
+                              <a href="tel:+2290195676714">+229 95 67 67 14</a>
                             </li>
                             <li className="gi-footer-link gi-foo-mail">
                               <span>

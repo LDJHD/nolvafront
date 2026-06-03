@@ -1,5 +1,5 @@
 import Breadcrumb from '@/components/breadcrumb/Breadcrumb'
-import TermAndCondition from "@/components/password/TermAndCondition"
+import CguPage from "@/components/legal/CguPage"
 
 
 
@@ -8,8 +8,8 @@ const page = () => {
         <>
 
 
-            <Breadcrumb title={"Terms & Condition"} />
-            <TermAndCondition />
+            <Breadcrumb title={"Conditions generales d'utilisation"} />
+            <CguPage />
 
         </>
     )

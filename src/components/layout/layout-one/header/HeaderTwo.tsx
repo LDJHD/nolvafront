@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { RootState } from "@/store";
 import { logout, initFromStorage } from "@/store/reducers/authSlice";
 import NotificationBell from "@/components/notifications/NotificationBell";
+import { accountDisplayName } from "@/lib/accountDisplay";
 
 function HeaderTwo() {
   const dispatch = useDispatch();
@@ -16,6 +17,7 @@ function HeaderTwo() {
   );
   const user = useSelector((state: RootState) => state.auth.user);
   const [searchInput, setSearchInput] = useState("");
+  const displayName = accountDisplayName(user);
 
   useEffect(() => {
     dispatch(initFromStorage());
@@ -25,7 +27,7 @@ function HeaderTwo() {
     event.preventDefault();
     const q = searchInput.trim();
     if (q) {
-      router.push(`/prestataires?search=${encodeURIComponent(q)}`);
+      router.push(`/recherche?search=${encodeURIComponent(q)}`);
     } else {
       router.push("/prestataires");
     }
@@ -94,7 +96,7 @@ function HeaderTwo() {
                     <div className="gi-btn-desc">
                       <span className="gi-btn-title">Compte</span>
                       <span className="gi-btn-stitle">
-                        {isAuthenticated ? user?.firstName || "Mon compte" : "Connexion"}
+                        {isAuthenticated ? displayName : "Connexion"}
                       </span>
                     </div>
                   </Link>

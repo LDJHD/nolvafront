@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { paymentsApi, reservationsApi } from "@/lib/api";
 import { showErrorToast, showSuccessToast } from "../toast-popup/Toastify";
+import NolvaContractModal from "@/components/legal/NolvaContractModal";
+import NolvaContractDownloadButton from "@/components/legal/NolvaContractDownloadButton";
 
 type Props = {
   reservation: any;
@@ -11,6 +13,7 @@ type Props = {
 const ReservationPaymentActions = ({ reservation, onUpdated }: Props) => {
   const [loading, setLoading] = useState(false);
   const [showDispute, setShowDispute] = useState(false);
+  const [showPaymentContract, setShowPaymentContract] = useState(false);
   const [reason, setReason] = useState("");
 
   const handlePay = async () => {
@@ -85,9 +88,21 @@ const ReservationPaymentActions = ({ reservation, onUpdated }: Props) => {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "6px", minWidth: "140px" }}>
       {ps === "unpaid" && (
-        <button type="button" className="btn btn-sm gi-btn-1 nolva-btn-reserve" disabled={loading} onClick={handlePay}>
+        <button
+          type="button"
+          className="btn btn-sm gi-btn-1 nolva-btn-reserve"
+          disabled={loading}
+          onClick={() => setShowPaymentContract(true)}
+        >
           Payer (FedaPay)
         </button>
+      )}
+      {["deposit_paid", "fully_paid", "paid"].includes(ps) && (
+        <NolvaContractDownloadButton
+          actorLabel="client"
+          className="btn btn-sm btn-outline-secondary"
+          label="Contrat NOLVA"
+        />
       )}
       {ps === "fully_paid" && st === "confirmed" && (
         <button type="button" className="btn btn-sm btn-success" disabled={loading} onClick={handleValidate}>
@@ -139,6 +154,14 @@ const ReservationPaymentActions = ({ reservation, onUpdated }: Props) => {
           </button>
         </>
       )}
+      <NolvaContractModal
+        show={showPaymentContract}
+        actorLabel="client"
+        actionLabel="J'accepte et je paie"
+        loading={loading}
+        onClose={() => setShowPaymentContract(false)}
+        onAccept={handlePay}
+      />
     </div>
   );
 };

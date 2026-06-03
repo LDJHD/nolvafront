@@ -9,10 +9,10 @@ import { setCredentials } from "@/store/reducers/authSlice";
 import { authApi } from "@/lib/api";
 import { parseRegisterError } from "@/lib/registerErrors";
 import { useProviderTypes } from "@/lib/useCatalog";
+import { BENIN_CITY_DATALIST_ID, beninCities } from "@/lib/beninCities";
 import Link from "next/link";
 import WelcomeMessage from "./WelcomeMessage";
 
-const beninCities = ["Cotonou", "Calavi", "Porto-Novo", "Parakou", "Abomey", "Natitingou", "Ouidah"];
 const phoneCountries = [
   { code: "+229", label: "Bénin (+229)" },
   { code: "+228", label: "Togo (+228)" },
@@ -56,17 +56,34 @@ const RegisterPage = () => {
     last_name: "",
     email: "",
     phone_country: "+229",
-    phone: "",
+    phone: "+229 ",
     password: "",
     confirmPassword: "",
     city: "",
     business_name: "",
+    company_position: "",
     type: "",
     description: "",
   });
 
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handlePhoneCountryChange = (e: any) => {
+    const code = e.target.value;
+    const localPhone = form.phone.replace(/^\+\d{1,4}\s*/, "");
+    setForm({
+      ...form,
+      phone_country: code,
+      phone: code === "+229" ? `${code} ${localPhone}`.trim() : localPhone,
+    });
+  };
+
+  const normalizedPhone = () => {
+    const compact = form.phone.replace(/\s+/g, "");
+    if (compact.startsWith(form.phone_country)) return compact;
+    return `${form.phone_country}${compact.replace(/^\+?\d{1,4}/, "")}`;
   };
 
   const handleSubmit = async (e: any) => {
@@ -85,13 +102,14 @@ const RegisterPage = () => {
         first_name: form.first_name,
         last_name: form.last_name,
         email: form.email,
-        phone: `${form.phone_country}${form.phone.replace(/^\+?\d{1,4}/, "").replace(/\s+/g, "")}`,
+        phone: normalizedPhone(),
         password: form.password,
         role,
         city: form.city,
       };
       if (role === "provider") {
         payload.business_name = form.business_name;
+        payload.company_position = form.company_position;
         payload.type = form.type;
         payload.description = form.description;
       }
@@ -191,12 +209,12 @@ const RegisterPage = () => {
                         <div className="nolva-register-field">
                           <label htmlFor="reg-phone">Téléphone *</label>
                           <Form.Group controlId="reg-phone" className="nolva-phone-field">
-                            <Form.Select name="phone_country" value={form.phone_country} onChange={handleChange} aria-label="Pays">
+                            <Form.Select name="phone_country" value={form.phone_country} onChange={handlePhoneCountryChange} aria-label="Pays">
                               {phoneCountries.map((country) => (
                                 <option key={country.code} value={country.code}>{country.label}</option>
                               ))}
                             </Form.Select>
-                            <Form.Control type="tel" name="phone" placeholder="XX XX XX XX"
+                            <Form.Control type="tel" name="phone" placeholder="+229 XX XX XX XX"
                               value={form.phone} onChange={handleChange} required />
                             <Form.Control.Feedback type="invalid">Numéro requis.</Form.Control.Feedback>
                           </Form.Group>
@@ -230,14 +248,14 @@ const RegisterPage = () => {
                           <label htmlFor="reg-city">Ville *</label>
                           <Form.Group controlId="reg-city">
                             <Form.Control
-                              list="nolva-benin-cities"
+                              list={BENIN_CITY_DATALIST_ID}
                               name="city"
                               value={form.city}
                               onChange={handleChange}
                               placeholder="Sélectionnez ou écrivez votre ville"
                               required
                             />
-                            <datalist id="nolva-benin-cities">
+                            <datalist id={BENIN_CITY_DATALIST_ID}>
                               {beninCities.map((c) => <option key={c} value={c} />)}
                             </datalist>
                             <Form.Control.Feedback type="invalid">Ville requise.</Form.Control.Feedback>
@@ -259,6 +277,20 @@ const RegisterPage = () => {
                                 <Form.Control type="text" name="business_name" placeholder="Nom de votre activité"
                                   value={form.business_name} onChange={handleChange} required={role === "provider"} />
                                 <Form.Control.Feedback type="invalid">Nom commercial requis.</Form.Control.Feedback>
+                              </Form.Group>
+                            </div>
+                          </div>
+                          <div className="col-md-6">
+                            <div className="nolva-register-field">
+                              <label htmlFor="reg-company_position">Poste occupé dans l&apos;entreprise</label>
+                              <Form.Group controlId="reg-company_position">
+                                <Form.Control
+                                  type="text"
+                                  name="company_position"
+                                  placeholder="Ex: Gérant, Directeur artistique, Responsable commercial"
+                                  value={form.company_position}
+                                  onChange={handleChange}
+                                />
                               </Form.Group>
                             </div>
                           </div>
