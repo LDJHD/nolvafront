@@ -56,7 +56,7 @@ const GlobalSearchResults = () => {
       <section className="padding-tb-40">
         <div className="container text-center">
           <p className="text-muted">Entrez une recherche pour trouver des prestataires ou des evenements.</p>
-          <Link href="/" className="gi-btn-2">Retour a l'accueil</Link>
+          <Link href="/" className="gi-btn-2">Retour a l&apos;accueil</Link>
         </div>
       </section>
     );
