@@ -16,6 +16,18 @@ import { BENIN_CITY_DATALIST_ID, beninCities } from "@/lib/beninCities";
 
 const MAX_PORTFOLIO_PHOTOS = 7;
 
+const providerProfilePhoto = (provider: any): string => {
+  const src =
+    provider?.profilePhoto ||
+    provider?.profile_photo ||
+    provider?.logo ||
+    provider?.business_logo ||
+    "";
+  if (!src) return "";
+  if (src.startsWith("data:") || src.startsWith("http") || src.startsWith("/")) return src;
+  return `/${src}`;
+};
+
 const safeParseArray = (val: unknown): string[] => {
   if (Array.isArray(val)) return val;
   if (typeof val === "string") {
@@ -112,7 +124,7 @@ const ProviderProfileForm = () => {
         instagram: p.instagram || "",
         facebook: p.facebook || "",
         tiktok: p.tiktok || "",
-        profile_photo: p.profilePhoto || p.profile_photo || "",
+        profile_photo: providerProfilePhoto(p),
         event_types: safeParseArray(p.eventTypes || p.event_types),
         momo_network: p.momoNetwork || p.momo_network || "",
         momo_phone: p.momoPhone || p.momo_phone || "",
@@ -339,7 +351,7 @@ const ProviderProfileForm = () => {
   const profilePhotoSrc =
     previewProfilePhoto ||
     form.profile_photo ||
-    `/assets/img/avatar/placeholder.jpg`;
+    `/assets/img/logo/logo.png`;
 
   const slotsLeft = MAX_PORTFOLIO_PHOTOS - photos.length;
   const payoutIsPhone = form.momo_network ? payoutNeedsPhone(form.momo_network) : true;

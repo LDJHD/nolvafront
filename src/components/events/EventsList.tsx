@@ -54,10 +54,10 @@ const EventsList = () => {
           {isAuthenticated ? (
             <>
               <Link href="/evenements/publier" className="gi-btn-1" style={{ marginLeft: "auto" }}>
-                <i className="fi fi-rr-rocket"></i> Publier un événement
+                <i className="fi fi-rr-rocket"></i> Créer un événement
               </Link>
               <Link href="/evenements/creer" className="gi-btn-2">
-                <i className="fi fi-rr-plus-small"></i> Créer (validation)
+                <i className="fi fi-rr-plus-small"></i> Publier (validation)
               </Link>
             </>
           ) : (

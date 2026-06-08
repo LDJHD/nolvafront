@@ -476,7 +476,7 @@ const UserDashboard = () => {
                 <div className="gi-vendor-card-header">
                   <h5>Mes Evenements</h5>
                   <div className="gi-header-btn">
-                    <Link className="gi-btn-2" href="/evenements/creer">Nouvel evenement</Link>
+                    <Link className="gi-btn-2" href="/evenements/creer">Publier un evenement</Link>
                   </div>
                 </div>
                 <div className="gi-vendor-card-body">
@@ -486,7 +486,7 @@ const UserDashboard = () => {
                     ) : myEvents.length === 0 ? (
                       <div style={{ padding: "30px", textAlign: "center" }}>
                         <p style={{ color: "#999", marginBottom: "15px" }}>Aucun evenement cree pour le moment.</p>
-                        <Link href="/evenements/creer" className="gi-btn-1">Creer un evenement</Link>
+                        <Link href="/evenements/creer" className="gi-btn-1">Publier un evenement</Link>
                       </div>
                     ) : (
                       <table className="table gi-vender-table">

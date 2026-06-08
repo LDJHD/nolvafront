@@ -2,13 +2,13 @@ import Breadcrumb from "@/components/breadcrumb/Breadcrumb";
 import CreateEventForm from "@/components/events/CreateEventForm";
 
 export const metadata = {
-  title: "Publier un événement | NOLVA",
+  title: "Creer mon evenement | NOLVA",
 };
 
 export default function PublierEvenementPage() {
   return (
     <>
-      <Breadcrumb title="Publier un événement" />
+      <Breadcrumb title="Creer mon evenement" />
       <CreateEventForm />
     </>
   );

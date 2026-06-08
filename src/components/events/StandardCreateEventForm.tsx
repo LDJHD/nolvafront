@@ -121,14 +121,14 @@ const StandardCreateEventForm = () => {
       });
       showSuccessToast(
         res.data?.message ||
-          "Evenement cree avec succes. Il sera visible apres validation par l'administration."
+          "Evenement publie avec succes. Il sera visible apres validation par l'administration."
       );
       router.push("/user-dashboard");
     } catch (err: any) {
       showErrorToast(
         err.response?.data?.errors?.[0]?.message ||
           err.response?.data?.message ||
-          "Erreur lors de la creation"
+          "Erreur lors de la publication"
       );
     } finally {
       setSubmitting(false);
@@ -139,7 +139,7 @@ const StandardCreateEventForm = () => {
     return (
       <section className="padding-tb-40">
         <div className="container text-center">
-          <p>Connectez-vous pour creer un evenement sur NOLVA.</p>
+          <p>Connectez-vous pour publier un evenement sur NOLVA.</p>
           <Link href="/login" className="gi-btn-1">
             Se connecter
           </Link>
@@ -153,7 +153,7 @@ const StandardCreateEventForm = () => {
       <div className="container">
         <div className="gi-vendor-dashboard-card" style={{ maxWidth: "980px", margin: "0 auto" }}>
           <div className="gi-vendor-card-header">
-            <h5 style={{ margin: 0 }}>Creer mon evenement</h5>
+            <h5 style={{ margin: 0 }}>Publier mon evenement</h5>
           </div>
           <div className="gi-vendor-card-body p-4">
             <Form onSubmit={submit}>
@@ -302,12 +302,12 @@ const StandardCreateEventForm = () => {
               )}
 
               <div className="alert alert-info mt-4 mb-0">
-                Tout evenement cree doit etre valide par l&apos;administration avant d&apos;apparaitre sur la plateforme.
+                Tout evenement publie doit etre valide par l&apos;administration avant d&apos;apparaitre sur la plateforme.
               </div>
 
               <div className="d-flex gap-2 mt-4 flex-wrap">
                 <button type="submit" className="gi-btn-1" disabled={submitting}>
-                  {submitting ? "Creation..." : "Creer mon evenement"}
+                  {submitting ? "Publication..." : "Publier mon evenement"}
                 </button>
                 <Link href="/evenements" className="gi-btn-2">
                   Annuler

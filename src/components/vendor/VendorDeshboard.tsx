@@ -9,6 +9,20 @@ import { downloadPaymentProof } from "@/lib/downloadPaymentProof";
 import Link from "next/link";
 import NolvaContractDownloadButton from "@/components/legal/NolvaContractDownloadButton";
 
+const DEFAULT_VENDOR_COVER = "/assets/img/logo/logo.png";
+
+const providerProfilePhoto = (provider: any): string => {
+  const src =
+    provider?.profilePhoto ||
+    provider?.profile_photo ||
+    provider?.logo ||
+    provider?.business_logo ||
+    "";
+  if (!src) return "";
+  if (src.startsWith("data:") || src.startsWith("http") || src.startsWith("/")) return src;
+  return `/${src}`;
+};
+
 const VendorDeshboard = () => {
   const [quoteRequests, setQuoteRequests] = useState<any[]>([]);
   const [reservations, setReservations] = useState<any[]>([]);
@@ -48,6 +62,7 @@ const VendorDeshboard = () => {
   }
 
   const provider = providerProfile || user?.serviceProvider;
+  const vendorCoverPhoto = providerProfilePhoto(provider) || DEFAULT_VENDOR_COVER;
   const pendingQuotes = quoteRequests.filter((q: any) => q.status === "pending").length;
   const confirmedReservations = reservations.filter((r: any) => r.status === "confirmed").length;
   const totalRevenue = reservations
@@ -84,7 +99,10 @@ const VendorDeshboard = () => {
 
               <Row className="mb-4">
                 <div className="container">
-                  <div className="gi-vendor-cover nolva-vendor-cover">
+                  <div
+                    className="gi-vendor-cover nolva-vendor-cover"
+                    style={{ backgroundImage: `url("${vendorCoverPhoto}")` }}
+                  >
                     <div className="detail">
                       <div className="nolva-provider-avatar" style={{ width: "80px", height: "80px", fontSize: "32px", overflow: "hidden" }}>
                         {provider?.profilePhoto || provider?.profile_photo || user?.avatar ? (

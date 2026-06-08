@@ -1,6 +1,7 @@
 "use client";
 import { Col, Row } from "react-bootstrap";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import CategoryItem from "../product-item/CategoryItem";
 import Spinner from "../button/Spinner";
@@ -58,8 +59,9 @@ const HomeProviderCategories = ({ className = "padding-tb-40" }) => {
           <Col xl={12}>
             <Swiper
               dir={direction === "RTL" ? "rtl" : "ltr"}
+              modules={[Autoplay]}
               loop={items.length > 5}
-              autoplay={{ delay: 3000 }}
+              autoplay={{ delay: 3000, disableOnInteraction: false }}
               slidesPerView={5}
               spaceBetween={20}
               breakpoints={{
