@@ -79,7 +79,7 @@ export default function NolvaFooter() {
             <div style={{ color: "rgba(255,255,255,0.6)", fontSize: "14px", lineHeight: "2" }}>
               <p>📍 Cotonou, Bénin</p>
               <p>📞 +229 XX XX XX XX</p>
-              <p>✉️ contact@nolva.bj</p>
+              <p>✉️ contact@nolva.org</p>
             </div>
             <div style={{ marginTop: "20px" }}>
               <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "13px", marginBottom: "10px" }}>

@@ -240,8 +240,8 @@ function Footer() {
                               <span>
                                 <i className="fi fi-rr-envelope"></i>
                               </span>
-                              <a href="mailto:contact@nolva.bj">
-                                contact@nolva.bj
+                              <a href="mailto:contact@nolva.org">
+                                contact@nolva.org
                               </a>
                             </li>
                           </ul>

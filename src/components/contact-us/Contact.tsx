@@ -48,13 +48,13 @@ const Contact = () => {
                       <i className="fa fa-envelope" aria-hidden="true">
                         <FaEnvelope />
                       </i>{" "}
-                      &nbsp; contact@nolva.bj
+                      &nbsp; contact@nolva.org
                     </p>
                     <p>
                       <i className="fa fa-globe" aria-hidden="true">
                         <FaGlobeAmericas />
                       </i>{" "}
-                      &nbsp; www.nolva.bj
+                      &nbsp; www.nolva.org
                     </p>
                   </div>
                 </div>
