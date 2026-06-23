@@ -80,7 +80,6 @@ const VendorDeshboard = () => {
         { label: "Justificatif unique", value: transaction?.proofCode || transaction?.proof_code },
         { label: "Numero de transaction", value: transaction?.reference },
         { label: "Client", value: `${reservation.user?.first_name || reservation.user?.firstName || ""} ${reservation.user?.last_name || reservation.user?.lastName || ""}`.trim() },
-        { label: "Email client", value: reservation.user?.email },
         { label: "Montant", value: reservation.total_amount ? `${Number(reservation.total_amount).toLocaleString("fr-FR")} FCFA` : null },
         { label: "Paiement", value: reservation.payment_status },
         { label: "Statut", value: reservation.status },
@@ -253,7 +252,7 @@ const VendorDeshboard = () => {
                                     <NolvaContractDownloadButton
                                       actorLabel="prestataire"
                                       className="btn btn-outline-secondary btn-sm"
-                                      label="Contrat"
+                                      label="LIRE LE CONTRAT NOLVA"
                                     />
                                   )}
                                   {((r.payment_transaction || r.paymentTransaction)?.proofCode ||

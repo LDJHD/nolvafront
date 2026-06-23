@@ -101,7 +101,7 @@ const ReservationPaymentActions = ({ reservation, onUpdated }: Props) => {
         <NolvaContractDownloadButton
           actorLabel="client"
           className="btn btn-sm btn-outline-secondary"
-          label="Contrat NOLVA"
+          label="LIRE LE CONTRAT NOLVA"
         />
       )}
       {ps === "fully_paid" && st === "confirmed" && (

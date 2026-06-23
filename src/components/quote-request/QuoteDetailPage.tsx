@@ -166,7 +166,7 @@ const QuoteDetailPage = () => {
                   <NolvaContractDownloadButton
                     actorLabel="prestataire"
                     className="btn btn-outline-secondary w-100"
-                    label="Télécharger le contrat NOLVA"
+                    label="LIRE LE CONTRAT NOLVA"
                   />
                 </div>
               )}

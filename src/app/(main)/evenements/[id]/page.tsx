@@ -136,6 +136,15 @@ const EventDetailPage = () => {
         minute: "2-digit",
       })
     : "";
+  const shareUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/evenements/${event.shareSlug || event.share_slug || event.id}`
+      : "";
+  const copyShareLink = async () => {
+    if (!shareUrl) return;
+    await navigator.clipboard.writeText(shareUrl);
+    toast.success("Lien de l'evenement copie");
+  };
 
   return (
     <>
@@ -173,6 +182,9 @@ const EventDetailPage = () => {
                       : event.status}
                 </span>
                 <h1 className="nolva-event-hero-title">{event.title}</h1>
+                <button type="button" className="btn btn-outline-secondary btn-sm mb-3" onClick={copyShareLink}>
+                  Copier le lien
+                </button>
 
                 <div className="nolva-event-hero-meta">
                   <div className="nolva-event-meta-item">

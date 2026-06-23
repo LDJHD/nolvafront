@@ -218,6 +218,7 @@ export const eventsApi = {
     api.get('/events/publish-suggestions', { params }),
   create: (data: any) => api.post('/events', data),
   myEvents: (params?: any) => api.get('/user/events', { params }),
+  updateMine: (id: number | string, data: any) => api.put(`/user/events/${id}`, data),
   cancelMine: (id: number | string, data?: { reason?: string }) =>
     api.post(`/user/events/${id}/cancel`, data || {}),
   rescheduleMine: (
@@ -225,5 +226,7 @@ export const eventsApi = {
     data: { event_date: string; location?: string; city?: string }
   ) => api.post(`/user/events/${id}/reschedule`, data),
   ticketSales: (id: number | string) => api.get(`/user/events/${id}/ticket-sales`),
+  scanTicket: (id: number | string, data: { qr_code: string }) =>
+    api.post(`/user/events/${id}/tickets/scan`, data),
   myTickets: (params?: any) => api.get('/user/tickets', { params }),
 }

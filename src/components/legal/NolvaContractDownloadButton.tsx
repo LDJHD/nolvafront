@@ -1,5 +1,5 @@
 "use client";
-import { downloadNolvaCguContract } from "@/lib/nolvaCguContract";
+import Link from "next/link";
 
 type Props = {
   actorLabel?: "client" | "prestataire";
@@ -8,17 +8,12 @@ type Props = {
 };
 
 const NolvaContractDownloadButton = ({
-  actorLabel = "client",
   className = "gi-btn-2",
-  label = "Télécharger le contrat NOLVA",
+  label = "LIRE LE CONTRAT NOLVA",
 }: Props) => (
-  <button
-    type="button"
-    className={className}
-    onClick={() => downloadNolvaCguContract(`contrat-cgu-nolva-${actorLabel}.txt`)}
-  >
+  <Link href="/terms-condition" target="_blank" className={className} style={{ textDecoration: "none" }}>
     {label}
-  </button>
+  </Link>
 );
 
 export default NolvaContractDownloadButton;

@@ -7,7 +7,7 @@ import Link from "next/link";
 import { paymentsApi } from "@/lib/api";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import NolvaContractDownloadButton from "@/components/legal/NolvaContractDownloadButton";
+import { downloadPaymentProof } from "@/lib/downloadPaymentProof";
 
 const PaymentConfirmationPage = () => {
   const searchParams = useSearchParams();
@@ -22,6 +22,35 @@ const PaymentConfirmationPage = () => {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
+
+  const downloadOrderForm = () => {
+    if (!result) return;
+    const transaction = result.transaction;
+    const ticket = result.ticket;
+    const qrCode = ticket?.qrCode || transaction?.proofQrCode || transaction?.proof_qr_code;
+    downloadPaymentProof({
+      title: "Bon de commande NOLVA",
+      subtitle: type === "ticket" ? "Achat de billet" : "Reservation de prestation",
+      fileName: transaction?.reference || ticket?.ticketCode || `bon-commande-${ref || "nolva"}`,
+      qrCode,
+      fields: [
+        { label: "Reference", value: transaction?.reference || ref },
+        { label: "Type", value: type === "ticket" ? "Billet evenement" : "Prestation" },
+        { label: "Ticket", value: ticket?.ticketCode },
+        { label: "Categorie", value: ticket?.type },
+        {
+          label: "Montant",
+          value: transaction?.amount
+            ? `${Number(transaction.amount).toLocaleString("fr-FR")} FCFA`
+            : ticket?.amount
+              ? `${Number(ticket.amount).toLocaleString("fr-FR")} FCFA`
+              : null,
+        },
+        { label: "Statut", value: "Paiement confirme" },
+        { label: "QR code unique", value: qrCode },
+      ],
+    });
+  };
 
   useEffect(() => {
     if (!ref || !isAuthenticated) {
@@ -199,11 +228,9 @@ const PaymentConfirmationPage = () => {
                       )}
 
                       <div className="d-flex gap-2 justify-content-center mt-3">
-                        <NolvaContractDownloadButton
-                          actorLabel="client"
-                          className="gi-btn-2"
-                          label="Télécharger le contrat"
-                        />
+                        <button type="button" className="gi-btn-2" onClick={downloadOrderForm}>
+                          Telecharger le bon de commande
+                        </button>
                         {type === "ticket" ? (
                           <Link href="/evenements" className="gi-btn-1">
                             <i className="fi fi-rr-calendar"></i> Mes evenements

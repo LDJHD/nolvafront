@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Form } from "react-bootstrap";
-import { offersApi, providersApi } from "@/lib/api";
+import { availabilityApi, offersApi, providersApi } from "@/lib/api";
 import {
   PAYOUT_METHOD_OPTIONS,
   PAYOUT_REGIONS,
@@ -15,6 +15,14 @@ import { showErrorToast, showSuccessToast } from "../toast-popup/Toastify";
 import { BENIN_CITY_DATALIST_ID, beninCities } from "@/lib/beninCities";
 
 const MAX_PORTFOLIO_PHOTOS = 7;
+const WEEK_DAYS = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
+const defaultWeeklySchedule = () =>
+  WEEK_DAYS.map((day) => ({
+    day,
+    is_available: day !== "dimanche",
+    start_time: "08:00",
+    end_time: "18:00",
+  }));
 
 const providerProfilePhoto = (provider: any): string => {
   const src =
@@ -104,6 +112,7 @@ const ProviderProfileForm = () => {
     event_types: [] as string[],
     momo_network: "",
     momo_phone: "",
+    weekly_schedule: defaultWeeklySchedule(),
   });
 
   const loadProfile = useCallback(async () => {
@@ -111,6 +120,9 @@ const ProviderProfileForm = () => {
     try {
       const res = await providersApi.myProfile();
       const p = res.data;
+      const availability = Array.isArray(p.availabilities) ? p.availabilities[0] : null;
+      const weeklySchedule =
+        availability?.weeklySchedule || availability?.weekly_schedule || defaultWeeklySchedule();
       setForm({
         business_name: p.businessName || p.business_name || "",
         company_position: p.companyPosition || p.company_position || "",
@@ -128,6 +140,7 @@ const ProviderProfileForm = () => {
         event_types: safeParseArray(p.eventTypes || p.event_types),
         momo_network: p.momoNetwork || p.momo_network || "",
         momo_phone: p.momoPhone || p.momo_phone || "",
+        weekly_schedule: weeklySchedule,
       });
       const loaded = (p.photos || []).filter(
         (ph: any) => ph?.url && String(ph.url).length > 80
@@ -172,6 +185,19 @@ const ProviderProfileForm = () => {
       else set.add(slug);
       return { ...prev, event_types: Array.from(set) };
     });
+  };
+
+  const updateSchedule = (
+    day: string,
+    field: "is_available" | "start_time" | "end_time",
+    value: boolean | string
+  ) => {
+    setForm((prev) => ({
+      ...prev,
+      weekly_schedule: prev.weekly_schedule.map((item) =>
+        item.day === day ? { ...item, [field]: value } : item
+      ),
+    }));
   };
 
   const onProfilePhotoFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -334,6 +360,10 @@ const ProviderProfileForm = () => {
         payload.profile_photo = form.profile_photo;
       }
       await providersApi.updateMyProfile(payload);
+      await availabilityApi.update({
+        weekly_schedule: form.weekly_schedule,
+        urgent_available: false,
+      });
       showSuccessToast("Profil prestataire enregistré. Visible sur votre fiche publique.");
       setPreviewProfilePhoto(null);
       void loadProfile();
@@ -490,6 +520,46 @@ const ProviderProfileForm = () => {
                   checked={form.event_types.includes(et.slug)}
                   onChange={() => toggleEventType(et.slug)}
                 />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="gi-vendor-dashboard-card mb-4 p-4">
+          <h5 className="mb-3">Heures d&apos;ouverture et disponibilites</h5>
+          <div className="row g-3">
+            {form.weekly_schedule.map((item) => (
+              <div key={item.day} className="col-md-6">
+                <div className="border rounded p-3 h-100">
+                  <div className="d-flex justify-content-between align-items-center mb-2">
+                    <strong style={{ textTransform: "capitalize" }}>{item.day}</strong>
+                    <Form.Check
+                      type="switch"
+                      id={`available-${item.day}`}
+                      label={item.is_available ? "Disponible" : "Indisponible"}
+                      checked={item.is_available}
+                      onChange={(e) => updateSchedule(item.day, "is_available", e.target.checked)}
+                    />
+                  </div>
+                  <div className="row g-2">
+                    <div className="col-6">
+                      <Form.Control
+                        type="time"
+                        value={item.start_time || ""}
+                        disabled={!item.is_available}
+                        onChange={(e) => updateSchedule(item.day, "start_time", e.target.value)}
+                      />
+                    </div>
+                    <div className="col-6">
+                      <Form.Control
+                        type="time"
+                        value={item.end_time || ""}
+                        disabled={!item.is_available}
+                        onChange={(e) => updateSchedule(item.day, "end_time", e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>

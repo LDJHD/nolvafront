@@ -11,7 +11,6 @@ import { parseRegisterError } from "@/lib/registerErrors";
 import { useProviderTypes } from "@/lib/useCatalog";
 import { BENIN_CITY_DATALIST_ID, beninCities } from "@/lib/beninCities";
 import Link from "next/link";
-import WelcomeMessage from "./WelcomeMessage";
 
 const phoneCountries = [
   { code: "+229", label: "Bénin (+229)" },
@@ -49,7 +48,7 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
   const [validated, setValidated] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [registeredUser, setRegisteredUser] = useState<any>(null);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [form, setForm] = useState({
     first_name: "",
@@ -116,8 +115,8 @@ const RegisterPage = () => {
       const res = await authApi.register(payload);
       const { token, user } = res.data;
       dispatch(setCredentials({ user, token: token.value || token }));
-      setRegisteredUser(user);
-      showSuccessToast("Compte créé ! Bienvenue sur NOLVA.");
+      showSuccessToast(res.data?.message || "Compte cree. Consultez votre email.");
+      router.push(user?.role === "provider" ? "/vendor-dashboard" : "/user-dashboard");
     } catch (err: any) {
       showErrorToast(parseRegisterError(err));
     } finally {
@@ -169,9 +168,6 @@ const RegisterPage = () => {
             <div className="gi-register-wrapper">
               <div className="gi-register-container">
                 <div className="gi-register-form">
-                  {registeredUser ? (
-                    <WelcomeMessage firstName={registeredUser.firstName || registeredUser.first_name} />
-                  ) : (
                   <Form noValidate validated={validated} onSubmit={handleSubmit} className="nolva-register-form">
 
                     <div className="row g-3">
@@ -236,9 +232,12 @@ const RegisterPage = () => {
                       <div className="col-md-6">
                         <div className="nolva-register-field">
                           <label htmlFor="reg-confirmPassword">Confirmer le mot de passe *</label>
-                          <Form.Group controlId="reg-confirmPassword">
-                            <Form.Control type={showPassword ? "text" : "password"} name="confirmPassword" placeholder="Répétez le mot de passe"
+                          <Form.Group controlId="reg-confirmPassword" className="nolva-password-field">
+                            <Form.Control type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder="Répétez le mot de passe"
                               value={form.confirmPassword} onChange={handleChange} required />
+                            <button type="button" onClick={() => setShowConfirmPassword((value) => !value)} aria-label="Afficher la confirmation du mot de passe">
+                              <i className={showConfirmPassword ? "fi fi-rr-eye-crossed" : "fi fi-rr-eye"}></i>
+                            </button>
                             <Form.Control.Feedback type="invalid">Confirmation requise.</Form.Control.Feedback>
                           </Form.Group>
                         </div>
@@ -332,7 +331,6 @@ const RegisterPage = () => {
                       </button>
                     </span>
                   </Form>
-                  )}
                 </div>
               </div>
             </div>

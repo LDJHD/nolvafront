@@ -19,7 +19,7 @@ const ConfidentialitePage = () => {
             <li>Données collectées : identité, contact, localisation, historique d&apos;événements</li>
             <li>Finalités : gestion de compte, paiements sécurisés, support client</li>
             <li>Partenaires : prestataires de paiement (FedaPay), hébergement sécurisé</li>
-            <li>Contact : support@nolva.com — Cotonou, Bénin</li>
+            <li>Contact : contact@nolva.org — Cotonou, Bénin</li>
           </ul>
           <p className="mt-4">
             <a

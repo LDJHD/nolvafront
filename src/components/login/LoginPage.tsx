@@ -13,6 +13,7 @@ import { authApi } from "@/lib/api";
 const LoginPage = () => {
   const [uid, setUid] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [validated, setValidated] = useState(false);
   const router = useRouter();
@@ -91,15 +92,18 @@ const LoginPage = () => {
 
                       <span style={{ marginTop: "24px" }} className="gi-login-wrap">
                         <label>Mot de passe *</label>
-                        <Form.Group>
+                        <Form.Group className="nolva-password-field">
                           <Form.Control
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Entrez votre mot de passe"
                             required
                             minLength={6}
                           />
+                          <button type="button" onClick={() => setShowPassword((value) => !value)} aria-label="Afficher le mot de passe">
+                            <i className={showPassword ? "fi fi-rr-eye-crossed" : "fi fi-rr-eye"}></i>
+                          </button>
                           <Form.Control.Feedback type="invalid">
                             Le mot de passe doit contenir au moins 6 caractères.
                           </Form.Control.Feedback>

@@ -59,6 +59,8 @@ const ProviderProfilePage = () => {
   const portfolioPhotos = (provider.photos || []).filter(
     (p: any) => p?.url && String(p.url).startsWith("data:image")
   );
+  const availability = Array.isArray(provider.availabilities) ? provider.availabilities[0] : null;
+  const weeklySchedule = availability?.weeklySchedule || availability?.weekly_schedule || [];
 
   return (
     <>
@@ -211,6 +213,28 @@ const ProviderProfilePage = () => {
               </div>
 
               {/* Réseaux sociaux */}
+              {weeklySchedule.length > 0 && (
+                <div className="gi-vendor-dashboard-card mb-4">
+                  <div className="gi-vendor-card-header">
+                    <h5>Disponibilites</h5>
+                  </div>
+                  <div className="gi-vendor-card-body">
+                    <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                      {weeklySchedule.map((item: any) => (
+                        <li key={item.day} className="mb-2 d-flex justify-content-between gap-2">
+                          <span style={{ textTransform: "capitalize" }}>{item.day}</span>
+                          <strong>
+                            {item.is_available
+                              ? `${item.start_time || "--:--"} - ${item.end_time || "--:--"}`
+                              : "Indisponible"}
+                          </strong>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+
               {(provider.instagram || provider.facebook || provider.tiktok) && (
                 <div className="gi-vendor-dashboard-card">
                   <div className="gi-vendor-card-header">
