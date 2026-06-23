@@ -20,7 +20,7 @@ export const metadata = {
   },
   icons: {
     icon: "/favicon.ico",
-    apple: "/assets/img/logo/nolva-logo.png",
+    apple: "/assets/img/logo/icone.png",
   },
 };
 
