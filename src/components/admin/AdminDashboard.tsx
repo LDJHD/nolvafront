@@ -10,6 +10,7 @@ import AdminDirectoryProviders from "./AdminDirectoryProviders";
 import AdminDirectoryQuotes from "./AdminDirectoryQuotes";
 import AdminQuoteActivities from "./AdminQuoteActivities";
 import AdminPayoutsPanel from "./AdminPayoutsPanel";
+import AdminMembersHistory from "./AdminMembersHistory";
 import { showErrorToast, showSuccessToast } from "../toast-popup/Toastify";
 import { Col, Form, Row } from "react-bootstrap";
 import { PAYOUT_METHOD_OPTIONS, payoutDestinationHint } from "@/lib/payoutMethods";
@@ -21,6 +22,7 @@ type Tab =
   | "commissions"
   | "payouts"
   | "events"
+  | "members"
   | "providers"
   | "quotes"
   | "catalog";
@@ -284,6 +286,7 @@ const AdminDashboard = () => {
               ["commissions", "Commissions"],
               ["payouts", "Reversements"],
               ["events", "Événements"],
+              ["members", "Adherents"],
               ["providers", "Prestataires"],
               ["quotes", "Devis"],
               ["catalog", "Catalogue"],
@@ -331,27 +334,10 @@ const AdminDashboard = () => {
                 <Col md={12}>
                   <div className="gi-vendor-dashboard-card p-4">
                     <h5>Paiements sécurisés FedaPay</h5>
-                    <p style={{ color: "#666", marginBottom: "12px" }}>
-                      Escrow : fonds bloqués jusqu&apos;à validation (24h prestataire / 48h après
-                      événement).
+                    <p style={{ color: "#666", marginBottom: 0 }}>
+                      Les prestations validées restent en attente jusqu&apos;au reversement FedaPay
+                      manuel depuis l&apos;onglet Reversements.
                     </p>
-                    <button
-                      type="button"
-                      className="gi-btn-2 btn-sm"
-                      onClick={async () => {
-                        try {
-                          const res = await adminApi.runEscrowRelease();
-                          showSuccessToast(
-                            `Libérations : ${res.data.tickets} billet(s), ${res.data.providers} prestation(s)`
-                          );
-                          loadData();
-                        } catch (e: any) {
-                          showErrorToast(e.response?.data?.message || "Erreur");
-                        }
-                      }}
-                    >
-                      Exécuter les libérations automatiques
-                    </button>
                   </div>
                 </Col>
               </Row>
@@ -406,18 +392,51 @@ const AdminDashboard = () => {
                               </span>
                             </td>
                             <td>
-                              {t.status === "paid" && (
-                                <button
-                                  type="button"
-                                  className="btn btn-sm btn-outline-warning"
-                                  onClick={() => {
-                                    setFreezeRef(t.reference);
-                                    setFreezeNote("");
-                                  }}
-                                >
-                                  Geler
-                                </button>
-                              )}
+                              <div className="d-flex flex-wrap gap-1">
+                                {t.type === "provider_payment" && t.status === "paid" && (
+                                  <>
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-outline-success"
+                                      onClick={() => setTab("payouts")}
+                                    >
+                                      Reversement
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-outline-primary"
+                                      onClick={() => setTab("payouts")}
+                                    >
+                                      Message
+                                    </button>
+                                  </>
+                                )}
+                                {t.status === "paid" && (
+                                  <button
+                                    type="button"
+                                    className="btn btn-sm btn-outline-warning"
+                                    onClick={() => {
+                                      setFreezeRef(t.reference);
+                                      setFreezeNote("");
+                                    }}
+                                  >
+                                    Geler
+                                  </button>
+                                )}
+                                {t.status === "disputed" && (
+                                  <button
+                                    type="button"
+                                    className="btn btn-sm btn-outline-danger"
+                                    onClick={() => {
+                                      setResolveRef(t.reference);
+                                      setRefundAmount(String(t.amount || ""));
+                                      setTab("disputes");
+                                    }}
+                                  >
+                                    Litige
+                                  </button>
+                                )}
+                              </div>
                             </td>
                           </tr>
                         ))
@@ -797,6 +816,8 @@ const AdminDashboard = () => {
             )}
 
             {tab === "events" && <AdminDirectoryEvents />}
+
+            {tab === "members" && <AdminMembersHistory />}
 
             {tab === "providers" && <AdminDirectoryProviders />}
 

@@ -304,16 +304,13 @@ Adresse : [À compléter]
 
 En créant un compte, en publiant un contenu ou en utilisant les services de NOLVA, l’utilisateur reconnaît avoir lu, compris et accepté sans réserve les présentes Conditions Générales d’Utilisation.`;
 
-export const downloadNolvaCguContract = (fileName = "contrat-cgu-nolva.txt") => {
+export const downloadNolvaCguContract = (fileName = "cgu-nolva.pdf") => {
   if (typeof window === "undefined") return;
 
-  const blob = new Blob([NOLVA_CGU_TEXT], { type: "text/plain;charset=utf-8" });
-  const url = window.URL.createObjectURL(blob);
   const link = document.createElement("a");
-  link.href = url;
+  link.href = "/documents/cgu-nolva.pdf";
   link.download = fileName;
   document.body.appendChild(link);
   link.click();
   link.remove();
-  window.URL.revokeObjectURL(url);
 };

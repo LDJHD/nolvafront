@@ -39,9 +39,13 @@ const QuoteDetailPage = () => {
     if (!id) return;
     setLoading(true);
     try {
-      const res = isProvider
-        ? await quoteRequestsApi.providerShow(id as string)
-        : await quoteRequestsApi.show(id as string);
+      let res;
+      try {
+        res = await quoteRequestsApi.show(id as string);
+      } catch (error) {
+        if (!isProvider) throw error;
+        res = await quoteRequestsApi.providerShow(id as string);
+      }
       setQuote(res.data);
       const price = res.data?.agreedPrice ?? res.data?.agreed_price ?? res.data?.proposedPrice ?? res.data?.proposed_price;
       if (price) setAgreedPrice(String(price));
@@ -60,7 +64,8 @@ const QuoteDetailPage = () => {
     if (!messageText.trim()) return;
     setSending(true);
     try {
-      if (isProvider) {
+      const ownsQuote = Number(quote?.userId ?? quote?.user_id) === Number(user?.id);
+      if (isProvider && !ownsQuote) {
         await quoteRequestsApi.providerPostMessage(id as string, messageText.trim());
       } else {
         await quoteRequestsApi.postMessage(id as string, messageText.trim());
@@ -118,8 +123,9 @@ const QuoteDetailPage = () => {
   const resPayment = reservation?.paymentStatus || reservation?.payment_status;
   const eventDate = quote.eventDate || quote.event_date;
   const proposedPrice = quote.proposedPrice ?? quote.proposed_price;
-  const canProviderAct = isProvider && ["pending", "negotiating"].includes(quote.status);
-  const canClientPay = !isProvider && quote.status === "accepted" && reservation && resPayment === "unpaid";
+  const isQuoteOwner = Number(quote.userId ?? quote.user_id) === Number(user?.id);
+  const canProviderAct = isProvider && !isQuoteOwner && ["pending", "negotiating"].includes(quote.status);
+  const canClientPay = isQuoteOwner && quote.status === "accepted" && reservation && resPayment === "unpaid";
 
   return (
     <section className="padding-tb-40">

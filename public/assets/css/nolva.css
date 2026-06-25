@@ -1213,6 +1213,51 @@ a:hover { color: var(--nolva-red) !important; text-decoration: none !important; 
   color: var(--nolva-gray);
   font-size: 13px;
 }
+.nolva-notification-foot {
+  padding: 10px 14px;
+  border-top: 1px solid var(--nolva-border);
+  text-align: center;
+}
+.nolva-notification-foot a {
+  color: var(--nolva-red);
+  font-size: 12px;
+  font-weight: 800;
+}
+.nolva-notification-list {
+  display: grid;
+  gap: 10px;
+}
+.nolva-notification-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--nolva-border);
+  border-radius: 8px;
+  background: #fff;
+}
+.nolva-notification-row.unread {
+  background: var(--nolva-red-glow);
+  border-color: rgba(227, 30, 36, 0.22);
+}
+.nolva-notification-row a {
+  display: grid;
+  gap: 4px;
+  color: var(--nolva-black);
+  flex: 1;
+}
+.nolva-notification-row strong {
+  font-size: 14px;
+}
+.nolva-notification-row span {
+  color: var(--nolva-gray);
+  line-height: 1.45;
+}
+.nolva-notification-row em {
+  color: var(--nolva-gray-light);
+  font-size: 12px;
+  font-style: normal;
+}
 .header-top-res .nolva-notification-mobile .header-icon {
   background: rgba(255,255,255,0.14);
   border: 1px solid rgba(255,255,255,0.22);

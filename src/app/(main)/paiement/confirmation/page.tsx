@@ -228,9 +228,11 @@ const PaymentConfirmationPage = () => {
                       )}
 
                       <div className="d-flex gap-2 justify-content-center mt-3">
-                        <button type="button" className="gi-btn-2" onClick={downloadOrderForm}>
-                          Telecharger le bon de commande
-                        </button>
+                        {type !== "ticket" && (
+                          <button type="button" className="gi-btn-2" onClick={downloadOrderForm}>
+                            Telecharger le bon de commande
+                          </button>
+                        )}
                         {type === "ticket" ? (
                           <Link href="/evenements" className="gi-btn-1">
                             <i className="fi fi-rr-calendar"></i> Mes evenements

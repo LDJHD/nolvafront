@@ -52,12 +52,20 @@ const NotificationBell = ({ mobile = false }: { mobile?: boolean }) => {
     }
   };
 
+  const notifyChanged = () => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("nolva:notifications-changed"));
+    }
+  };
+
   useEffect(() => {
     if (!isAuthenticated) return;
     load();
     timerRef.current = setInterval(load, 30000);
+    window.addEventListener("nolva:notifications-changed", load);
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
+      window.removeEventListener("nolva:notifications-changed", load);
     };
   }, [isAuthenticated]);
 
@@ -68,8 +76,29 @@ const NotificationBell = ({ mobile = false }: { mobile?: boolean }) => {
     try {
       await notificationsApi.markAllRead();
       await load();
+      notifyChanged();
     } finally {
       setLoading(false);
+    }
+  };
+
+  const markRead = async (item: NotificationItem) => {
+    const isUnread = !(item.readAt || item.read_at);
+    setOpen(false);
+    if (!isUnread) return;
+    setUnread((value) => Math.max(0, value - 1));
+    setItems((current) =>
+      current.map((notification) =>
+        notification.id === item.id
+          ? { ...notification, readAt: new Date().toISOString(), read_at: new Date().toISOString() }
+          : notification
+      )
+    );
+    try {
+      await notificationsApi.markRead(item.id);
+      notifyChanged();
+    } catch {
+      await load();
     }
   };
 
@@ -103,10 +132,11 @@ const NotificationBell = ({ mobile = false }: { mobile?: boolean }) => {
                 const href =
                   item.metadata?.url ||
                   item.metadata?.href ||
+                  (item.metadata?.quote_request_id ? `/devis/${item.metadata.quote_request_id}` : "") ||
                   (item.kind?.includes("event") ? "/user-dashboard" : "/user-dashboard");
                 return (
                   <li key={item.id} className={isUnread ? "unread" : ""}>
-                    <Link href={href} onClick={() => setOpen(false)}>
+                    <Link href={href} onClick={() => markRead(item)}>
                       <span>{item.title}</span>
                       <small>{item.body}</small>
                       <em>{formatDate(item.createdAt || item.created_at)}</em>
@@ -116,6 +146,9 @@ const NotificationBell = ({ mobile = false }: { mobile?: boolean }) => {
               })}
             </ul>
           )}
+          <div className="nolva-notification-foot">
+            <Link href="/notifications" onClick={() => setOpen(false)}>Voir toutes les notifications</Link>
+          </div>
         </div>
       )}
     </div>

@@ -7,6 +7,7 @@ import { RootState } from "@/store";
 import { logout, initFromStorage } from "@/store/reducers/authSlice";
 import { authApi } from "@/lib/api";
 import { accountDisplayName } from "@/lib/accountDisplay";
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 export default function NolvaHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -100,6 +101,7 @@ export default function NolvaHeader() {
 
           {/* Boutons droite */}
           <div className="d-flex align-items-center" style={{ gap: "12px" }}>
+            {isAuthenticated && <NotificationBell />}
             {!isAuthenticated ? (
               <Link href="/inscription?role=provider"
                 style={{
@@ -124,17 +126,20 @@ export default function NolvaHeader() {
                   {user?.role === "admin" ? (
                     <>
                       <li><Link className="dropdown-item" href="/admin">Tableau de bord admin</Link></li>
+                      <li><Link className="dropdown-item" href="/notifications">Notifications</Link></li>
                     </>
                   ) : user?.role === "provider" ? (
                     <>
                       <li><Link className="dropdown-item" href="/vendor-dashboard">Mon tableau de bord</Link></li>
                       <li><Link className="dropdown-item" href="/vendor-profile">Mon profil</Link></li>
+                      <li><Link className="dropdown-item" href="/notifications">Notifications</Link></li>
                     </>
                   ) : (
                     <>
                       <li><Link className="dropdown-item" href="/user-dashboard">Mon compte</Link></li>
                       <li><Link className="dropdown-item" href="/user-dashboard">Mes réservations</Link></li>
                       <li><Link className="dropdown-item" href="/user-dashboard">Mes billets</Link></li>
+                      <li><Link className="dropdown-item" href="/notifications">Notifications</Link></li>
                     </>
                   )}
                   <li><hr className="dropdown-divider" /></li>

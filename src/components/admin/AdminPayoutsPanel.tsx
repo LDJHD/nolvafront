@@ -56,11 +56,8 @@ const AdminPayoutsPanel = () => {
   );
 
   const applyProviderDefaults = (txn: any) => {
-    const p = txn?.reservation?.provider;
-    const method = p?.momoNetwork || p?.momo_network || "bj_mtn";
-    const dest = p?.momoPhone || p?.momo_phone || "";
-    setPayoutMethod(method);
-    setPayoutDestination(dest);
+    setPayoutMethod("bj_mtn");
+    setPayoutDestination("");
     setPayoutAmount(String(txn?.net_amount ?? txn?.netAmount ?? ""));
   };
 
@@ -325,8 +322,8 @@ const AdminPayoutsPanel = () => {
                     ))}
                   </Form.Select>
                   <Form.Text className="text-muted">
-                    Par défaut : choix du prestataire dans son profil. Modifiable si convenu dans la
-                    discussion.
+                    L&apos;admin choisit la méthode et saisit les informations à utiliser pour ce
+                    reversement FedaPay.
                   </Form.Text>
                 </Form.Group>
 

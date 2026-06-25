@@ -204,6 +204,7 @@ export const adminApi = {
   updateManageEvent: (id: number, data: any) => api.put(`/admin/manage/events/${id}`, data),
   listManageProviders: (params?: any) => api.get('/admin/manage/providers', { params }),
   updateManageProvider: (id: number, data: any) => api.put(`/admin/manage/providers/${id}`, data),
+  listMembersHistory: (params?: any) => api.get('/admin/manage/members-history', { params }),
   listManageQuoteRequests: (params?: any) => api.get('/admin/manage/quote-requests', { params }),
   updateManageQuoteRequest: (id: number, data: { status: string }) =>
     api.put(`/admin/manage/quote-requests/${id}`, data),

@@ -32,8 +32,23 @@ const safeFileName = (value: string) =>
     .replace(/^-+|-+$/g, "")
     .slice(0, 120);
 
+const downloadPrestationOrderForm = () => {
+  const link = document.createElement("a");
+  link.href = "/documents/bon-de-commande-prestation-evenementielle.docx";
+  link.download = "bon-de-commande-prestation-evenementielle.docx";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+};
+
 export function downloadPaymentProof({ title, subtitle, fileName, qrCode, fields }: DownloadProofOptions) {
   if (typeof window === "undefined") return;
+
+  const normalizedTitle = title.toLowerCase();
+  if (normalizedTitle.includes("prestation") || normalizedTitle.includes("bon de commande")) {
+    downloadPrestationOrderForm();
+    return;
+  }
 
   const rows = fields
     .filter((field) => field.value !== undefined && field.value !== null && field.value !== "")

@@ -11,7 +11,13 @@ const NolvaContractDownloadButton = ({
   className = "gi-btn-2",
   label = "LIRE LE CONTRAT NOLVA",
 }: Props) => (
-  <Link href="/terms-condition" target="_blank" className={className} style={{ textDecoration: "none" }}>
+  <Link
+    href="/documents/contrat-de-prestation.pdf"
+    target="_blank"
+    download
+    className={className}
+    style={{ textDecoration: "none" }}
+  >
     {label}
   </Link>
 );
