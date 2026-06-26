@@ -197,7 +197,7 @@ const CguPage = () => {
                 </Link>
               </div>
               <p style={{ color: "#999", fontSize: "13px", lineHeight: 1.7, marginTop: "18px", marginBottom: 0 }}>
-                Date d&apos;entree en vigueur : a completer par l&apos;administration NOLVA.
+                Date d&apos;entrée en vigueur : 03/06/2026.
               </p>
             </div>
           </Col>
