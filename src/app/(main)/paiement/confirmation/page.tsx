@@ -18,10 +18,16 @@ const PaymentConfirmationPage = () => {
   const [loading, setLoading] = useState(true);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const [hasStoredToken, setHasStoredToken] = useState<boolean | null>(null);
 
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
+  const canConfirmPayment = isAuthenticated || hasStoredToken === true;
+
+  useEffect(() => {
+    setHasStoredToken(!!localStorage.getItem("nolva_token"));
+  }, []);
 
   const downloadOrderForm = () => {
     if (!result) return;
@@ -53,7 +59,11 @@ const PaymentConfirmationPage = () => {
   };
 
   useEffect(() => {
-    if (!ref || !isAuthenticated) {
+    if (hasStoredToken === null) {
+      return;
+    }
+
+    if (!ref || !canConfirmPayment) {
       setLoading(false);
       return;
     }
@@ -77,7 +87,7 @@ const PaymentConfirmationPage = () => {
     };
 
     confirm();
-  }, [ref, type, isAuthenticated]);
+  }, [ref, type, canConfirmPayment, hasStoredToken]);
 
   if (loading) {
     return (
@@ -252,11 +262,11 @@ const PaymentConfirmationPage = () => {
                     <>
                       <h4>Aucune transaction trouvee</h4>
                       <p style={{ color: "var(--nolva-gray)" }}>
-                        {!isAuthenticated
+                        {!canConfirmPayment
                           ? "Connectez-vous pour confirmer votre paiement."
                           : "Reference de transaction manquante."}
                       </p>
-                      {!isAuthenticated ? (
+                      {!canConfirmPayment ? (
                         <Link href="/login" className="gi-btn-1">
                           Se connecter
                         </Link>
