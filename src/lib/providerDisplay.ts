@@ -32,11 +32,18 @@ export function offerPriceLabel(offer: {
 }
 
 export function lowestOfferPrice(
-  offers: { price_min?: number | null; priceMin?: number | null }[]
+  offers: {
+    price_min?: number | null
+    priceMin?: number | null
+    price_max?: number | null
+    priceMax?: number | null
+  }[]
 ): number {
   let lowest = 0
   for (const o of offers) {
-    const v = Number(o.priceMin ?? o.price_min ?? 0)
+    const min = Number(o.priceMin ?? o.price_min ?? 0)
+    const max = Number(o.priceMax ?? o.price_max ?? 0)
+    const v = min > 0 ? min : max
     if (v > 0 && (lowest === 0 || v < lowest)) lowest = v
   }
   return lowest

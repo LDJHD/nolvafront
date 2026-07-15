@@ -28,7 +28,7 @@ const EventsList = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const params: any = {};
+        const params: any = { limit: 1000 };
         if (cityFilter) params.city = cityFilter;
         if (typeFilter) params.type = typeFilter;
         if (searchFilter) params.search = searchFilter;

@@ -46,6 +46,7 @@ const VendorList = () => {
 
   const buildQuery = () => {
     const params = new URLSearchParams();
+    params.set("limit", "1000");
     if (filters.type) params.set("type", filters.type);
     if (filters.city) params.set("city", filters.city);
     if (filters.search) params.set("search", filters.search);
