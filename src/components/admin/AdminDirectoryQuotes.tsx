@@ -34,7 +34,7 @@ const AdminDirectoryQuotes = () => {
       try {
         const res = await adminApi.listManageQuoteRequests({
           page: p,
-          limit: 15,
+          limit: 100,
           search: search.trim() || undefined,
           status: status || undefined,
           event_type: eventType || undefined,

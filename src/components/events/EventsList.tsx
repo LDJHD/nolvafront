@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { eventsApi } from "@/lib/api";
-import { normalizeList } from "@/lib/nolvaData";
+import { normalizeList, isPastEvent } from "@/lib/nolvaData";
 import { useEventTypes, getTypeLabel } from "@/lib/useCatalog";
 import Link from "next/link";
 import { Col, Row } from "react-bootstrap";
@@ -33,7 +33,7 @@ const EventsList = () => {
         if (typeFilter) params.type = typeFilter;
         if (searchFilter) params.search = searchFilter;
         const res = await eventsApi.list(params);
-        setEvents(normalizeList(res.data));
+        setEvents(normalizeList(res.data).filter((event: any) => !isPastEvent(event)));
       } catch {
         setEvents([]);
       } finally {

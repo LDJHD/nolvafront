@@ -6,7 +6,7 @@ import Spinner from "@/components/button/Spinner";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { paymentsApi } from "@/lib/api";
+import { paymentsApi, eventsApi } from "@/lib/api";
 import { toast } from "react-toastify";
 
 const EventDetailPage = () => {
@@ -20,6 +20,26 @@ const EventDetailPage = () => {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
+  const user = useSelector((state: RootState) => state.auth.user);
+  const [regForm, setRegForm] = useState({
+    first_name: user?.firstName || "",
+    last_name: user?.lastName || "",
+    phone: user?.phone || "",
+  });
+  const [regLoading, setRegLoading] = useState(false);
+  const [regDone, setRegDone] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Pré-remplir les champs vides quand le compte est chargé (redux asynchrone)
+    if (user && !regDone) {
+      setRegForm((prev) => ({
+        first_name: prev.first_name || user.firstName || "",
+        last_name: prev.last_name || user.lastName || "",
+        phone: prev.phone || user.phone || "",
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, regDone]);
 
   const handleBuyTicket = async () => {
     if (!event) return;
@@ -111,6 +131,33 @@ const EventDetailPage = () => {
     ? Number(selectedType.price)
     : Number(event.ticketPrice || event.ticket_price || 0);
   const isFreeTicket = unitPrice <= 0;
+
+  const isFreeEvent =
+    ticketTypes.length > 0
+      ? ticketTypes.every((t) => Number(t.price) <= 0)
+      : Number(event.ticketPrice || event.ticket_price || 0) <= 0;
+
+  const handleRegisterFree = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!event) return;
+    if (!regForm.first_name.trim() || !regForm.last_name.trim() || !regForm.phone.trim()) {
+      toast.error("Renseignez votre nom, prénom et numéro de téléphone.");
+      return;
+    }
+    setRegLoading(true);
+    try {
+      const res = await eventsApi.registerFree(event.id, {
+        first_name: regForm.first_name.trim(),
+        last_name: regForm.last_name.trim(),
+        phone: regForm.phone.trim(),
+      });
+      setRegDone(res.data?.message || "Inscription confirmée !");
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Erreur lors de l'inscription");
+    } finally {
+      setRegLoading(false);
+    }
+  };
 
   const availableTickets =
     ticketTypes.length > 0
@@ -278,7 +325,100 @@ const EventDetailPage = () => {
                       </span>
                     </div>
                   )}
-                  {availableTickets !== 0 && isAuthenticated ? (
+                  {isFreeEvent ? (
+                    regDone ? (
+                      <>
+                        <div
+                          className="alert alert-success mt-3 mb-2"
+                          role="alert"
+                          style={{ borderRadius: "8px" }}
+                        >
+                          <i className="fi fi-rr-check-circle me-2"></i>
+                          {regDone}
+                        </div>
+                        <button
+                          type="button"
+                          className="btn btn-outline-secondary w-100"
+                          onClick={() => {
+                            setRegDone(null);
+                            setRegForm({ first_name: "", last_name: "", phone: "" });
+                          }}
+                        >
+                          Inscrire une autre personne
+                        </button>
+                      </>
+                    ) : (
+                      <form onSubmit={handleRegisterFree} className="mt-3">
+                        <div className="row g-2">
+                          <div className="col-6">
+                            <label className="form-label fw-semibold" style={{ fontSize: "13px" }}>
+                              Nom *
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              placeholder="Votre nom"
+                              value={regForm.last_name}
+                              onChange={(e) =>
+                                setRegForm({ ...regForm, last_name: e.target.value })
+                              }
+                              style={{ borderRadius: "8px", fontSize: "14px" }}
+                            />
+                          </div>
+                          <div className="col-6">
+                            <label className="form-label fw-semibold" style={{ fontSize: "13px" }}>
+                              Prénom *
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              placeholder="Votre prénom"
+                              value={regForm.first_name}
+                              onChange={(e) =>
+                                setRegForm({ ...regForm, first_name: e.target.value })
+                              }
+                              style={{ borderRadius: "8px", fontSize: "14px" }}
+                            />
+                          </div>
+                          <div className="col-12">
+                            <label className="form-label fw-semibold" style={{ fontSize: "13px" }}>
+                              Numéro de téléphone *
+                            </label>
+                            <input
+                              type="tel"
+                              className="form-control"
+                              placeholder="Ex : +229 01 00 00 00 00"
+                              value={regForm.phone}
+                              onChange={(e) => setRegForm({ ...regForm, phone: e.target.value })}
+                              style={{ borderRadius: "8px", fontSize: "14px" }}
+                            />
+                          </div>
+                        </div>
+                        <button
+                          type="submit"
+                          className="gi-btn-1 nolva-btn-reserve w-100 mt-3"
+                          disabled={regLoading}
+                        >
+                          {regLoading ? (
+                            <>
+                              <Spinner /> Inscription...
+                            </>
+                          ) : (
+                            <>
+                              <i className="fi fi-rr-user-add"></i> S&apos;inscrire gratuitement
+                            </>
+                          )}
+                        </button>
+                        <p
+                          className="small text-muted mt-2 mb-0"
+                          style={{ fontSize: "12px" }}
+                        >
+                          <i className="fi fi-rr-shield-check" style={{ color: "#059669" }}></i>{" "}
+                          L&apos;organisateur recevra vos informations pour l&apos;entrée.
+                        </p>
+                      </form>
+                    )
+                  ) : availableTickets !== 0 && isAuthenticated ? (
                     <>
                       <div className="mt-3 mb-2">
                         {ticketTypes.length > 0 ? (

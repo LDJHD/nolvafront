@@ -215,6 +215,11 @@ export const adminApi = {
 export const eventsApi = {
   list: (params?: any) => api.get('/events', { params }),
   show: (id: number | string) => api.get(`/events/${id}`),
+  registerFree: (
+    id: number | string,
+    data: { first_name: string; last_name: string; phone: string }
+  ) => api.post(`/events/${id}/register`, data),
+  eventRegistrations: (id: number | string) => api.get(`/user/events/${id}/registrations`),
   publishSuggestions: (params: { event_type: string; title?: string; city?: string }) =>
     api.get('/events/publish-suggestions', { params }),
   create: (data: any) => api.post('/events', data),

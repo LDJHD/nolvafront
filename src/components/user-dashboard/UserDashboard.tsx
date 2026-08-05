@@ -35,6 +35,9 @@ const UserDashboard = () => {
   const [scanQrCode, setScanQrCode] = useState("");
   const [scanResult, setScanResult] = useState<any | null>(null);
   const [scanning, setScanning] = useState(false);
+  const [registrationsEvent, setRegistrationsEvent] = useState<any | null>(null);
+  const [registrations, setRegistrations] = useState<any[]>([]);
+  const [registrationsLoading, setRegistrationsLoading] = useState(false);
   const scanVideoRef = useRef<HTMLVideoElement | null>(null);
   const scanStreamRef = useRef<MediaStream | null>(null);
   const scanLoopRef = useRef<number | null>(null);
@@ -399,6 +402,27 @@ const UserDashboard = () => {
     setScanEvent(event);
     setScanQrCode("");
     setScanResult(null);
+  };
+
+  const isFreeEventValue = (event: any) => {
+    const t = event.ticketTypes || event.ticket_types || [];
+    return t.length > 0
+      ? t.every((x: any) => Number(x.price ?? x.ticket_price ?? 0) <= 0)
+      : Number(event.ticketPrice ?? event.ticket_price ?? 0) <= 0;
+  };
+
+  const openRegistrations = async (event: any) => {
+    setRegistrationsEvent(event);
+    setRegistrations([]);
+    setRegistrationsLoading(true);
+    try {
+      const res = await eventsApi.eventRegistrations(event.id);
+      setRegistrations(res.data?.registrations || []);
+    } catch {
+      setRegistrations([]);
+    } finally {
+      setRegistrationsLoading(false);
+    }
   };
 
   const closeScanTicket = () => {
@@ -813,6 +837,15 @@ const UserDashboard = () => {
                                   >
                                     Scanner QR
                                   </button>
+                                  {isFreeEventValue(event) && event.status !== "cancelled" && (
+                                    <button
+                                      type="button"
+                                      className="btn btn-outline-info btn-sm"
+                                      onClick={() => void openRegistrations(event)}
+                                    >
+                                      Voir les inscrits
+                                    </button>
+                                  )}
                                 </div>
                               </td>
                             </tr>
@@ -969,6 +1002,56 @@ const UserDashboard = () => {
           </div>
         )}
       </Modal.Body>
+    </Modal>
+
+    <Modal show={Boolean(registrationsEvent)} onHide={() => setRegistrationsEvent(null)} size="lg" centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Inscrits à l&apos;événement gratuit</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <p className="small text-muted mb-3">{registrationsEvent?.title}</p>
+        {registrationsLoading ? (
+          <p>Chargement...</p>
+        ) : registrations.length === 0 ? (
+          <div style={{ padding: "30px", textAlign: "center", color: "#999" }}>
+            Aucune inscription pour le moment.
+          </div>
+        ) : (
+          <div className="table-responsive">
+            <table className="table gi-vender-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Nom</th>
+                  <th>Prénom</th>
+                  <th>Numéro</th>
+                  <th>Inscrit le</th>
+                </tr>
+              </thead>
+              <tbody>
+                {registrations.map((r: any, index: number) => (
+                  <tr key={r.id}>
+                    <td>{index + 1}</td>
+                    <td>{r.lastName || r.last_name || "—"}</td>
+                    <td>{r.firstName || r.first_name || "—"}</td>
+                    <td>{r.phone || "—"}</td>
+                    <td>
+                      {r.createdAt || r.created_at
+                        ? new Date(r.createdAt || r.created_at).toLocaleDateString("fr-FR")
+                        : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Modal.Body>
+      <Modal.Footer>
+        <button type="button" className="btn btn-outline-secondary" onClick={() => setRegistrationsEvent(null)}>
+          Fermer
+        </button>
+      </Modal.Footer>
     </Modal>
     </>
   );

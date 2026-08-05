@@ -1,7 +1,7 @@
 "use client";
 import useSWR from "swr";
 import fetcher from "../fetcher-api/Fetcher";
-import { normalizeList } from "@/lib/nolvaData";
+import { normalizeList, isPastEvent } from "@/lib/nolvaData";
 import Spinner from "../button/Spinner";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -97,7 +97,7 @@ const HomeEvents = () => {
   if (error) return null;
   if (!data) return <div className="text-center py-4"><Spinner /></div>;
 
-  const events = normalizeList(data);
+  const events = normalizeList(data).filter((event: any) => !isPastEvent(event));
 
   if (events.length === 0) return null;
 

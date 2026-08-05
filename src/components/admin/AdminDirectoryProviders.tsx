@@ -27,7 +27,7 @@ const AdminDirectoryProviders = () => {
       try {
         const res = await adminApi.listManageProviders({
           page: p,
-          limit: 15,
+          limit: 100,
           search: search.trim() || undefined,
           type: type || undefined,
           status: status || undefined,

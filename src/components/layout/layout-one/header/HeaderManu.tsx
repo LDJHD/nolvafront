@@ -65,7 +65,7 @@ function HeaderManu() {
                               <Link href="/evenements/publier">Créer un événement</Link>
                             </li>
                             <li>
-                              <Link href="/evenements/creer">Publier (validation admin)</Link>
+                              <Link href="/evenements/creer">Publier mon evenement</Link>
                             </li>
                           </ul>
                         </li>

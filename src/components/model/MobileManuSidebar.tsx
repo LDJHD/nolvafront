@@ -81,7 +81,7 @@ const MobileManuSidebar = ({ isMobileMenuOpen, closeMobileManu, toggleMainMenu, 
                         <Link href="/evenements/publier" onClick={closeMobileManu}>Créer un événement</Link>
                       </li>
                       <li>
-                        <Link href="/evenements/creer" onClick={closeMobileManu}>Publier (validation admin)</Link>
+                        <Link href="/evenements/creer" onClick={closeMobileManu}>Publier mon evenement</Link>
                       </li>
                     </ul>
                   </Collapse>

@@ -27,6 +27,7 @@ const AdminDirectoryEvents = () => {
   const [rejectTarget, setRejectTarget] = useState<any | null>(null);
   const [rejectNote, setRejectNote] = useState("");
   const [rejecting, setRejecting] = useState(false);
+  const [detailTarget, setDetailTarget] = useState<any | null>(null);
 
   const loadPending = useCallback(async () => {
     setLoadingPending(true);
@@ -47,7 +48,7 @@ const AdminDirectoryEvents = () => {
       try {
         const res = await adminApi.listManageEvents({
           page: p,
-          limit: 15,
+          limit: 100,
           search: search.trim() || undefined,
           event_type: eventType || undefined,
           status: status || undefined,
@@ -143,6 +144,13 @@ const AdminDirectoryEvents = () => {
                           <td>{dateStr ? new Date(dateStr).toLocaleString("fr-FR") : "—"}</td>
                           <td>{ev.city || "—"}</td>
                           <td className="text-nowrap">
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-outline-dark me-1"
+                              onClick={() => setDetailTarget(ev)}
+                            >
+                              Voir détails
+                            </button>
                             <button
                               type="button"
                               className="btn btn-sm btn-success me-1"
@@ -369,6 +377,13 @@ const AdminDirectoryEvents = () => {
                             <td>{featured ? "Oui" : "Non"}</td>
                             <td>{dateStr ? new Date(dateStr).toLocaleDateString("fr-FR") : "—"}</td>
                             <td className="text-nowrap">
+                              <button
+                                type="button"
+                                className="btn btn-sm btn-outline-dark me-1"
+                                onClick={() => setDetailTarget(ev)}
+                              >
+                                Voir détails
+                              </button>
                               {!ok && ev.status !== "cancelled" && (
                                 <>
                                   <button
@@ -498,6 +513,218 @@ const AdminDirectoryEvents = () => {
           </div>
         </div>
       )}
+
+      {detailTarget && (
+        <div
+          className="modal d-block"
+          style={{ background: "rgba(0,0,0,0.45)" }}
+          role="dialog"
+        >
+          <div
+            className="modal-dialog modal-lg"
+            style={{
+              height: "auto",
+              width: "min(960px, 94vw)",
+              maxWidth: "min(960px, 94vw)",
+              maxHeight: "92vh",
+              overflowY: "auto",
+              padding: 0,
+            }}
+          >
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Détails de l&apos;événement</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setDetailTarget(null)}
+                />
+              </div>
+              <div className="modal-body">
+                <EventDetailPreview event={detailTarget} eventTypes={eventTypes} />
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setDetailTarget(null)}
+                >
+                  Fermer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const EventDetailPreview = ({ event, eventTypes }: { event: any; eventTypes: any[] }) => {
+  const dateStr = event.eventDate || event.event_date;
+  const slug = event.eventType || event.event_type;
+  const ok = toBooleanFlag(event.isApproved ?? event.is_approved);
+  const image = event.image || event.cover_image;
+  const org = event.organizer;
+  const orgName = org
+    ? `${org.firstName || org.first_name || ""} ${org.lastName || org.last_name || ""}`.trim() ||
+      org.email ||
+      "—"
+    : "—";
+  const tickets: any[] = event.ticketTypes || event.ticket_types || [];
+  const ticketCount = Number(event.ticketCount ?? event.ticket_count ?? 0);
+  const ticketsSold = Number(event.ticketsSold ?? event.tickets_sold ?? 0);
+  const hasTickets = tickets.length > 0;
+  const allFree =
+    tickets.length > 0
+      ? tickets.every((t) => Number(t.price ?? t.ticket_price ?? 0) <= 0)
+      : Number(event.ticketPrice ?? event.ticket_price ?? 0) <= 0;
+
+  return (
+    <div>
+      <div className="row g-3">
+        <div className="col-md-5">
+          {image ? (
+            <img
+              src={image}
+              alt={event.title}
+              style={{
+                width: "100%",
+                maxHeight: 300,
+                objectFit: "cover",
+                borderRadius: 8,
+                border: "1px solid #eee",
+              }}
+            />
+          ) : (
+            <div
+              style={{
+                width: "100%",
+                height: 200,
+                borderRadius: 8,
+                background: "linear-gradient(135deg,#f3f4f6,#e5e7eb)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#9ca3af",
+                fontSize: 48,
+              }}
+            >
+              <i className="fi fi-rr-calendar-star"></i>
+            </div>
+          )}
+          <div className="d-flex flex-wrap gap-2 mt-3">
+            <span className={`badge ${ok ? "bg-success" : "bg-warning text-dark"}`}>
+              {ok ? "Validé" : "Non validé"}
+            </span>
+            <span className="badge bg-secondary">
+              {event.status === "upcoming"
+                ? "À venir"
+                : event.status === "ongoing"
+                  ? "En cours"
+                  : event.status === "completed"
+                    ? "Terminé"
+                    : event.status === "cancelled"
+                      ? "Annulé"
+                      : event.status}
+            </span>
+            {allFree && <span className="badge bg-info text-dark">Gratuit</span>}
+          </div>
+        </div>
+        <div className="col-md-7">
+          <h5 className="mb-1">{event.title}</h5>
+          <div className="small text-muted mb-2">
+            {slug ? getTypeLabel(eventTypes, slug) : "—"} · #{event.id}
+          </div>
+          <ul className="list-unstyled small mb-3" style={{ lineHeight: 1.9 }}>
+            <li>
+              <i className="fi fi-rr-calendar me-2" style={{ color: "var(--nolva-red)" }}></i>
+              <strong>Date :</strong>{" "}
+              {dateStr ? new Date(dateStr).toLocaleString("fr-FR") : "—"}
+            </li>
+            <li>
+              <i className="fi fi-rr-marker me-2" style={{ color: "var(--nolva-red)" }}></i>
+              <strong>Lieu :</strong> {event.location || "—"}
+            </li>
+            <li>
+              <i className="fi fi-rr-map me-2" style={{ color: "var(--nolva-red)" }}></i>
+              <strong>Ville :</strong> {event.city || "—"}
+            </li>
+            <li>
+              <i className="fi fi-rr-user me-2" style={{ color: "var(--nolva-red)" }}></i>
+              <strong>Organisateur :</strong> {orgName}
+            </li>
+            {org && (org.email || org.phone) && (
+              <li>
+                <i className="fi fi-rr-envelope me-2" style={{ color: "var(--nolva-red)" }}></i>
+                <strong>Contact :</strong>{" "}
+                {[org.email, org.phone].filter(Boolean).join(" · ")}
+              </li>
+            )}
+            {event.rejectionReason || event.rejection_reason ? (
+              <li className="text-danger">
+                <i className="fi fi-rr-info me-2"></i>
+                <strong>Motif refus :</strong> {event.rejectionReason || event.rejection_reason}
+              </li>
+            ) : null}
+          </ul>
+          {event.description && (
+            <p
+              className="small mb-0"
+              style={{ color: "#4b5966", whiteSpace: "pre-line", lineHeight: 1.7 }}
+            >
+              <strong>Description :</strong>
+              <br />
+              {event.description}
+            </p>
+          )}
+        </div>
+      </div>
+
+      <hr />
+      <h6 className="fw-semibold mb-2">Billets</h6>
+      {hasTickets ? (
+        <table className="table table-sm table-bordered align-middle mb-2">
+          <thead className="table-light">
+            <tr>
+              <th>Type</th>
+              <th>Prix</th>
+              <th>Places</th>
+              <th>Vendus</th>
+              <th>Restantes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tickets.map((t: any) => {
+              const price = Number(t.price ?? t.ticket_price ?? 0);
+              const quantity = Number(t.quantity ?? 0);
+              const sold = Number(t.sold ?? 0);
+              const remaining = quantity > 0 ? Math.max(0, quantity - sold) : 999999;
+              return (
+                <tr key={t.id}>
+                  <td>{t.label}</td>
+                  <td>
+                    {price > 0 ? `${price.toLocaleString("fr-FR")} FCFA` : "Gratuit"}
+                  </td>
+                  <td>{quantity > 0 ? quantity : "Illimité"}</td>
+                  <td>{sold}</td>
+                  <td>{remaining === 999999 ? "Illimité" : remaining}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      ) : (
+        <p className="small text-muted mb-2">
+          {allFree
+            ? "Événement gratuit — les visiteurs s'inscrivent directement (nom, prénom, numéro)."
+            : "Aucun type de billet déclaré."}
+        </p>
+      )}
+      <div className="small text-muted">
+        Total places : {hasTickets ? ticketCount : event.ticketCount || "Illimité"} · Vendus :{" "}
+        {ticketsSold}
+      </div>
     </div>
   );
 };

@@ -77,9 +77,9 @@ const AdminDashboard = () => {
     try {
       const [statsRes, txRes, commRes, payRes] = await Promise.allSettled([
         adminApi.commissionStats(),
-        adminApi.transactions({ status: statusFilter || undefined, limit: 50 }),
+        adminApi.transactions({ status: statusFilter || undefined, limit: 100 }),
         adminApi.listCommissions(),
-        adminApi.payouts({ limit: 30 }),
+        adminApi.payouts({ limit: 100 }),
       ]);
       if (statsRes.status === "fulfilled") setStats(statsRes.value.data);
       if (txRes.status === "fulfilled") {
