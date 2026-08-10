@@ -16,6 +16,10 @@ const EventCard = ({ event, eventTypes }: { event: any; eventTypes: any[] }) => 
   const eventType = event.eventType || event.event_type;
   const sold = Number(event.ticketsSold || event.tickets_sold || 0);
   const ticketCount = Number(event.ticketCount || event.ticket_count || 0);
+  const expectedParticipants = Number(
+    event.expectedParticipants ?? event.expected_participants ?? 0
+  );
+  const registered = Number(event.registrationsCount ?? event.registrations_count ?? 0);
 
   return (
     <div className="nolva-event-card">
@@ -80,11 +84,17 @@ const EventCard = ({ event, eventTypes }: { event: any; eventTypes: any[] }) => 
             Découvrir <i className="fi fi-rr-arrow-small-right"></i>
           </Link>
         </div>
-        <div className="nolva-event-social-proof">
-          {ticketCount > 0 && ticketCount - sold <= 20
-            ? "Places limitées"
-            : `${Math.max(sold, ticketCount || 80)} participants attendus`}
-        </div>
+        {(ticketCount > 0 || expectedParticipants > 0) && (
+          <div className="nolva-event-social-proof">
+            {ticketCount > 0
+              ? ticketCount - sold <= 20
+                ? "Places limitées"
+                : `${Math.max(sold, ticketCount)} participants attendus`
+              : expectedParticipants - registered <= 20
+                ? "Places limitées"
+                : `${Math.max(registered, expectedParticipants)} participants attendus`}
+          </div>
+        )}
       </div>
     </div>
   );

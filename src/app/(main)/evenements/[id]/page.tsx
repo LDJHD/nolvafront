@@ -167,6 +167,11 @@ const EventDetailPage = () => {
           : (selectedType.available ?? 0)
         : null
       : event.availableTickets ?? null;
+  const ticketCount = Number(event.ticketCount || event.ticket_count || 0);
+  const expectedParticipants = Number(
+    event.expectedParticipants ?? event.expected_participants ?? 0
+  );
+  const registered = Number(event.registrationsCount ?? event.registrations_count ?? 0);
   const eventDate = event.eventDate || event.event_date;
   const formattedDate = eventDate
     ? new Date(eventDate).toLocaleDateString("fr-FR", {
@@ -314,7 +319,14 @@ const EventDetailPage = () => {
                         <div
                           className="progress-bar-fill"
                           style={{
-                            width: `${Math.min(100, ((event.ticketsSold || event.tickets_sold || 0) / (event.ticketCount || event.ticket_count || 1)) * 100)}%`,
+                            width: `${Math.min(
+                              100,
+                              (ticketCount > 0
+                                ? (event.ticketsSold || event.tickets_sold || 0) / ticketCount
+                                : expectedParticipants > 0
+                                  ? registered / expectedParticipants
+                                  : 0) * 100
+                            )}%`,
                           }}
                         ></div>
                       </div>
@@ -326,7 +338,16 @@ const EventDetailPage = () => {
                     </div>
                   )}
                   {isFreeEvent ? (
-                    regDone ? (
+                    availableTickets === 0 ? (
+                      <div
+                        className="alert alert-warning mt-3 mb-2"
+                        role="alert"
+                        style={{ borderRadius: "8px" }}
+                      >
+                        <i className="fi fi-rr-ban me-2"></i>
+                        Cet événement est complet : le nombre de participants attendus est atteint.
+                      </div>
+                    ) : regDone ? (
                       <>
                         <div
                           className="alert alert-success mt-3 mb-2"

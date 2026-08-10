@@ -42,6 +42,7 @@ const PublishEventWizard = () => {
     location: "",
     city: "",
     image: "",
+    expected_participants: "",
   });
   const [tickets, setTickets] = useState<TicketDraft[]>([
     { label: "Standard", price: "5000", quantity: "100" },
@@ -158,6 +159,9 @@ const PublishEventWizard = () => {
         ticket_types,
         ticket_price: isFreeEvent ? 0 : undefined,
         ticket_count: isFreeEvent ? 0 : undefined,
+        expected_participants: isFreeEvent && form.expected_participants
+          ? Number(form.expected_participants)
+          : undefined,
         auto_publish: true,
       });
       const d = res.data;
@@ -321,9 +325,30 @@ const PublishEventWizard = () => {
                   onChange={(e) => setIsFreeEvent(e.target.checked)}
                 />
                 {isFreeEvent && (
-                  <div className="alert alert-light border">
-                    Aucun billet payant ne sera cree. L&apos;evenement restera gratuit.
-                  </div>
+                  <>
+                    <div className="alert alert-light border">
+                      Aucun billet payant ne sera cree. L&apos;evenement restera gratuit.
+                    </div>
+                    <Row className="g-2 mb-3 align-items-end">
+                      <Col md={5}>
+                        <Form.Label>Nombre de participants attendus</Form.Label>
+                        <Form.Control
+                          type="number"
+                          min={0}
+                          name="expected_participants"
+                          value={form.expected_participants}
+                          onChange={handleChange}
+                          placeholder="Ex : 150"
+                        />
+                      </Col>
+                      <Col md={7}>
+                        <p className="small text-muted mb-0">
+                          Ce nombre s&apos;affichera sur la fiche (« X participants attendus ») et
+                          servira de jauge de places pour l&apos;evenement.
+                        </p>
+                      </Col>
+                    </Row>
+                  </>
                 )}
                 <p className="small text-muted mb-3">
                   Définissez un libellé et un prix pour chaque type de billet (ex: Standard, VIP).

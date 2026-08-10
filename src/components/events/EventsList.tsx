@@ -102,6 +102,14 @@ const EventsList = () => {
             {events.map((event: any, index: number) => {
               const dateStr = event.eventDate || event.event_date;
               const price = Number(event.ticketPrice ?? event.ticket_price ?? 0);
+              const ticketCount = Number(event.ticketCount || event.ticket_count || 0);
+              const ticketsSold = Number(event.ticketsSold || event.tickets_sold || 0);
+              const expectedParticipants = Number(
+                event.expectedParticipants ?? event.expected_participants ?? 0
+              );
+              const registered = Number(
+                event.registrationsCount ?? event.registrations_count ?? 0
+              );
 
               return (
                 <Col lg={4} md={6} className="mb-4" key={event.id || index}>
@@ -139,12 +147,17 @@ const EventsList = () => {
                           {getTypeLabel(eventTypesCatalog, event.eventType || event.event_type)}
                         </span>
                       )}
-                      <div className="nolva-event-social-proof">
-                        {(event.ticketCount || event.ticket_count) &&
-                        Number(event.ticketCount || event.ticket_count) - Number(event.ticketsSold || event.tickets_sold || 0) <= 20
-                          ? "Places limitées"
-                          : `${Math.max(Number(event.ticketsSold || event.tickets_sold || 0), Number(event.ticketCount || event.ticket_count || 80))} participants attendus`}
-                      </div>
+                      {(ticketCount > 0 || expectedParticipants > 0) && (
+                        <div className="nolva-event-social-proof">
+                          {ticketCount > 0
+                            ? ticketCount - ticketsSold <= 20
+                              ? "Places limitées"
+                              : `${Math.max(ticketsSold, ticketCount)} participants attendus`
+                            : expectedParticipants - registered <= 20
+                              ? "Places limitées"
+                              : `${Math.max(registered, expectedParticipants)} participants attendus`}
+                        </div>
+                      )}
                       <div className="nolva-event-meta">
                         <span>
                           <i className="fi fi-rr-marker"></i>

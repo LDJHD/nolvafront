@@ -574,6 +574,12 @@ const EventDetailPreview = ({ event, eventTypes }: { event: any; eventTypes: any
   const tickets: any[] = event.ticketTypes || event.ticket_types || [];
   const ticketCount = Number(event.ticketCount ?? event.ticket_count ?? 0);
   const ticketsSold = Number(event.ticketsSold ?? event.tickets_sold ?? 0);
+  const expectedParticipants = Number(
+    event.expectedParticipants ?? event.expected_participants ?? 0
+  );
+  const registrationsCount = Number(
+    event.registrationsCount ?? event.registrations_count ?? 0
+  );
   const hasTickets = tickets.length > 0;
   const allFree =
     tickets.length > 0
@@ -722,8 +728,12 @@ const EventDetailPreview = ({ event, eventTypes }: { event: any; eventTypes: any
         </p>
       )}
       <div className="small text-muted">
-        Total places : {hasTickets ? ticketCount : event.ticketCount || "Illimité"} · Vendus :{" "}
-        {ticketsSold}
+        Total places :{" "}
+        {hasTickets ? ticketCount : expectedParticipants > 0 ? expectedParticipants : "Illimité"}{" "}
+        · Vendus : {ticketsSold}
+        {!hasTickets && (expectedParticipants > 0 || registrationsCount > 0)
+          ? ` · Inscrits : ${registrationsCount}`
+          : ""}
       </div>
     </div>
   );

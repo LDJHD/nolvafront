@@ -107,6 +107,7 @@ const CreateEventForm = () => {
     location: "",
     city: "",
     image: "",
+    expected_participants: "",
     is_free: true,
   });
   const [draftTickets, setDraftTickets] = useState<TicketDraft[]>([
@@ -247,6 +248,7 @@ const CreateEventForm = () => {
       location: form.hasVenue === "Oui" ? "Lieu a confirmer" : "Salle a definir",
       city: form.city,
       image: "",
+      expected_participants: form.guests || "",
       is_free: true,
     });
     setDraftTickets([{ label: "Standard", price: "5000", quantity: defaultTicketQuantity }]);
@@ -357,6 +359,9 @@ const CreateEventForm = () => {
         ticket_types: ticketTypes,
         ticket_price: draftEvent.is_free ? 0 : undefined,
         ticket_count: draftEvent.is_free ? 0 : undefined,
+        expected_participants: draftEvent.is_free && draftEvent.expected_participants
+          ? Number(draftEvent.expected_participants)
+          : undefined,
       });
       showSuccessToast(res.data?.message || "Evenement soumis a validation admin.");
       router.push("/user-dashboard");
@@ -576,9 +581,31 @@ const CreateEventForm = () => {
                 </div>
 
                 {draftEvent.is_free ? (
-                  <div className="alert alert-light border">
-                    Les champs de billets sont masques. L&apos;evenement sera soumis comme gratuit.
-                  </div>
+                  <>
+                    <div className="alert alert-light border">
+                      Les champs de billets sont masques. L&apos;evenement sera soumis comme gratuit.
+                    </div>
+                    <Row className="g-2 mb-3 align-items-end">
+                      <Col md={5}>
+                        <Form.Label>Nombre de participants attendus</Form.Label>
+                        <Form.Control
+                          type="number"
+                          min={0}
+                          value={draftEvent.expected_participants}
+                          onChange={(e) =>
+                            setDraftEvent({ ...draftEvent, expected_participants: e.target.value })
+                          }
+                          placeholder="Ex : 150"
+                        />
+                      </Col>
+                      <Col md={7}>
+                        <p className="small text-muted mb-0">
+                          Ce nombre s&apos;affichera sur la fiche (« X participants attendus ») et
+                          servira de jauge de places pour l&apos;evenement.
+                        </p>
+                      </Col>
+                    </Row>
+                  </>
                 ) : (
                   <>
                     {draftTickets.map((ticket, index) => (
@@ -655,8 +682,13 @@ const CreateEventForm = () => {
                 )}
                 <button className="gi-btn-1 mt-3" onClick={downloadPdf}>Télécharger ma fiche événement</button>
                 {isAuthenticated ? (
-                  <button className="gi-btn-2 mt-2" onClick={submitForAdminValidation} disabled={submitting}>
-                    {submitting ? "Soumission..." : "Soumettre à validation admin"}
+                  <button
+                    className="gi-btn-2 mt-2"
+                    onClick={submitForAdminValidation}
+                    disabled
+                    style={{ opacity: 0.55, cursor: "not-allowed" }}
+                  >
+                    Soumettre à validation admin
                   </button>
                 ) : (
                   <Link href="/register" className="gi-btn-2 mt-2">Sauvegardez votre projet gratuitement</Link>

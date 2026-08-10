@@ -27,6 +27,7 @@ const UserDashboard = () => {
     city: "",
     location: "",
     image: "",
+    expected_participants: "",
     is_free: true,
   });
   const [editTickets, setEditTickets] = useState<TicketDraft[]>([emptyTicketRow()]);
@@ -195,6 +196,7 @@ const UserDashboard = () => {
       city: event.city || "",
       location: event.location || "",
       image: event.image || event.cover_image || "",
+      expected_participants: event.expectedParticipants ?? event.expected_participants ?? "",
       is_free: tickets.length === 0 && Number(event.ticketPrice || event.ticket_price || 0) === 0,
     });
     setEditTickets(
@@ -244,6 +246,9 @@ const UserDashboard = () => {
         ticket_types: ticketTypes,
         ticket_price: editForm.is_free ? 0 : undefined,
         ticket_count: editForm.is_free ? 0 : undefined,
+        expected_participants: editForm.is_free
+          ? Number(editForm.expected_participants) || 0
+          : undefined,
       });
       setEditingEvent(null);
       await fetchData();
@@ -931,6 +936,23 @@ const UserDashboard = () => {
               />
             </div>
           </Col>
+          {editForm.is_free && (
+            <Col md={12}>
+              <Form.Label>Nombre de participants attendus</Form.Label>
+              <Form.Control
+                type="number"
+                min={0}
+                value={editForm.expected_participants}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, expected_participants: e.target.value })
+                }
+                placeholder="Ex : 150"
+              />
+              <Form.Text className="text-muted">
+                Sera affiche sur la fiche publique (« X participants attendus »).
+              </Form.Text>
+            </Col>
+          )}
           {!editForm.is_free && (
             <Col md={12}>
               {editTickets.map((ticket, index) => (
