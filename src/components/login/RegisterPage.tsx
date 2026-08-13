@@ -115,8 +115,9 @@ const RegisterPage = () => {
       const res = await authApi.register(payload);
       const { token, user } = res.data;
       dispatch(setCredentials({ user, token: token.value || token }));
-      showSuccessToast(res.data?.message || "Compte cree. Consultez votre email.");
-      router.push(user?.role === "provider" ? "/vendor-dashboard" : "/user-dashboard");
+      const baseMessage = res.data?.message || "Compte cree. Consultez votre email.";
+      showSuccessToast(`${baseMessage} Complétez votre profil.`);
+      router.push("/user-profile");
     } catch (err: any) {
       showErrorToast(parseRegisterError(err));
     } finally {
