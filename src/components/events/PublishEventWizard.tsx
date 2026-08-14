@@ -8,9 +8,8 @@ import { Col, Form, Modal, Row } from "react-bootstrap";
 import { eventsApi } from "@/lib/api";
 import { useEventTypes } from "@/lib/useCatalog";
 import { emptyTicketRow, type TicketDraft } from "@/lib/eventPublishGuide";
+import { BENIN_CITY_DATALIST_ID, beninCities } from "@/lib/beninCities";
 import { showErrorToast, showSuccessToast } from "../toast-popup/Toastify";
-
-const beninCities = ["Cotonou", "Calavi", "Porto-Novo", "Parakou", "Abomey", "Ouidah"];
 
 const formatEventDateForApi = (local: string): string => {
   if (!local) return local;
@@ -282,14 +281,18 @@ const PublishEventWizard = () => {
                 </Col>
                 <Col md={6}>
                   <Form.Label>Ville *</Form.Label>
-                  <Form.Select name="city" value={form.city} onChange={handleChange}>
-                    <option value="">Choisir</option>
+                  <Form.Control
+                    list={BENIN_CITY_DATALIST_ID}
+                    name="city"
+                    value={form.city}
+                    onChange={handleChange}
+                    placeholder="Sélectionnez ou écrivez votre ville"
+                  />
+                  <datalist id={BENIN_CITY_DATALIST_ID}>
                     {beninCities.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
+                      <option key={c} value={c} />
                     ))}
-                  </Form.Select>
+                  </datalist>
                 </Col>
                 <Col md={12}>
                   <Form.Label>Lieu</Form.Label>

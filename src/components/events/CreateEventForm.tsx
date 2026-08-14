@@ -11,6 +11,7 @@ import { RootState } from "@/store";
 import { useRouter } from "next/navigation";
 import { emptyTicketRow, type TicketDraft } from "@/lib/eventPublishGuide";
 import { useEventTypes } from "@/lib/useCatalog";
+import { BENIN_CITY_DATALIST_ID, beninCities } from "@/lib/beninCities";
 import { showErrorToast, showSuccessToast } from "../toast-popup/Toastify";
 
 const eventTypes = [
@@ -25,8 +26,6 @@ const eventTypes = [
   "Festival",
   "Autre",
 ];
-
-const beninCities = ["Cotonou", "Calavi", "Porto-Novo", "Parakou", "Abomey", "Ouidah"];
 
 const moods = [
   "Élégant et chic",
@@ -420,14 +419,17 @@ const CreateEventForm = () => {
               <h4>Informations principales</h4>
               <div className="row g-3">
                 <div className="col-md-6">
-                  <Form.Select value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })}>
-                    <option value="">Choisir une ville</option>
+                  <Form.Control
+                    list={BENIN_CITY_DATALIST_ID}
+                    placeholder="Choisir une ville"
+                    value={form.city}
+                    onChange={(e) => setForm({ ...form, city: e.target.value })}
+                  />
+                  <datalist id={BENIN_CITY_DATALIST_ID}>
                     {beninCities.map((city) => (
-                      <option key={city} value={city}>
-                        {city}
-                      </option>
+                      <option key={city} value={city} />
                     ))}
-                  </Form.Select>
+                  </datalist>
                 </div>
                 <div className="col-md-6"><Form.Control type="datetime-local" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} /></div>
                 <div className="col-md-6"><Form.Control type="number" placeholder="Nombre d'invités" value={form.guests} onChange={(e) => setForm({ ...form, guests: e.target.value })} /></div>
@@ -542,17 +544,12 @@ const CreateEventForm = () => {
                   </Col>
                   <Col md={6}>
                     <Form.Label>Ville *</Form.Label>
-                    <Form.Select
+                    <Form.Control
+                      list={BENIN_CITY_DATALIST_ID}
+                      placeholder="Choisir ou écrire votre ville"
                       value={draftEvent.city}
                       onChange={(e) => setDraftEvent({ ...draftEvent, city: e.target.value })}
-                    >
-                      <option value="">Choisir</option>
-                      {beninCities.map((city) => (
-                        <option key={city} value={city}>
-                          {city}
-                        </option>
-                      ))}
-                    </Form.Select>
+                    />
                   </Col>
                   <Col md={6}>
                     <Form.Label>Lieu</Form.Label>
@@ -566,6 +563,12 @@ const CreateEventForm = () => {
                     <Form.Control type="file" accept="image/*" onChange={handleDraftImage} />
                   </Col>
                 </Row>
+
+                <datalist id={BENIN_CITY_DATALIST_ID}>
+                  {beninCities.map((city) => (
+                    <option key={city} value={city} />
+                  ))}
+                </datalist>
 
                 <hr className="my-4" />
 

@@ -9,9 +9,8 @@ import { Col, Form, Row } from "react-bootstrap";
 import { eventsApi } from "@/lib/api";
 import { emptyTicketRow, type TicketDraft } from "@/lib/eventPublishGuide";
 import { useEventTypes } from "@/lib/useCatalog";
+import { BENIN_CITY_DATALIST_ID, beninCities } from "@/lib/beninCities";
 import { showErrorToast, showSuccessToast } from "../toast-popup/Toastify";
-
-const beninCities = ["Cotonou", "Calavi", "Porto-Novo", "Parakou", "Abomey", "Ouidah"];
 
 const formatEventDateForApi = (local: string): string => {
   if (!local) return local;
@@ -212,14 +211,19 @@ const StandardCreateEventForm = () => {
                 </Col>
                 <Col md={6}>
                   <Form.Label>Ville *</Form.Label>
-                  <Form.Select name="city" value={form.city} onChange={handleChange} required>
-                    <option value="">Choisir</option>
+                  <Form.Control
+                    list={BENIN_CITY_DATALIST_ID}
+                    name="city"
+                    value={form.city}
+                    onChange={handleChange}
+                    placeholder="Sélectionnez ou écrivez votre ville"
+                    required
+                  />
+                  <datalist id={BENIN_CITY_DATALIST_ID}>
                     {beninCities.map((city) => (
-                      <option key={city} value={city}>
-                        {city}
-                      </option>
+                      <option key={city} value={city} />
                     ))}
-                  </Form.Select>
+                  </datalist>
                 </Col>
                 <Col md={6}>
                   <Form.Label>Lieu</Form.Label>
