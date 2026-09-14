@@ -10,7 +10,7 @@ import AdminDirectoryProviders from "./AdminDirectoryProviders";
 import AdminDirectoryQuotes from "./AdminDirectoryQuotes";
 import AdminQuoteActivities from "./AdminQuoteActivities";
 import AdminPayoutsPanel from "./AdminPayoutsPanel";
-import AdminMembersHistory from "./AdminMembersHistory";
+import AdminUsersDirectory from "./AdminUsersDirectory";
 import { showErrorToast, showSuccessToast } from "../toast-popup/Toastify";
 import { Col, Form, Row } from "react-bootstrap";
 import { PAYOUT_METHOD_OPTIONS, payoutDestinationHint } from "@/lib/payoutMethods";
@@ -832,7 +832,7 @@ const AdminDashboard = () => {
 
             {tab === "events" && <AdminDirectoryEvents />}
 
-            {tab === "members" && <AdminMembersHistory />}
+            {tab === "members" && <AdminUsersDirectory />}
 
             {tab === "providers" && <AdminDirectoryProviders />}
 
