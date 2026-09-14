@@ -32,15 +32,16 @@ function HeroSlider() {
       <div className="nolva-hero-overlay">
         <div className="container">
           <div className="nolva-hero-content">
-            <p className="nolva-hero-tagline text-red-500">CONNECTER - VIVRE - EXPÉRIENCER</p>
+            <p className="nolva-hero-tagline text-red-500">TOUT L’ÉVÉNEMENTIEL, UNE SEULE PLATEFORME.</p>
             <h1 className="nolva-hero-title">
-              Trouvez le prestataire idéal<br />
-              <span>pour votre événement</span>
+            Votre événement, de l’idée au jour J.
+            Prestataires, événements et <br />
+              <span>assistance intelligente réunis sur NOLVA</span>
             </h1>
-            <p className="nolva-hero-subtitle">
+            {/* <p className="nolva-hero-subtitle">
               Animation, Gastronomie, Décoration, Logistique et bien plus encore.<br />
               Des prestataires vérifiés, un paiement sécurisé.
-            </p>
+            </p> */}
 
             <form onSubmit={handleSearch} className="nolva-search-bar">
               <div className="nolva-search-field nolva-search-scope">
@@ -90,18 +91,18 @@ function HeroSlider() {
 
             <div className="nolva-hero-stats">
               <div className="nolva-stat">
-                <strong>500+</strong>
-                <span>Prestataires</span>
+                <strong>TROUVEZ</strong>
+                <span>Prestataires & lieux</span>
               </div>
               <div className="nolva-stat-divider"></div>
               <div className="nolva-stat">
-                <strong>1000+</strong>
-                <span>Événements réalisés</span>
+                <strong>DÉCOUVREZ</strong>
+                <span>Événements & billets</span>
               </div>
               <div className="nolva-stat-divider"></div>
               <div className="nolva-stat">
-                <strong>98%</strong>
-                <span>Clients satisfaits</span>
+                <strong>ORGANISEZ</strong>
+                <span>Avec l’assistance intelligente</span>
               </div>
             </div>
           </div>
