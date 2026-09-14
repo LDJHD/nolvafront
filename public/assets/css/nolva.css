@@ -549,8 +549,10 @@ a.nolva-btn-reserve:hover {
   .nolva-hero-overlay { padding: 40px 0; }
   .nolva-hero-title { font-size: 30px; }
   .nolva-hero-subtitle { font-size: 14px; margin-bottom: 28px; }
-  .nolva-hero-stats { gap: 16px; }
-  .nolva-stat strong { font-size: 22px; }
+  .nolva-hero-stats { flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .nolva-stat strong { font-size: 18px; }
+  .nolva-stat span { font-size: 10px; }
+  .nolva-stat-divider { display: none; }
   .nolva-search-bar { flex-direction: column; border-radius: var(--nolva-radius-lg); padding: 12px; gap: 8px; }
   .nolva-search-field { width: 100%; padding: 6px; }
   .nolva-search-divider { width: 100%; height: 1px; margin: 2px 0; }

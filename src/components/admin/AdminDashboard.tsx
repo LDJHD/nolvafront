@@ -71,15 +71,17 @@ const AdminDashboard = () => {
   const [refundDestination, setRefundDestination] = useState("");
   const [contactingOrganizer, setContactingOrganizer] = useState(false);
   const [refundingClient, setRefundingClient] = useState(false);
+  const [membersStats, setMembersStats] = useState<{ total_users: number; recent_users: number } | null>(null);
 
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const [statsRes, txRes, commRes, payRes] = await Promise.allSettled([
+      const [statsRes, txRes, commRes, payRes, memRes] = await Promise.allSettled([
         adminApi.commissionStats(),
         adminApi.transactions({ status: statusFilter || undefined, limit: 100 }),
         adminApi.listCommissions(),
         adminApi.payouts({ limit: 100 }),
+        adminApi.membersStats(),
       ]);
       if (statsRes.status === "fulfilled") setStats(statsRes.value.data);
       if (txRes.status === "fulfilled") {
@@ -91,6 +93,7 @@ const AdminDashboard = () => {
         const d = payRes.value.data;
         setPayouts(d?.data || d || []);
       }
+      if (memRes.status === "fulfilled") setMembersStats(memRes.value.data);
     } finally {
       setLoading(false);
     }
@@ -329,6 +332,18 @@ const AdminDashboard = () => {
                   <div className="gi-vendor-dashboard-sort-card">
                     <h5>Transactions</h5>
                     <h3>{stats?.total_transactions ?? transactions.length}</h3>
+                  </div>
+                </Col>
+                <Col md={6} className="mb-3">
+                  <div className="gi-vendor-dashboard-sort-card">
+                    <h5>Utilisateurs inscrits</h5>
+                    <h3>{membersStats?.total_users ?? "—"}</h3>
+                  </div>
+                </Col>
+                <Col md={6} className="mb-3">
+                  <div className="gi-vendor-dashboard-sort-card">
+                    <h5>Inscriptions (7 jours)</h5>
+                    <h3>{membersStats?.recent_users ?? "—"}</h3>
                   </div>
                 </Col>
                 <Col md={12}>
