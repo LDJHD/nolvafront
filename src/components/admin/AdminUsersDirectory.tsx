@@ -27,6 +27,7 @@ const AdminUsersDirectory = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
   const [recentUsers, setRecentUsers] = useState<any[]>([]);
+  const [recentTotal, setRecentTotal] = useState(0);
   const [loadingRecent, setLoadingRecent] = useState(false);
 
   const loadUsers = useCallback(async () => {
@@ -42,7 +43,7 @@ const AdminUsersDirectory = () => {
       const payload = res.data;
       const list = payload?.data?.data || payload?.data || [];
       setUsers(Array.isArray(list) ? list : []);
-      setTotal(Number(payload?.total ?? payload?.data?.meta?.total ?? 0));
+      setTotal(Number(payload?.total ?? 0));
     } catch (err: any) {
       showErrorToast(err.response?.data?.message || "Impossible de charger les utilisateurs");
     } finally {
@@ -67,6 +68,7 @@ const AdminUsersDirectory = () => {
       const payload = res.data;
       const list = payload?.data?.data || payload?.data || [];
       setRecentUsers(Array.isArray(list) ? list : []);
+      setRecentTotal(Number(payload?.total ?? 0));
     } catch (err: any) {
       showErrorToast(err.response?.data?.message || "Erreur chargement récents");
     } finally {
@@ -100,7 +102,7 @@ const AdminUsersDirectory = () => {
           <div>
             <h5 className="mb-1">Inscriptions récentes (7 derniers jours)</h5>
             <p className="small text-muted mb-0">
-              {recentUsers.length} compte(s) récent(s)
+              {recentTotal} compte(s) récent(s)
             </p>
           </div>
         </div>
