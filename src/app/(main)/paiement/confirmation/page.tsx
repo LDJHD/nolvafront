@@ -68,25 +68,50 @@ const PaymentConfirmationPage = () => {
       return;
     }
 
+    // FedaPay peut valider le paiement quelques secondes APRÈS le retour du navigateur.
+    // On retente plusieurs fois avant d'afficher une erreur : sans cela, les billets ne
+    // sont jamais créés et les places ne sont jamais décomptées côté événement.
+    const maxAttempts = 5;
+    let cancelled = false;
+
     const confirm = async () => {
-      try {
-        let res;
-        if (type === "ticket") {
-          res = await paymentsApi.confirmTicket({ transaction_ref: ref });
-        } else {
-          res = await paymentsApi.confirmReservation({ transaction_ref: ref });
+      for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        if (cancelled) return;
+        try {
+          let res;
+          if (type === "ticket") {
+            res = await paymentsApi.confirmTicket({ transaction_ref: ref });
+          } else {
+            res = await paymentsApi.confirmReservation({ transaction_ref: ref });
+          }
+          if (cancelled) return;
+          setResult(res.data);
+          setLoading(false);
+          return;
+        } catch (err: any) {
+          const message = err.response?.data?.message || "Erreur lors de la confirmation";
+          const retriable =
+            message.includes("non confirmé") ||
+            message.includes("non confirmee") ||
+            message.includes("Paiement non confirm");
+          if (retriable && attempt < maxAttempts) {
+            await new Promise((resolve) => setTimeout(resolve, 3000));
+            continue;
+          }
+          if (!cancelled) {
+            setError(message);
+            setLoading(false);
+          }
+          return;
         }
-        setResult(res.data);
-      } catch (err: any) {
-        setError(
-          err.response?.data?.message || "Erreur lors de la confirmation"
-        );
-      } finally {
-        setLoading(false);
       }
     };
 
     confirm();
+
+    return () => {
+      cancelled = true;
+    };
   }, [ref, type, canConfirmPayment, hasStoredToken]);
 
   if (loading) {

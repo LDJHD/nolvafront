@@ -87,12 +87,16 @@ const EventCard = ({ event, eventTypes }: { event: any; eventTypes: any[] }) => 
         {(ticketCount > 0 || expectedParticipants > 0) && (
           <div className="nolva-event-social-proof">
             {ticketCount > 0
-              ? ticketCount - sold <= 20
-                ? "Places limitées"
-                : `${Math.max(sold, ticketCount)} participants attendus`
-              : expectedParticipants - registered <= 20
-                ? "Places limitées"
-                : `${Math.max(registered, expectedParticipants)} participants attendus`}
+              ? ticketCount - sold <= 0
+                ? "Complet"
+                : ticketCount - sold <= 20
+                  ? `Places limitées : ${ticketCount - sold} restantes`
+                  : `${ticketCount - sold} places restantes`
+              : expectedParticipants - registered <= 0
+                ? "Complet"
+                : expectedParticipants - registered <= 20
+                  ? `Places limitées : ${expectedParticipants - registered} restantes`
+                  : `${expectedParticipants - registered} places restantes`}
           </div>
         )}
       </div>

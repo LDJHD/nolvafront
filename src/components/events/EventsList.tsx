@@ -150,12 +150,16 @@ const EventsList = () => {
                       {(ticketCount > 0 || expectedParticipants > 0) && (
                         <div className="nolva-event-social-proof">
                           {ticketCount > 0
-                            ? ticketCount - ticketsSold <= 20
-                              ? "Places limitées"
-                              : `${Math.max(ticketsSold, ticketCount)} participants attendus`
-                            : expectedParticipants - registered <= 20
-                              ? "Places limitées"
-                              : `${Math.max(registered, expectedParticipants)} participants attendus`}
+                            ? ticketCount - ticketsSold <= 0
+                              ? "Complet"
+                              : ticketCount - ticketsSold <= 20
+                                ? `Places limitées : ${ticketCount - ticketsSold} restantes`
+                                : `${ticketCount - ticketsSold} places restantes`
+                            : expectedParticipants - registered <= 0
+                              ? "Complet"
+                              : expectedParticipants - registered <= 20
+                                ? `Places limitées : ${expectedParticipants - registered} restantes`
+                                : `${expectedParticipants - registered} places restantes`}
                         </div>
                       )}
                       <div className="nolva-event-meta">

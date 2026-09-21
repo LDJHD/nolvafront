@@ -148,11 +148,13 @@ const UserDashboard = () => {
 
   const toDateTimeLocalValue = (value: string) => {
     if (!value) return "";
+    // La date renvoyée par l'API est déjà l'heure locale enregistrée (suffixe Z factice).
+    // On la découpe directement SANS passer par Date/toISOString pour éviter tout décalage.
+    const raw = value.includes(" ") ? value.replace(" ", "T") : value;
+    const match = raw.match(/^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})/);
+    if (match) return `${match[1]}T${match[2]}`;
     const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return value.includes(" ") ? value.replace(" ", "T").slice(0, 16) : value;
-    const offset = date.getTimezoneOffset();
-    const local = new Date(date.getTime() - offset * 60 * 1000);
-    return local.toISOString().slice(0, 16);
+    return Number.isNaN(date.getTime()) ? "" : value.slice(0, 16);
   };
 
   const fileToEventImage = (file: File): Promise<string> =>
@@ -274,9 +276,7 @@ const UserDashboard = () => {
   };
 
   const handleRescheduleEvent = async (event: any) => {
-    const current = eventDateValue(event)
-      ? new Date(eventDateValue(event)).toISOString().slice(0, 16)
-      : "";
+    const current = toDateTimeLocalValue(eventDateValue(event) || "");
     const nextDate = window.prompt("Nouvelle date et heure (format AAAA-MM-JJTHH:mm)", current);
     if (!nextDate) return;
     try {
