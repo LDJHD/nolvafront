@@ -250,6 +250,7 @@ a.nolva-btn-reserve:hover {
 
 @media (max-width: 991px) {
   .nolva-header-row {
+    flex-direction: row;
     flex-wrap: wrap;
   }
   .nolva-header-spacer {
@@ -260,7 +261,16 @@ a.nolva-btn-reserve:hover {
     flex: 1 1 100%;
     max-width: 100%;
     margin-left: 0;
-    margin-top: 0px;
+  }
+}
+
+/* Neutralise le passage en colonne du theme (<=575px) qui etire la barre de recherche */
+@media (max-width: 575px) {
+  .gi-header-bottom .gi-flex.nolva-header-row {
+    flex-direction: row;
+  }
+  .gi-header-bottom .gi-flex.nolva-header-row .gi-header-logo {
+    margin-bottom: 0;
   }
 }
 
