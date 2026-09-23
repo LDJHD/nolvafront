@@ -18,3 +18,68 @@
  ✓ Compiled /middleware in 665ms (115 modules)
  ○ Compiling / ...
  ✓ Compiled / in 5.5s (622 modules)
+redux-persist failed to create sync storage. falling back to noop storage.
+ GET / 200 in 7352ms
+ GET / 200 in 243ms
+ ○ Compiling /home ...
+ ✓ Compiled /home in 9.1s (1915 modules)
+redux-persist failed to create sync storage. falling back to noop storage.
+ GET /home/ 200 in 12207ms
+ GET / 200 in 12244ms
+ GET /home/ 200 in 12293ms
+ GET /home/ 200 in 386ms
+ ○ Compiling /api/catalog/provider-types ...
+ ✓ Compiled /api/catalog/provider-types in 6.2s (1937 modules)
+[events/upcoming] Error: fetch failed
+ GET /api/events/upcoming/ 200 in 8186ms
+ GET /api/catalog/provider-types/ 200 in 7875ms
+ GET /api/catalog/provider-types/ 200 in 7880ms
+ GET /api/catalog/provider-types/ 200 in 7719ms
+ GET /api/catalog/provider-types/ 200 in 7439ms
+[providers/popular] Error: fetch failed
+ GET /api/providers/popular/ 200 in 8230ms
+ ○ Compiling /api/catalog/event-types ...
+ ✓ Compiled /api/catalog/event-types in 2.1s (1939 modules)
+ GET /api/catalog/provider-types/ 200 in 3257ms
+ GET /api/catalog/provider-types/ 200 in 3262ms
+ GET /api/catalog/provider-types/ 200 in 3275ms
+ GET /api/catalog/provider-types/ 200 in 3294ms
+ GET /api/catalog/provider-types/ 200 in 3304ms
+ GET /api/catalog/event-types/ 200 in 3318ms
+ GET /api/catalog/provider-types/ 200 in 481ms
+ GET /api/catalog/provider-types/ 200 in 617ms
+ GET /api/catalog/provider-types/ 200 in 606ms
+ GET /api/catalog/event-types/ 200 in 630ms
+redux-persist failed to create sync storage. falling back to noop storage.
+ GET / 200 in 785ms
+ GET /home/ 200 in 682ms
+ GET / 200 in 2530ms
+ GET /home/ 200 in 2797ms
+ GET /home/ 200 in 2346ms
+[providers/popular] Error: fetch failed
+ GET /api/providers/popular/ 200 in 397ms
+[events/upcoming] Error: fetch failed
+ GET /api/events/upcoming/ 200 in 578ms
+ GET /api/catalog/provider-types/ 200 in 358ms
+ GET /api/catalog/provider-types/ 200 in 494ms
+ GET /api/catalog/provider-types/ 200 in 498ms
+ GET /api/catalog/event-types/ 200 in 507ms
+ GET /api/catalog/provider-types/ 200 in 511ms
+ GET /api/catalog/provider-types/ 200 in 326ms
+ GET /api/catalog/provider-types/ 200 in 310ms
+ GET /api/catalog/provider-types/ 200 in 286ms
+ GET /api/catalog/provider-types/ 200 in 291ms
+ GET /api/catalog/provider-types/ 200 in 303ms
+ GET /api/catalog/provider-types/ 200 in 309ms
+ GET /api/catalog/event-types/ 200 in 275ms
+ GET /api/catalog/provider-types/ 200 in 233ms
+ GET /api/catalog/provider-types/ 200 in 208ms
+ ✓ Compiled in 3.7s (1905 modules)
+ ○ Compiling /evenements ...
+ ✓ Compiled /evenements in 2.2s (1918 modules)
+redux-persist failed to create sync storage. falling back to noop storage.
+ GET /evenements/ 200 in 4309ms
+ ○ Compiling /evenements/[id] ...
+ ✓ Compiled /evenements/[id] in 1543ms (1927 modules)
+redux-persist failed to create sync storage. falling back to noop storage.
+ GET /evenements/1/ 200 in 13264ms

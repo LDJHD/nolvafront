@@ -392,12 +392,24 @@ const UserDashboard = () => {
     stopQrCamera();
     try {
       const res = await eventsApi.scanTicket(scanEvent.id, { qr_code: qrCode.trim() });
-      setScanResult({ ok: true, ...res.data });
+      // 200 : premier contrôle -> ticket VALIDE pour l'événement
+      setScanResult({ ok: true, alreadyUsed: false, ...res.data });
       setScanQrCode("");
     } catch (err: any) {
+      const status = err.response?.status;
+      const alreadyUsed =
+        err.response?.data?.already_used === true ||
+        status === 409 ||
+        Boolean(err.response?.data?.ticket?.scannedAt);
+      // 409 : ticket déjà contrôlé une première fois -> DÉJÀ UTILISÉ (expiré)
       setScanResult({
         ok: false,
-        message: err.response?.data?.message || "Ticket non valide pour cet evenement.",
+        alreadyUsed,
+        message:
+          err.response?.data?.message ||
+          (alreadyUsed
+            ? "DÉJÀ UTILISÉ : ce ticket a déjà été validé pour cet événement."
+            : "Ticket non valide pour cet événement."),
         ticket: err.response?.data?.ticket,
       });
     }
@@ -1011,14 +1023,41 @@ const UserDashboard = () => {
           <button type="button" className="btn btn-outline-success" onClick={() => void validateQrCode(scanQrCode)}>Valider</button>
         </div>
         {scanResult && (
-          <div className={`alert mt-3 ${scanResult.ok ? "alert-success" : "alert-danger"}`}>
-            <strong>{scanResult.ok ? "Ticket valide" : "Validation refusee"}</strong>
-            <div>{scanResult.message}</div>
+          <div
+            className={`alert mt-3 ${
+              scanResult.ok
+                ? "alert-success"
+                : scanResult.alreadyUsed
+                  ? "alert-warning"
+                  : "alert-danger"
+            }`}
+            style={
+              scanResult.ok
+                ? { border: "2px solid #059669", background: "#ecfdf5", color: "#065f46" }
+                : scanResult.alreadyUsed
+                  ? { border: "2px solid var(--nolva-red)", background: "#fdecec", color: "var(--nolva-red)" }
+                  : undefined
+            }
+          >
+            <strong style={{ fontSize: "18px", letterSpacing: "0.5px" }}>
+              {scanResult.ok
+                ? "✔ TICKET VALIDE"
+                : scanResult.alreadyUsed
+                  ? "⚠ DÉJÀ UTILISÉ (EXPIRÉ)"
+                  : "✘ VALIDATION REFUSÉE"}
+            </strong>
+            <div className="mt-1">{scanResult.message}</div>
             {scanResult.ticket && (
               <div className="small mt-2">
                 <div>Ticket : {scanResult.ticket.ticketCode}</div>
                 {scanResult.ticket.client && <div>Client : {scanResult.ticket.client.firstName} {scanResult.ticket.client.lastName}</div>}
-                {scanResult.ticket.scannedAt && <div>Valide le : {new Date(scanResult.ticket.scannedAt).toLocaleString("fr-FR")}</div>}
+                {scanResult.ticket.scannedAt && (
+                  <div>
+                    {scanResult.ok
+                      ? `Validé le : ${new Date(scanResult.ticket.scannedAt).toLocaleString("fr-FR")}`
+                      : `Déjà validé le : ${new Date(scanResult.ticket.scannedAt).toLocaleString("fr-FR")}`}
+                  </div>
+                )}
               </div>
             )}
           </div>

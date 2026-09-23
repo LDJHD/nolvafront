@@ -78,9 +78,8 @@ const EventDetailPage = () => {
     }
   };
 
-  useEffect(() => {
-    if (!id) return;
-    fetch(`/api/events/${id}`)
+  const fetchEvent = (eventId: string | string[]) =>
+    fetch(`/api/events/${eventId}`)
       .then((res) => {
         if (!res.ok) throw new Error("Not found");
         return res.json();
@@ -88,10 +87,21 @@ const EventDetailPage = () => {
       .then((data) => {
         setEvent(data);
         const types = data.ticket_types || data.ticketTypes || [];
-        if (types.length > 0) setSelectedTicketTypeId(types[0].id);
-      })
+        if (types.length > 0) {
+          setSelectedTicketTypeId((prev) => {
+            if (prev && types.some((t: any) => t.id === prev)) return prev;
+            return types[0].id;
+          });
+        }
+        return data;
+      });
+
+  useEffect(() => {
+    if (!id) return;
+    fetchEvent(id)
       .catch(() => setError(true))
       .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   if (loading)
@@ -152,6 +162,9 @@ const EventDetailPage = () => {
         phone: regForm.phone.trim(),
       });
       setRegDone(res.data?.message || "Inscription confirmée !");
+      // Rafraîchir l'événement : le compteur de places baisse à chaque
+      // inscription et SOLD OUT s'affiche dès que la capacité est atteinte.
+      await fetchEvent(event.id);
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Erreur lors de l'inscription");
     } finally {
@@ -172,6 +185,17 @@ const EventDetailPage = () => {
     event.expectedParticipants ?? event.expected_participants ?? 0
   );
   const registered = Number(event.registrationsCount ?? event.registrations_count ?? 0);
+  const ticketsSoldCount = Number(event.ticketsSold ?? event.tickets_sold ?? 0);
+  const ticketsAllSoldOut =
+    ticketTypes.length > 0 &&
+    ticketTypes.every(
+      (t) => (t.quantity ?? 0) > 0 && (t.available ?? 0) <= 0
+    );
+  const isSoldOut =
+    ticketsAllSoldOut ||
+    Boolean(event.is_sold_out) ||
+    (ticketCount > 0 && ticketsSoldCount >= ticketCount) ||
+    (expectedParticipants > 0 && registered >= expectedParticipants);
   const eventDate = event.eventDate || event.event_date;
   const formattedDate = eventDate
     ? new Date(eventDate).toLocaleDateString("fr-FR", {
@@ -233,6 +257,12 @@ const EventDetailPage = () => {
                       ? "En cours"
                       : event.status}
                 </span>
+                {isSoldOut && (
+                  <div className="nolva-sold-out-banner">
+                    <i className="fi fi-rr-ban"></i>
+                    <span>SOLD OUT</span>
+                  </div>
+                )}
                 <h1 className="nolva-event-hero-title">{event.title}</h1>
                 <button type="button" className="btn btn-outline-secondary btn-sm mb-3" onClick={copyShareLink}>
                   Copier le lien
@@ -330,24 +360,30 @@ const EventDetailPage = () => {
                           }}
                         ></div>
                       </div>
-                      <span>
+                      <span
+                        style={
+                          availableTickets <= 0
+                            ? { color: "var(--nolva-red)", fontWeight: 900, letterSpacing: "1px" }
+                            : undefined
+                        }
+                      >
                         {availableTickets > 0
                           ? `${availableTickets} places restantes`
-                          : "Complet"}
+                          : "SOLD OUT"}
                       </span>
                     </div>
                   )}
                   {isFreeEvent ? (
-                    availableTickets === 0 ? (
+                    isSoldOut ? (
                       <div
                         className="alert alert-warning mt-3 mb-2"
                         role="alert"
                         style={{ borderRadius: "8px" }}
                       >
                         <i className="fi fi-rr-ban me-2"></i>
-                        Cet événement est complet : le nombre de participants attendus est atteint.
+                        Cet événement est complet : il n&apos;y a plus de places disponibles.
                       </div>
-                    ) : regDone ? (
+                    ) : availableTickets === 0 ? (
                       <>
                         <div
                           className="alert alert-success mt-3 mb-2"
@@ -439,6 +475,15 @@ const EventDetailPage = () => {
                         </p>
                       </form>
                     )
+                  ) : isSoldOut ? (
+                    <div
+                      className="alert alert-warning mt-3 mb-2"
+                      role="alert"
+                      style={{ borderRadius: "8px" }}
+                    >
+                      <i className="fi fi-rr-ban me-2"></i>
+                      Cet événement est complet : il n&apos;y a plus de billets disponibles.
+                    </div>
                   ) : availableTickets !== 0 && isAuthenticated ? (
                     <>
                       <div className="mt-3 mb-2">
@@ -458,9 +503,9 @@ const EventDetailPage = () => {
                               {ticketTypes.map((t) => (
                                 <option key={t.id} value={t.id} disabled={(t.available ?? 0) === 0}>
                                   {t.label} — {Number(t.price).toLocaleString("fr-FR")} FCFA
-                                  {(t.available ?? 0) > 0 && t.available !== 999999
+                                  {(t.available ?? 0) > 0
                                     ? ` (${t.available} restants)`
-                                    : ""}
+                                    : " — SOLD OUT"}
                                 </option>
                               ))}
                             </select>

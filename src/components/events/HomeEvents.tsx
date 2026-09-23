@@ -20,6 +20,19 @@ const EventCard = ({ event, eventTypes }: { event: any; eventTypes: any[] }) => 
     event.expectedParticipants ?? event.expected_participants ?? 0
   );
   const registered = Number(event.registrationsCount ?? event.registrations_count ?? 0);
+  const types = event.ticket_types || event.ticketTypes || [];
+  const allTypesSoldOut =
+    types.length > 0 &&
+    types.every(
+      (t: any) =>
+        Number(t.quantity ?? 0) > 0 &&
+        Math.max(0, Number(t.quantity ?? 0) - Number(t.sold ?? 0)) <= 0
+    );
+  const isSoldOutCard =
+    Boolean(event.is_sold_out) ||
+    allTypesSoldOut ||
+    (ticketCount > 0 && sold >= ticketCount) ||
+    (ticketCount === 0 && expectedParticipants > 0 && registered >= expectedParticipants);
 
   return (
     <div className="nolva-event-card">
@@ -53,6 +66,9 @@ const EventCard = ({ event, eventTypes }: { event: any; eventTypes: any[] }) => 
         ) : (
           <span className="nolva-event-price-tag free">Gratuit</span>
         )}
+        {isSoldOutCard && (
+          <span className="nolva-event-sold-out-badge">SOLD OUT</span>
+        )}
       </div>
       <div className="nolva-event-content">
         <h5 className="nolva-event-title">{event.title}</h5>
@@ -84,19 +100,19 @@ const EventCard = ({ event, eventTypes }: { event: any; eventTypes: any[] }) => 
             Découvrir <i className="fi fi-rr-arrow-small-right"></i>
           </Link>
         </div>
-        {(ticketCount > 0 || expectedParticipants > 0) && (
+        {(ticketCount > 0 || expectedParticipants > 0 || allTypesSoldOut) && (
           <div className="nolva-event-social-proof">
-            {ticketCount > 0
-              ? ticketCount - sold <= 0
-                ? "Complet"
-                : ticketCount - sold <= 20
+            {isSoldOutCard
+              ? "Complet"
+              : ticketCount > 0
+                ? ticketCount - sold <= 20
                   ? `Places limitées : ${ticketCount - sold} restantes`
                   : `${ticketCount - sold} places restantes`
-              : expectedParticipants - registered <= 0
-                ? "Complet"
-                : expectedParticipants - registered <= 20
-                  ? `Places limitées : ${expectedParticipants - registered} restantes`
-                  : `${expectedParticipants - registered} places restantes`}
+                : expectedParticipants > 0
+                  ? expectedParticipants - registered <= 20
+                    ? `Places limitées : ${expectedParticipants - registered} restantes`
+                    : `${expectedParticipants - registered} places restantes`
+                  : "Places limitées"}
           </div>
         )}
       </div>

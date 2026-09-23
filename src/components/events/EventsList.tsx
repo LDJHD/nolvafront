@@ -110,6 +110,21 @@ const EventsList = () => {
               const registered = Number(
                 event.registrationsCount ?? event.registrations_count ?? 0
               );
+              const types = event.ticket_types || event.ticketTypes || [];
+              const allTypesSoldOut =
+                types.length > 0 &&
+                types.every(
+                  (t: any) =>
+                    Number(t.quantity ?? 0) > 0 &&
+                    Math.max(0, Number(t.quantity ?? 0) - Number(t.sold ?? 0)) <= 0
+                );
+              const isSoldOutCard =
+                Boolean(event.is_sold_out) ||
+                allTypesSoldOut ||
+                (ticketCount > 0 && ticketsSold >= ticketCount) ||
+                (ticketCount === 0 &&
+                  expectedParticipants > 0 &&
+                  registered >= expectedParticipants);
 
               return (
                 <Col lg={4} md={6} className="mb-4" key={event.id || index}>
@@ -139,6 +154,9 @@ const EventsList = () => {
                       ) : (
                         <span className="nolva-event-price-tag free">Gratuit</span>
                       )}
+                      {isSoldOutCard && (
+                        <span className="nolva-event-sold-out-badge">SOLD OUT</span>
+                      )}
                     </div>
                     <div className="nolva-event-content">
                       <h5 className="nolva-event-title">{event.title}</h5>
@@ -147,19 +165,19 @@ const EventsList = () => {
                           {getTypeLabel(eventTypesCatalog, event.eventType || event.event_type)}
                         </span>
                       )}
-                      {(ticketCount > 0 || expectedParticipants > 0) && (
+                      {(ticketCount > 0 || expectedParticipants > 0 || allTypesSoldOut) && (
                         <div className="nolva-event-social-proof">
-                          {ticketCount > 0
-                            ? ticketCount - ticketsSold <= 0
-                              ? "Complet"
-                              : ticketCount - ticketsSold <= 20
+                          {isSoldOutCard
+                            ? "Complet"
+                            : ticketCount > 0
+                              ? ticketCount - ticketsSold <= 20
                                 ? `Places limitées : ${ticketCount - ticketsSold} restantes`
                                 : `${ticketCount - ticketsSold} places restantes`
-                            : expectedParticipants - registered <= 0
-                              ? "Complet"
-                              : expectedParticipants - registered <= 20
-                                ? `Places limitées : ${expectedParticipants - registered} restantes`
-                                : `${expectedParticipants - registered} places restantes`}
+                              : expectedParticipants > 0
+                                ? expectedParticipants - registered <= 20
+                                  ? `Places limitées : ${expectedParticipants - registered} restantes`
+                                  : `${expectedParticipants - registered} places restantes`
+                                : "Places limitées"}
                         </div>
                       )}
                       <div className="nolva-event-meta">
