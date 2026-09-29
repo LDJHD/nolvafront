@@ -12,6 +12,9 @@ import { getTypeLabel, useEventTypes } from "@/lib/useCatalog";
 
 const EventCard = ({ event, eventTypes }: { event: any; eventTypes: any[] }) => {
   const dateStr = event.eventDate || event.event_date;
+  const isReferencedCard = Boolean(
+    event.referenced ?? event.is_referenced ?? event.isReferenced
+  );
   const price = Number(event.ticketPrice ?? event.ticket_price ?? 0);
   const eventType = event.eventType || event.event_type;
   const sold = Number(event.ticketsSold || event.tickets_sold || 0);
@@ -59,7 +62,9 @@ const EventCard = ({ event, eventTypes }: { event: any; eventTypes: any[] }) => 
             {getTypeLabel(eventTypes, eventType)}
           </span>
         )}
-        {price > 0 ? (
+        {isReferencedCard ? (
+          <span className="nolva-event-price-tag">Référencé</span>
+        ) : price > 0 ? (
           <span className="nolva-event-price-tag">
             {price.toLocaleString()} FCFA
           </span>
