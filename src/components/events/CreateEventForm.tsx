@@ -108,6 +108,7 @@ const CreateEventForm = () => {
     image: "",
     expected_participants: "",
     is_free: true,
+    is_referenced: false,
   });
   const [draftTickets, setDraftTickets] = useState<TicketDraft[]>([
     { label: "Standard", price: "5000", quantity: "100" },
@@ -249,6 +250,7 @@ const CreateEventForm = () => {
       image: "",
       expected_participants: form.guests || "",
       is_free: true,
+      is_referenced: false,
     });
     setDraftTickets([{ label: "Standard", price: "5000", quantity: defaultTicketQuantity }]);
     setStep(6);
@@ -332,17 +334,18 @@ const CreateEventForm = () => {
 
     setSubmitting(true);
     try {
-      const ticketTypes = draftEvent.is_free
-        ? []
-        : draftTickets
-            .filter((ticket) => ticket.label.trim())
-            .map((ticket) => ({
-              label: ticket.label.trim(),
-              price: Number(ticket.price) || 0,
-              quantity: Number(ticket.quantity) || 0,
-            }));
+      const ticketTypes =
+        draftEvent.is_free || draftEvent.is_referenced
+          ? []
+          : draftTickets
+              .filter((ticket) => ticket.label.trim())
+              .map((ticket) => ({
+                label: ticket.label.trim(),
+                price: Number(ticket.price) || 0,
+                quantity: Number(ticket.quantity) || 0,
+              }));
 
-      if (!draftEvent.is_free && ticketTypes.length === 0) {
+      if (!draftEvent.is_free && !draftEvent.is_referenced && ticketTypes.length === 0) {
         showErrorToast("Ajoutez au moins un type de billet");
         return;
       }
@@ -356,11 +359,13 @@ const CreateEventForm = () => {
         location: draftEvent.location.trim() || undefined,
         image: draftEvent.image || undefined,
         ticket_types: ticketTypes,
-        ticket_price: draftEvent.is_free ? 0 : undefined,
-        ticket_count: draftEvent.is_free ? 0 : undefined,
-        expected_participants: draftEvent.is_free && draftEvent.expected_participants
-          ? Number(draftEvent.expected_participants)
-          : undefined,
+        ticket_price: draftEvent.is_free || draftEvent.is_referenced ? 0 : undefined,
+        ticket_count: draftEvent.is_free || draftEvent.is_referenced ? 0 : undefined,
+        expected_participants:
+          draftEvent.is_free && !draftEvent.is_referenced && draftEvent.expected_participants
+            ? Number(draftEvent.expected_participants)
+            : undefined,
+        referenced: draftEvent.is_referenced || undefined,
       });
       showSuccessToast(res.data?.message || "Evenement soumis a validation admin.");
       router.push("/user-dashboard");
@@ -574,16 +579,35 @@ const CreateEventForm = () => {
 
                 <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
                   <h6 className="fw-semibold mb-0">Billets</h6>
-                  <Form.Check
-                    type="switch"
-                    id="ai-free-event"
-                    label="Evenement gratuit"
-                    checked={draftEvent.is_free}
-                    onChange={(e) => setDraftEvent({ ...draftEvent, is_free: e.target.checked })}
-                  />
+                  <div className="d-flex flex-wrap gap-3">
+                    <Form.Check
+                      type="switch"
+                      id="ai-free-event"
+                      label="Evenement gratuit"
+                      checked={draftEvent.is_free}
+                      disabled={draftEvent.is_referenced}
+                      onChange={(e) => setDraftEvent({ ...draftEvent, is_free: e.target.checked })}
+                    />
+                    <Form.Check
+                      type="switch"
+                      id="ai-referenced-event"
+                      label="Référencé"
+                      checked={draftEvent.is_referenced}
+                      onChange={(e) => {
+                        setDraftEvent({ ...draftEvent, is_referenced: e.target.checked });
+                        if (e.target.checked) setDraftEvent((prev) => ({ ...prev, is_free: false }));
+                      }}
+                    />
+                  </div>
                 </div>
 
-                {draftEvent.is_free ? (
+                {draftEvent.is_referenced ? (
+                  <div className="alert alert-light border">
+                    Événement <strong>référencé</strong> : il sera visible dans la liste des
+                    événements comme les autres, mais sans achat de billet ni inscription
+                    gratuite. Les visiteurs verront uniquement les informations de la fiche.
+                  </div>
+                ) : draftEvent.is_free ? (
                   <>
                     <div className="alert alert-light border">
                       Les champs de billets sont masques. L&apos;evenement sera soumis comme gratuit.

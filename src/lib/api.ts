@@ -219,7 +219,13 @@ export const eventsApi = {
   show: (id: number | string) => api.get(`/events/${id}`),
   registerFree: (
     id: number | string,
-    data: { first_name: string; last_name: string; phone: string }
+    data: {
+      first_name: string
+      last_name: string
+      phone: string
+      email: string
+      consent_contact: boolean
+    }
   ) => api.post(`/events/${id}/register`, data),
   eventRegistrations: (id: number | string) => api.get(`/user/events/${id}/registrations`),
   publishSuggestions: (params: { event_type: string; title?: string; city?: string }) =>

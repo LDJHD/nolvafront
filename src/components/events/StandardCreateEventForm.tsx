@@ -30,6 +30,7 @@ const StandardCreateEventForm = () => {
   const { types: eventTypes, loading: typesLoading } = useEventTypes();
   const [submitting, setSubmitting] = useState(false);
   const [isFreeEvent, setIsFreeEvent] = useState(false);
+  const [isReferenced, setIsReferenced] = useState(false);
   const [form, setForm] = useState({
     event_type: "",
     title: "",
@@ -90,7 +91,7 @@ const StandardCreateEventForm = () => {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const ticketTypes = isFreeEvent
+    const ticketTypes = isFreeEvent || isReferenced
       ? []
       : tickets
           .filter((t) => t.label.trim())
@@ -100,7 +101,7 @@ const StandardCreateEventForm = () => {
             quantity: Number(t.quantity) || 0,
           }));
 
-    if (!isFreeEvent && ticketTypes.length === 0) {
+    if (!isFreeEvent && !isReferenced && ticketTypes.length === 0) {
       showErrorToast("Ajoutez au moins un type de billet");
       return;
     }
@@ -116,15 +117,19 @@ const StandardCreateEventForm = () => {
         city: form.city,
         image: form.image || undefined,
         ticket_types: ticketTypes,
-        ticket_price: isFreeEvent ? 0 : undefined,
-        ticket_count: isFreeEvent ? 0 : undefined,
-        expected_participants: isFreeEvent && form.expected_participants
-          ? Number(form.expected_participants)
-          : undefined,
+        ticket_price: isFreeEvent || isReferenced ? 0 : undefined,
+        ticket_count: isFreeEvent || isReferenced ? 0 : undefined,
+        expected_participants:
+          isFreeEvent && !isReferenced && form.expected_participants
+            ? Number(form.expected_participants)
+            : undefined,
+        referenced: isReferenced || undefined,
       });
       showSuccessToast(
         res.data?.message ||
-          "Evenement publie avec succes. Il sera visible apres validation par l'administration."
+          (isReferenced
+            ? "Evenement reference soumis. Il sera visible apres validation, sans billets ni inscriptions."
+            : "Evenement publie avec succes. Il sera visible apres validation par l'administration.")
       );
       router.push("/user-dashboard");
     } catch (err: any) {
@@ -244,16 +249,36 @@ const StandardCreateEventForm = () => {
 
               <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
                 <h6 className="fw-semibold mb-0">Billets</h6>
-                <Form.Check
-                  type="switch"
-                  id="standard-free-event"
-                  label="Evenement gratuit"
-                  checked={isFreeEvent}
-                  onChange={(e) => setIsFreeEvent(e.target.checked)}
-                />
+                <div className="d-flex flex-wrap gap-3">
+                  <Form.Check
+                    type="switch"
+                    id="standard-free-event"
+                    label="Evenement gratuit"
+                    checked={isFreeEvent}
+                    disabled={isReferenced}
+                    onChange={(e) => setIsFreeEvent(e.target.checked)}
+                  />
+                  <Form.Check
+                    type="switch"
+                    id="standard-referenced-event"
+                    label="Référencé"
+                    checked={isReferenced}
+                    onChange={(e) => {
+                      setIsReferenced(e.target.checked);
+                      if (e.target.checked) setIsFreeEvent(false);
+                    }}
+                  />
+                </div>
               </div>
 
-              {isFreeEvent ? (
+              {isReferenced ? (
+                <div className="alert alert-light border">
+                  Événement <strong>référencé</strong> : il sera visible dans la liste des
+                  événements comme les autres, mais sans achat de billet ni inscription
+                  gratuite. Les visiteurs verront uniquement les informations de la fiche
+                  (description, date, lieu, heure).
+                </div>
+              ) : isFreeEvent ? (
                 <>
                   <div className="alert alert-light border">
                     Les champs de billets sont masques. L&apos;evenement sera soumis comme gratuit.

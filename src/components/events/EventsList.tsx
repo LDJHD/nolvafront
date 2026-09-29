@@ -101,6 +101,9 @@ const EventsList = () => {
           <Row>
             {events.map((event: any, index: number) => {
               const dateStr = event.eventDate || event.event_date;
+              const isReferencedCard = Boolean(
+                event.referenced ?? event.is_referenced ?? event.isReferenced
+              );
               const price = Number(event.ticketPrice ?? event.ticket_price ?? 0);
               const ticketCount = Number(event.ticketCount || event.ticket_count || 0);
               const ticketsSold = Number(event.ticketsSold || event.tickets_sold || 0);
@@ -147,14 +150,16 @@ const EventsList = () => {
                             : ""}
                         </span>
                       </div>
-                      {price > 0 ? (
+                      {isReferencedCard ? (
+                        <span className="nolva-event-price-tag">Référencé</span>
+                      ) : price > 0 ? (
                         <span className="nolva-event-price-tag">
                           {price.toLocaleString()} FCFA
                         </span>
                       ) : (
                         <span className="nolva-event-price-tag free">Gratuit</span>
                       )}
-                      {isSoldOutCard && (
+                      {!isReferencedCard && isSoldOutCard && (
                         <span className="nolva-event-sold-out-badge">SOLD OUT</span>
                       )}
                     </div>
@@ -165,7 +170,8 @@ const EventsList = () => {
                           {getTypeLabel(eventTypesCatalog, event.eventType || event.event_type)}
                         </span>
                       )}
-                      {(ticketCount > 0 || expectedParticipants > 0 || allTypesSoldOut) && (
+                      {!isReferencedCard &&
+                        (ticketCount > 0 || expectedParticipants > 0 || allTypesSoldOut) && (
                         <div className="nolva-event-social-proof">
                           {isSoldOutCard
                             ? "Complet"
@@ -206,7 +212,11 @@ const EventsList = () => {
                       )}
                       <div className="nolva-event-actions" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <span style={{ fontWeight: 700, color: "var(--nolva-red)", fontSize: "16px" }}>
-                          {price > 0 ? `${price.toLocaleString()} FCFA` : "Gratuit"}
+                          {isReferencedCard
+                            ? "Informations"
+                            : price > 0
+                              ? `${price.toLocaleString()} FCFA`
+                              : "Gratuit"}
                         </span>
                         <Link href={`/evenements/${event.id}`} className="nolva-event-btn">
                           Découvrir <i className="fi fi-rr-arrow-small-right"></i>

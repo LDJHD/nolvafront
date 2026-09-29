@@ -25,6 +25,8 @@ const EventDetailPage = () => {
     first_name: user?.firstName || "",
     last_name: user?.lastName || "",
     phone: user?.phone || "",
+    email: user?.email || "",
+    consent_contact: false,
   });
   const [regLoading, setRegLoading] = useState(false);
   const [regDone, setRegDone] = useState<string | null>(null);
@@ -36,6 +38,8 @@ const EventDetailPage = () => {
         first_name: prev.first_name || user.firstName || "",
         last_name: prev.last_name || user.lastName || "",
         phone: prev.phone || user.phone || "",
+        email: prev.email || user.email || "",
+        consent_contact: prev.consent_contact,
       }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -147,11 +151,19 @@ const EventDetailPage = () => {
       ? ticketTypes.every((t) => Number(t.price) <= 0)
       : Number(event.ticketPrice || event.ticket_price || 0) <= 0;
 
+  const isReferencedEvent = Boolean(
+    event.referenced ?? event.is_referenced ?? event.isReferenced
+  );
+
   const handleRegisterFree = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!event) return;
     if (!regForm.first_name.trim() || !regForm.last_name.trim() || !regForm.phone.trim()) {
       toast.error("Renseignez votre nom, prénom et numéro de téléphone.");
+      return;
+    }
+    if (!regForm.email.trim()) {
+      toast.error("Renseignez votre adresse email.");
       return;
     }
     setRegLoading(true);
@@ -160,6 +172,8 @@ const EventDetailPage = () => {
         first_name: regForm.first_name.trim(),
         last_name: regForm.last_name.trim(),
         phone: regForm.phone.trim(),
+        email: regForm.email.trim(),
+        consent_contact: regForm.consent_contact,
       });
       setRegDone(res.data?.message || "Inscription confirmée !");
       // Rafraîchir l'événement : le compteur de places baisse à chaque
@@ -251,11 +265,13 @@ const EventDetailPage = () => {
             <div className="col-lg-6">
               <div className="nolva-event-hero-info">
                 <span className="nolva-event-status-badge">
-                  {event.status === "upcoming"
-                    ? "A venir"
-                    : event.status === "ongoing"
-                      ? "En cours"
-                      : event.status}
+                  {isReferencedEvent
+                    ? "Référencé"
+                    : event.status === "upcoming"
+                      ? "A venir"
+                      : event.status === "ongoing"
+                        ? "En cours"
+                        : event.status}
                 </span>
                 {isSoldOut && (
                   <div className="nolva-sold-out-banner">
@@ -312,10 +328,23 @@ const EventDetailPage = () => {
 
                 {/* Prix et billets */}
                 <div className="nolva-event-ticket-box">
-                  <div className="nolva-event-price-display">
-                    <span className="label">
-                      {ticketTypes.length > 1 ? "Tarifs" : "Prix du billet"}
-                    </span>
+                  {isReferencedEvent ? (
+                    <div
+                      className="alert alert-light border mt-3 mb-2"
+                      role="alert"
+                      style={{ borderRadius: "8px" }}
+                    >
+                      <i className="fi fi-rr-info me-2"></i>
+                      Cet événement est référencé sur NOLVA : il est présenté à titre
+                      informatif. Les billets et les inscriptions ne sont pas disponibles
+                      sur la plateforme.
+                    </div>
+                  ) : null}
+                  {!isReferencedEvent && (
+                    <div className="nolva-event-price-display">
+                      <span className="label">
+                        {ticketTypes.length > 1 ? "Tarifs" : "Prix du billet"}
+                      </span>
                     <span className="price">
                       {ticketTypes.length > 0 ? (
                         ticketTypes.length === 1 ? (
@@ -341,9 +370,10 @@ const EventDetailPage = () => {
                       ) : (
                         "Gratuit"
                       )}
-                    </span>
-                  </div>
-                  {availableTickets !== null && (
+                      </span>
+                    </div>
+                  )}
+                  {!isReferencedEvent && availableTickets !== null && (
                     <div className="nolva-event-tickets-left">
                       <div className="progress-bar-wrapper">
                         <div
@@ -373,7 +403,7 @@ const EventDetailPage = () => {
                       </span>
                     </div>
                   )}
-                  {isFreeEvent ? (
+                  {!isReferencedEvent && isFreeEvent ? (
                     isSoldOut ? (
                       <div
                         className="alert alert-warning mt-3 mb-2"
@@ -398,7 +428,13 @@ const EventDetailPage = () => {
                           className="btn btn-outline-secondary w-100"
                           onClick={() => {
                             setRegDone(null);
-                            setRegForm({ first_name: "", last_name: "", phone: "" });
+                            setRegForm({
+                              first_name: "",
+                              last_name: "",
+                              phone: "",
+                              email: "",
+                              consent_contact: false,
+                            });
                           }}
                         >
                           Inscrire une autre personne
@@ -450,6 +486,43 @@ const EventDetailPage = () => {
                               style={{ borderRadius: "8px", fontSize: "14px" }}
                             />
                           </div>
+                          <div className="col-12">
+                            <label className="form-label fw-semibold" style={{ fontSize: "13px" }}>
+                              Adresse email (gmail) *
+                            </label>
+                            <input
+                              type="email"
+                              className="form-control"
+                              placeholder="Ex : votrenom@gmail.com"
+                              value={regForm.email}
+                              onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
+                              required
+                              style={{ borderRadius: "8px", fontSize: "14px" }}
+                            />
+                            <p className="small text-muted mt-1 mb-0" style={{ fontSize: "12px" }}>
+                              Le mail de confirmation avec l&apos;affiche et les détails de
+                              l&apos;événement sera envoyé sur cette adresse.
+                            </p>
+                          </div>
+                        </div>
+                        <div className="form-check mt-3" style={{ fontSize: "13px" }}>
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id="consent-contact-checkbox"
+                            checked={regForm.consent_contact}
+                            onChange={(e) =>
+                              setRegForm({ ...regForm, consent_contact: e.target.checked })
+                            }
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor="consent-contact-checkbox"
+                            style={{ fontSize: "13px" }}
+                          >
+                            J&apos;accepte que l&apos;organisateur reçoive mes coordonnées et me
+                            contacte si possible.
+                          </label>
                         </div>
                         <button
                           type="submit"
@@ -471,11 +544,13 @@ const EventDetailPage = () => {
                           style={{ fontSize: "12px" }}
                         >
                           <i className="fi fi-rr-shield-check" style={{ color: "#059669" }}></i>{" "}
-                          L&apos;organisateur recevra vos informations pour l&apos;entrée.
+                          {regForm.consent_contact
+                            ? "L'organisateur recevra vos coordonnées et pourra vous contacter."
+                            : "Un mail de confirmation vous sera envoyé avec l'affiche et les détails."}
                         </p>
                       </form>
                     )
-                  ) : isSoldOut ? (
+                  ) : !isReferencedEvent && isSoldOut ? (
                     <div
                       className="alert alert-warning mt-3 mb-2"
                       role="alert"
@@ -484,7 +559,7 @@ const EventDetailPage = () => {
                       <i className="fi fi-rr-ban me-2"></i>
                       Cet événement est complet : il n&apos;y a plus de billets disponibles.
                     </div>
-                  ) : availableTickets !== 0 && isAuthenticated ? (
+                  ) : !isReferencedEvent && availableTickets !== 0 && isAuthenticated ? (
                     <>
                       <div className="mt-3 mb-2">
                         {ticketTypes.length > 0 ? (
@@ -549,7 +624,7 @@ const EventDetailPage = () => {
                         )}
                       </button>
                     </>
-                  ) : !isAuthenticated ? (
+                  ) : !isReferencedEvent && !isAuthenticated ? (
                     <Link href="/login" className="gi-btn-1 w-100 mt-3 d-block text-center">
                       Connexion pour acheter
                     </Link>
