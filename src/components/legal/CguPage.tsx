@@ -135,9 +135,9 @@ const CguPage = () => {
       <Container>
         <div className="section-title-2 text-center mb-4">
           <h2 className="gi-title">
-            Conditions generales <span>d&apos;utilisation</span>
+            Conditions générales <span>d&apos;utilisation</span>
           </h2>
-          <p>Version 1.0 - NOLVA, plateforme evenementielle au Benin.</p>
+          <p>Version 1.0 - NOLVA, plateforme événementielle au Bénin.</p>
         </div>
 
         <Row className="mb-4">
@@ -174,9 +174,9 @@ const CguPage = () => {
           <Col lg={4} className="mb-3">
             <div className="gi-vendor-dashboard-card p-4" style={{ position: "sticky", top: "100px" }}>
               <h5>Infos utiles</h5>
-              <p style={{ color: "#4b5966", lineHeight: 1.8 }}>
-                Retrouvez les pages qui expliquent le fonctionnement, la protection des donnees
-                et les regles d&apos;utilisation de NOLVA.
+              <p style={{ color: "#475569", lineHeight: 1.8 }}>
+                Retrouvez les pages qui expliquent le fonctionnement, la protection des données
+                et les règles d&apos;utilisation de NOLVA.
               </p>
               <div className="d-flex flex-column gap-2">
                 <button
@@ -190,7 +190,7 @@ const CguPage = () => {
                   Comment fonctionne NOLVA
                 </Link>
                 <Link href="/confidentialite" className="gi-btn-2" style={{ textAlign: "center" }}>
-                  Politique de confidentialite
+                  Politique de confidentialité
                 </Link>
                 <Link href="/contact-us" className="gi-btn-2" style={{ textAlign: "center" }}>
                   Contacter NOLVA

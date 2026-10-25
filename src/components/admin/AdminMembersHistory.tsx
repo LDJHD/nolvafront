@@ -13,7 +13,7 @@ const todayIsoDate = () => {
 };
 
 const roleLabels: Record<string, string> = {
-  user: "Utilisateur",
+  user: "Participant",
   provider: "Prestataire",
 };
 

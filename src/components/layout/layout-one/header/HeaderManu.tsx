@@ -1,10 +1,21 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import CurrentLocation from "./CurrentLocation";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 import ProviderTypeMenuList from "@/components/catalog/ProviderTypeMenuList";
 
 function HeaderManu() {
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const user = useSelector((state: RootState) => state.auth.user);
+  const accountHref = !isAuthenticated
+    ? "/login"
+    : user?.role === "admin"
+      ? "/admin"
+      : user?.role === "provider"
+        ? "/vendor-dashboard"
+        : "/user-profile";
+
   return (
     <>
       <div className="gi-header-cat d-none d-lg-block">
@@ -42,67 +53,33 @@ function HeaderManu() {
                     <div className="gi-main-menu">
                       <ul>
                         <li className="non-drop">
-                          <Link href="/">Accueil</Link>
+                          <Link href="/">
+                            <i className="fi fi-rr-home nolva-nav-icon" aria-hidden="true"></i>
+                            Accueil
+                          </Link>
+                        </li>
+                        <li className="non-drop">
+                          <Link href="/evenements">
+                            <i className="fi fi-rr-calendar nolva-nav-icon" aria-hidden="true"></i>
+                            Événements
+                          </Link>
                         </li>
                         <li className="non-drop">
                           <Link href="/prestataires">
+                            <i className="fi fi-rr-briefcase nolva-nav-icon" aria-hidden="true"></i>
                             Prestataires
                           </Link>
                         </li>
-                        <li className="dropdown drop-list">
-                          <Link href="/evenements" className="dropdown-arrow">
-                            Événements
-                            <i
-                              className="fi-rr-angle-small-right"
-                              style={{ marginLeft: "4px" }}
-                            ></i>
-                          </Link>
-                          <ul className="sub-menu">
-                            <li>
-                              <Link href="/evenements">Tous les événements</Link>
-                            </li>
-                            <li>
-                              <Link href="/evenements/publier">Créer un événement</Link>
-                            </li>
-                            <li>
-                              <Link href="/evenements/creer">Publier mon evenement</Link>
-                            </li>
-                          </ul>
-                        </li>
                         <li className="non-drop">
-                          <Link href="/demande-devis">
-                            <i className="fi-rr-document" style={{ marginRight: "5px" }}></i>
-                            Demande de devis
+                          <Link href="/lieux">
+                            <i className="fi fi-rr-marker nolva-nav-icon" aria-hidden="true"></i>
+                            Lieux
                           </Link>
                         </li>
                         <li className="non-drop">
-                          <Link href="/about-us">
-                            À propos
-                          </Link>
-                        </li>
-                        <li className="dropdown drop-list">
-                          <Link href="/politique-nolva" className="dropdown-arrow">
-                            Infos utiles
-                            <i
-                              className="fi-rr-angle-small-right"
-                              style={{ marginLeft: "4px" }}
-                            ></i>
-                          </Link>
-                          <ul className="sub-menu">
-                            <li>
-                              <Link href="/politique-nolva">Comment ça marche</Link>
-                            </li>
-                            <li>
-                              <Link href="/terms-condition">CGU</Link>
-                            </li>
-                            <li>
-                              <Link href="/confidentialite">Confidentialité</Link>
-                            </li>
-                          </ul>
-                        </li>
-                        <li className="non-drop">
-                          <Link href="/contact-us">
-                            Contact
+                          <Link href={accountHref}>
+                            <i className="fi fi-rr-user nolva-nav-icon" aria-hidden="true"></i>
+                            Mon compte
                           </Link>
                         </li>
                       </ul>
@@ -111,8 +88,6 @@ function HeaderManu() {
                 </div>
               </div>
             </div>
-
-            {/* <CurrentLocation /> */}
           </div>
         </div>
       </div>

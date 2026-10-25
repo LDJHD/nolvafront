@@ -207,7 +207,7 @@ const UserProfile = () => {
 
                 <div className="gi-register-wrap gi-register-btn mt-4">
                   <span>
-                    Role : <strong>{user.role}</strong>
+                    Profil : <strong>{user.role === "provider" ? "Prestataire" : user.role === "admin" ? "Administrateur" : "Participant"}</strong>
                   </span>
                   <button className="gi-btn-1" type="submit" disabled={saving}>
                     {saving ? "Enregistrement..." : "Enregistrer les modifications"}

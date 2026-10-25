@@ -146,19 +146,6 @@ function HeaderTwo() {
                     )}
                   </ul>
                 </div>
-                <Link
-                  href="/demande-devis"
-                  className="gi-header-btn gi-header-rtl-btn"
-                  title="Demande de devis"
-                >
-                  <div className="header-icon">
-                    <i className="fi-rr-document"></i>
-                  </div>
-                  <div className="gi-btn-desc">
-                    <span className="gi-btn-title">Devis</span>
-                    <span className="gi-btn-stitle">Demander</span>
-                  </div>
-                </Link>
               </div>
             </div>
           </div>

@@ -22,32 +22,33 @@ const beninCities = [
   { value: "Ouidah", label: "Ouidah" },
 ];
 
-const VendorList = () => {
+const VendorList = ({ fixedType = "", heading = "" }: { fixedType?: string; heading?: string }) => {
   const { types: providerTypesCatalog } = useProviderTypes();
   const searchParams = useSearchParams();
-  const [type, setType] = useState(searchParams.get("type") || "");
+  const [type, setType] = useState(fixedType || searchParams.get("type") || "");
   const [city, setCity] = useState(searchParams.get("city") || "");
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [filters, setFilters] = useState({
-    type: searchParams.get("type") || "",
+    type: fixedType || searchParams.get("type") || "",
     city: searchParams.get("city") || "",
     search: searchParams.get("search") || "",
   });
 
   useEffect(() => {
-    const t = searchParams.get("type") || "";
+    const t = fixedType || searchParams.get("type") || "";
     const c = searchParams.get("city") || "";
     const s = searchParams.get("search") || "";
     setType(t);
     setCity(c);
     setSearch(s);
     setFilters({ type: t, city: c, search: s });
-  }, [searchParams]);
+  }, [searchParams, fixedType]);
 
   const buildQuery = () => {
     const params = new URLSearchParams();
     params.set("limit", "1000");
-    if (filters.type) params.set("type", filters.type);
+    const typeFilter = fixedType || filters.type;
+    if (typeFilter) params.set("type", typeFilter);
     if (filters.city) params.set("city", filters.city);
     if (filters.search) params.set("search", filters.search);
     return params.toString() ? "?" + params.toString() : "";
@@ -60,38 +61,48 @@ const VendorList = () => {
   };
 
   const resetFilters = () => {
-    setType("");
+    setType(fixedType || "");
     setCity("");
     setSearch("");
-    setFilters({ type: "", city: "", search: "" });
+    setFilters({ type: fixedType || "", city: "", search: "" });
   };
 
   if (error) return <div className="container py-4"><p>Impossible de charger les prestataires.</p></div>;
   if (!data) return <div className="text-center py-5"><Spinner /></div>;
 
   const providers = normalizeList(data);
+  const itemLabel = fixedType ? "lieu" : "prestataire";
 
   return (
     <section className="padding-tb-40">
       <div className="container">
 
+        {heading && (
+          <div className="nolva-list-heading mb-4">
+            <h2 className="gi-title mb-1">{heading}</h2>
+            <p className="mb-0">Trouvez le lieu idéal pour votre événement au Bénin.</p>
+          </div>
+        )}
+
         {/* Filtres */}
         <div className="nolva-filters mb-4">
           <div className="row align-items-end g-3">
-            <div className="col-md-6 col-lg-3">
-              <label className="form-label fw-semibold">Type de prestataire</label>
-              <select
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-                className="form-select nolva-filter-select"
-              >
-                <option value="">Tous les types</option>
-                {providerTypesCatalog.map((t) => (
-                  <option key={t.slug} value={t.slug}>{t.label}</option>
-                ))}
-              </select>
-            </div>
-            <div className="col-md-6 col-lg-3">
+            {!fixedType && (
+              <div className="col-md-6 col-lg-3">
+                <label className="form-label fw-semibold">Type de prestataire</label>
+                <select
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  className="form-select nolva-filter-select"
+                >
+                  <option value="">Tous les types</option>
+                  {providerTypesCatalog.map((t) => (
+                    <option key={t.slug} value={t.slug}>{t.label}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+            <div className={`col-md-6 ${fixedType ? "col-lg-5" : "col-lg-3"}`}>
               <label className="form-label fw-semibold">Recherche</label>
               <input
                 type="search"
@@ -102,7 +113,7 @@ const VendorList = () => {
                 onKeyDown={(e) => e.key === "Enter" && applyFilters()}
               />
             </div>
-            <div className="col-md-6 col-lg-3">
+            <div className={`col-md-6 ${fixedType ? "col-lg-4" : "col-lg-3"}`}>
               <label className="form-label fw-semibold">Ville</label>
               <select
                 value={city}
@@ -129,13 +140,13 @@ const VendorList = () => {
         {providers.length === 0 ? (
           <div className="text-center py-5">
             <i className="fi fi-rr-search" style={{ fontSize: "48px", color: "var(--nolva-red)", opacity: 0.4 }}></i>
-            <p className="mt-3">Aucun prestataire trouvé pour ces critères.</p>
+            <p className="mt-3">Aucun {itemLabel} trouvé pour ces critères.</p>
             <button onClick={resetFilters} className="gi-btn-2 mt-2">Réinitialiser les filtres</button>
           </div>
         ) : (
           <>
             <p className="text-muted mb-3">
-              <strong>{providers.length}</strong> prestataire{providers.length > 1 ? "s" : ""} trouvé
+              <strong>{providers.length}</strong> {itemLabel}{providers.length > 1 ? "s" : ""} trouvé
               {providers.length > 1 ? "s" : ""}
               {filters.search ? (
                 <> pour « <em>{filters.search}</em> »</>

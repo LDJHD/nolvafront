@@ -103,7 +103,7 @@ export default function NolvaHeader() {
           <div className="d-flex align-items-center" style={{ gap: "12px" }}>
             {isAuthenticated && <NotificationBell />}
             {!isAuthenticated ? (
-              <Link href="/inscription?role=provider"
+              <Link href="/register?role=provider"
                 style={{
                   background: "transparent", color: "var(--nolva-gold)", border: "2px solid var(--nolva-gold)",
                   borderRadius: "8px", padding: "8px 18px", fontWeight: 600, fontSize: "14px",
@@ -174,8 +174,8 @@ export default function NolvaHeader() {
               </Link>
               {!isAuthenticated && (
                 <>
-                  <Link href="/connexion" style={{ color: "#1A1A1A", textDecoration: "none", padding: "8px 0" }} onClick={() => setMenuOpen(false)}>Connexion</Link>
-                  <Link href="/inscription" style={{ color: "var(--nolva-gold)", textDecoration: "none", padding: "8px 0", fontWeight: 600 }} onClick={() => setMenuOpen(false)}>Inscription</Link>
+                  <Link href="/login" style={{ color: "#1A1A1A", textDecoration: "none", padding: "8px 0" }} onClick={() => setMenuOpen(false)}>Connexion</Link>
+                  <Link href="/register" style={{ color: "var(--nolva-gold)", textDecoration: "none", padding: "8px 0", fontWeight: 600 }} onClick={() => setMenuOpen(false)}>Inscription</Link>
                 </>
               )}
             </div>

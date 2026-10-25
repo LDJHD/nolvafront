@@ -37,10 +37,17 @@
 }
 
 /* --- Reset and Base Typography --- */
+:root {
+  --nolva-font: 'Inter', 'Poppins', system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+}
+
 body {
-  font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family: var(--nolva-font) !important;
   color: var(--nolva-black);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 h1,
@@ -53,7 +60,7 @@ button,
 input,
 select,
 textarea {
-  font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family: var(--nolva-font) !important;
 }
 
 /* ============================================
@@ -2251,3 +2258,523 @@ html { scroll-behavior: smooth; }
   background-color: #f8f8f8;
   background-blend-mode: normal;
 }
+
+/* ============================================
+   NOLVA — Boutons (hiérarchie visuelle)
+   ============================================ */
+.nolva-btn-primary,
+.nolva-btn-secondary,
+.nolva-btn-ai {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-family: var(--nolva-font) !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  cursor: pointer;
+  transition: var(--nolva-transition);
+}
+
+.nolva-btn-primary {
+  background: var(--nolva-primary);
+  border: 2px solid var(--nolva-primary);
+  color: #fff !important;
+}
+
+.nolva-btn-primary:hover:not(:disabled) {
+  background: var(--nolva-primary-dark);
+  border-color: var(--nolva-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(61, 31, 110, 0.28);
+}
+
+.nolva-btn-secondary {
+  background: #fff;
+  border: 2px solid var(--nolva-primary);
+  color: var(--nolva-primary) !important;
+}
+
+.nolva-btn-secondary:hover:not(:disabled) {
+  background: var(--nolva-primary-soft);
+  transform: translateY(-1px);
+}
+
+.nolva-btn-ai {
+  background: linear-gradient(120deg, #3d1f6e 0%, #8a2f8f 55%, #d4663a 100%);
+  border: none;
+  color: #fff !important;
+  box-shadow: 0 6px 18px rgba(138, 47, 143, 0.24);
+}
+
+.nolva-btn-primary:disabled,
+.nolva-btn-secondary:disabled,
+.nolva-btn-ai:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.nolva-btn-block { width: 100%; }
+.nolva-btn-grow { flex: 1; }
+
+/* ============================================
+   NOLVA — Authentification (connexion / inscription)
+   ============================================ */
+.nolva-auth-section {
+  background: linear-gradient(180deg, #faf8ff 0%, #ffffff 55%);
+}
+
+.nolva-auth-card {
+  max-width: 660px;
+  margin: 0 auto;
+  padding: 32px;
+  background: #fff;
+  border: 1px solid var(--nolva-border);
+  border-radius: 20px;
+  box-shadow: var(--nolva-shadow-md);
+}
+
+.nolva-auth-head { margin-bottom: 24px; }
+
+.nolva-auth-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--nolva-gold-glow);
+  color: var(--nolva-gold-dark);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.nolva-auth-title {
+  margin: 0 0 8px;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--nolva-primary-dark);
+}
+
+.nolva-auth-subtitle {
+  margin: 0;
+  color: #475569;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.nolva-auth-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.nolva-role-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--nolva-primary-soft);
+  border: 1px solid rgba(61, 31, 110, 0.16);
+  color: var(--nolva-primary);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.nolva-link-button {
+  border: none;
+  background: transparent;
+  padding: 4px 0;
+  color: var(--nolva-primary);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.nolva-role-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.nolva-role-choice {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 20px;
+  background: #fff;
+  border: 2px solid var(--nolva-border);
+  border-radius: 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--nolva-transition);
+  font-family: var(--nolva-font) !important;
+}
+
+.nolva-role-choice:hover {
+  border-color: var(--nolva-primary);
+  box-shadow: var(--nolva-shadow);
+}
+
+.nolva-role-choice.selected {
+  border-color: var(--nolva-primary);
+  background: var(--nolva-primary-soft);
+  box-shadow: 0 0 0 4px var(--nolva-red-glow);
+}
+
+.nolva-role-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--nolva-primary-soft);
+  color: var(--nolva-primary);
+  font-size: 20px;
+  transition: var(--nolva-transition);
+}
+
+.nolva-role-choice.selected .nolva-role-icon {
+  background: var(--nolva-primary);
+  color: #fff;
+}
+
+.nolva-role-name {
+  display: block;
+  margin-top: 4px;
+  color: var(--nolva-primary-dark);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+}
+
+.nolva-role-desc {
+  display: block;
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.nolva-role-check {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--nolva-gold);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: var(--nolva-transition);
+}
+
+.nolva-role-choice.selected .nolva-role-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.nolva-auth-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 16px 0 0;
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.nolva-auth-note i { margin-top: 2px; color: var(--nolva-gold-dark); }
+.nolva-auth-note-small { margin-top: 8px; font-size: 12px; }
+
+.nolva-auth-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.nolva-auth-footnote {
+  margin: 18px 0 0;
+  text-align: center;
+  color: #475569;
+  font-size: 14px;
+}
+
+.nolva-auth-footnote a {
+  color: var(--nolva-primary);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.nolva-auth-form .form-control,
+.nolva-auth-form .form-select {
+  width: 100% !important;
+  min-height: 48px;
+  padding: 12px 16px !important;
+  border: 2px solid var(--nolva-border) !important;
+  border-radius: 10px !important;
+  background-color: #fff;
+  color: #1f2937;
+  font-size: 16px !important;
+  font-weight: 400;
+  transition: var(--nolva-transition);
+}
+
+.nolva-auth-form .form-control::placeholder { color: #94a3b8; }
+
+.nolva-auth-form .form-control:focus,
+.nolva-auth-form .form-select:focus {
+  border-color: var(--nolva-primary) !important;
+  box-shadow: 0 0 0 4px var(--nolva-red-glow) !important;
+}
+
+.nolva-auth-form .nolva-register-field label {
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.nolva-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 22px;
+  padding: 14px 16px;
+  border: 1.5px solid var(--nolva-border);
+  border-radius: 12px;
+  background: var(--nolva-light);
+  color: #334155;
+  font-size: 14px;
+  line-height: 1.55;
+  cursor: pointer;
+  font-weight: 400;
+}
+
+.nolva-consent.is-invalid {
+  border-color: #dc2626;
+  background: #fef2f2;
+}
+
+.nolva-consent input {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--nolva-primary);
+  cursor: pointer;
+}
+
+.nolva-consent a {
+  color: var(--nolva-primary);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.nolva-google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 18px;
+  background: #fff;
+  border: 1.5px solid var(--nolva-border);
+  border-radius: 10px;
+  color: #1f2937;
+  font-family: var(--nolva-font) !important;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--nolva-transition);
+}
+
+.nolva-google-btn:hover {
+  border-color: var(--nolva-primary);
+  background: var(--nolva-primary-soft);
+}
+
+.nolva-auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.nolva-auth-divider::before,
+.nolva-auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--nolva-border);
+}
+
+/* ============================================
+   NOLVA — Navigation & listes
+   ============================================ */
+.nolva-nav-icon {
+  margin-right: 6px;
+  font-size: 13px;
+  color: var(--nolva-gold-dark);
+}
+
+.nolva-menu-icon {
+  display: inline-block;
+  width: 22px;
+  margin-right: 10px;
+  color: var(--nolva-primary);
+  font-size: 15px;
+  text-align: center;
+}
+
+.nolva-mobile-signed-in {
+  margin: 18px 0 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--nolva-primary-soft);
+  color: #475569;
+  font-size: 13px;
+}
+
+.nolva-footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 18px;
+  margin-bottom: 10px;
+}
+
+.nolva-footer-legal a {
+  color: #64748b;
+  font-size: 13px;
+  text-decoration: none;
+  transition: var(--nolva-transition);
+}
+
+.nolva-footer-legal a:hover { color: var(--nolva-primary); }
+
+.nolva-list-heading {
+  padding: 22px 24px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--nolva-primary) 0%, var(--nolva-primary-dark) 100%);
+  color: #fff;
+}
+
+.nolva-list-heading .gi-title { color: #fff; }
+.nolva-list-heading p { color: rgba(255, 255, 255, 0.78); font-size: 14px; }
+
+@media (max-width: 575px) {
+  .nolva-auth-card { padding: 22px 18px; border-radius: 16px; }
+  .nolva-auth-title { font-size: 22px; }
+  .nolva-role-grid { grid-template-columns: 1fr; }
+  .nolva-auth-actions { flex-direction: column-reverse; }
+  .nolva-auth-actions > * { width: 100%; }
+}
+
+/* ============================================
+   NOLVA — Pages légales
+   ============================================ */
+.nolva-legal-sections {
+  display: grid;
+  gap: 18px;
+  margin: 24px 0;
+}
+
+.nolva-legal-section {
+  padding: 18px 20px;
+  border: 1px solid var(--nolva-border);
+  border-left: 4px solid var(--nolva-gold);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.nolva-legal-section h5 {
+  margin-bottom: 8px;
+  color: var(--nolva-primary-dark);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.nolva-legal-section p {
+  margin: 0;
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.nolva-legal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* ============================================
+   NOLVA — Connexion (lisibilité & confort mobile)
+   ============================================ */
+.gi-login-wrapper .gi-login-container {
+  padding: 28px;
+  border: 1px solid var(--nolva-border);
+  border-radius: 16px;
+  box-shadow: var(--nolva-shadow-sm);
+}
+
+.gi-login-wrapper .gi-login-container .gi-login-form label {
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.gi-login-wrapper .gi-login-container .gi-login-form input,
+.gi-login-wrapper .gi-login-container .gi-login-form .form-control {
+  min-height: 48px;
+  padding: 10px 15px !important;
+  border: 2px solid var(--nolva-border) !important;
+  border-radius: 10px !important;
+  color: #1f2937 !important;
+  font-size: 16px !important;
+}
+
+.gi-login-wrapper .gi-login-container .gi-login-form input:focus,
+.gi-login-wrapper .gi-login-container .gi-login-form .form-control:focus {
+  border-color: var(--nolva-primary) !important;
+  box-shadow: 0 0 0 4px var(--nolva-red-glow) !important;
+}
+
+.gi-login-wrapper .gi-login-container .gi-login-form .gi-login-btn span,
+.gi-login-wrapper .gi-login-container .gi-login-form .gi-login-btn span a {
+  color: #334155;
+}
+
+
+

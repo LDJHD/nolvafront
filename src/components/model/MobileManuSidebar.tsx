@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Collapse from 'react-bootstrap/Collapse';
 import { useDispatch, useSelector } from "react-redux";
-import { useProviderTypes } from "@/lib/useCatalog";
 import { RootState } from "@/store";
 import { initFromStorage, logout } from "@/store/reducers/authSlice";
 import { accountDisplayName } from "@/lib/accountDisplay";
@@ -12,10 +11,16 @@ import { accountDisplayName } from "@/lib/accountDisplay";
 const MobileManuSidebar = ({ isMobileMenuOpen, closeMobileManu, toggleMainMenu, activeMainMenu }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { types: providerTypes } = useProviderTypes();
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const user = useSelector((state: RootState) => state.auth.user);
   const displayName = accountDisplayName(user);
+  const accountHref = !isAuthenticated
+    ? "/login"
+    : user?.role === "admin"
+      ? "/admin"
+      : user?.role === "provider"
+        ? "/vendor-dashboard"
+        : "/user-profile";
 
   useEffect(() => {
     dispatch(initFromStorage());
@@ -47,101 +52,54 @@ const MobileManuSidebar = ({ isMobileMenuOpen, closeMobileManu, toggleMainMenu, 
               <ul>
                 <li>
                   <Link href="/" onClick={closeMobileManu}>
+                    <i className="fi fi-rr-home nolva-menu-icon" aria-hidden="true"></i>
                     Accueil
                   </Link>
                 </li>
                 <li>
-                  <span onClick={() => toggleMainMenu('prestataires')} className="menu-toggle"></span>
-                  <Link href="/prestataires" onClick={closeMobileManu}>
-                    Prestataires
-                  </Link>
-                  <Collapse in={activeMainMenu === "prestataires"}>
-                    <ul style={{ display: activeMainMenu === "prestataires" ? "block" : "none" }} className="sub-menu height-transition-1s-ease">
-                      {providerTypes.slice(0, 10).map((type) => (
-                        <li key={type.slug}>
-                          <Link href={`/prestataires?type=${type.slug}`} onClick={closeMobileManu}>
-                            {type.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </Collapse>
-                </li>
-                <li>
-                  <span onClick={() => toggleMainMenu('evenements')} className="menu-toggle"></span>
                   <Link href="/evenements" onClick={closeMobileManu}>
+                    <i className="fi fi-rr-calendar nolva-menu-icon" aria-hidden="true"></i>
                     Événements
                   </Link>
-                  <Collapse in={activeMainMenu === "evenements"}>
-                    <ul style={{ display: activeMainMenu === "evenements" ? "block" : "none" }} className="sub-menu height-transition-1s-ease">
-                      <li>
-                        <Link href="/evenements" onClick={closeMobileManu}>Tous les événements</Link>
-                      </li>
-                      <li>
-                        <Link href="/evenements/publier" onClick={closeMobileManu}>Créer un événement</Link>
-                      </li>
-                      <li>
-                        <Link href="/evenements/creer" onClick={closeMobileManu}>Publier mon evenement</Link>
-                      </li>
-                    </ul>
-                  </Collapse>
                 </li>
                 <li>
-                  <Link href="/demande-devis" onClick={closeMobileManu}>
-                    Demande de devis
+                  <Link href="/prestataires" onClick={closeMobileManu}>
+                    <i className="fi fi-rr-briefcase nolva-menu-icon" aria-hidden="true"></i>
+                    Prestataires
                   </Link>
                 </li>
                 <li>
-                  <Link href="/about-us" onClick={closeMobileManu}>
-                    À propos
+                  <Link href="/lieux" onClick={closeMobileManu}>
+                    <i className="fi fi-rr-marker nolva-menu-icon" aria-hidden="true"></i>
+                    Lieux
                   </Link>
                 </li>
                 <li>
-                  <span onClick={() => toggleMainMenu('infos')} className="menu-toggle"></span>
-                  <Link href="/politique-nolva" onClick={closeMobileManu}>
-                    Infos utiles
+                  <span onClick={() => toggleMainMenu('compte')} className="menu-toggle"></span>
+                  <Link href={accountHref} onClick={closeMobileManu}>
+                    <i className="fi fi-rr-user nolva-menu-icon" aria-hidden="true"></i>
+                    Mon compte
                   </Link>
-                  <Collapse in={activeMainMenu === "infos"}>
-                    <ul style={{ display: activeMainMenu === "infos" ? "block" : "none" }} className="sub-menu height-transition-1s-ease">
-                      <li>
-                        <Link href="/politique-nolva" onClick={closeMobileManu}>Comment ça marche</Link>
-                      </li>
-                      <li>
-                        <Link href="/terms-condition" onClick={closeMobileManu}>CGU</Link>
-                      </li>
-                      <li>
-                        <Link href="/confidentialite" onClick={closeMobileManu}>Confidentialité</Link>
-                      </li>
-                    </ul>
-                  </Collapse>
-                </li>
-                <li>
-                  <Link href="/contact-us" onClick={closeMobileManu}>
-                    Contact
-                  </Link>
-                </li>
-                <li>
-                  <span onClick={() => toggleMainMenu('connexion')} className="menu-toggle"></span>
-                  <Link
-                    href={isAuthenticated ? "/user-profile" : "/login"}
-                    onClick={closeMobileManu}
-                  >
-                    {isAuthenticated ? displayName : "Connexion"}
-                  </Link>
-                  <Collapse in={activeMainMenu === "connexion"}>
-                    <ul style={{ display: activeMainMenu === "connexion" ? "block" : "none" }} className="sub-menu height-transition-1s-ease">
+                  <Collapse in={activeMainMenu === "compte"}>
+                    <ul style={{ display: activeMainMenu === "compte" ? "block" : "none" }} className="sub-menu height-transition-1s-ease">
                       {isAuthenticated ? (
                         <>
-                          {user?.role === "provider" && (
-                            <li>
-                              <Link href="/vendor-dashboard" onClick={closeMobileManu}>Tableau de bord</Link>
-                            </li>
-                          )}
+                          <li>
+                            <Link href={accountHref} onClick={closeMobileManu}>
+                              {user?.role === "provider" ? "Tableau de bord" : user?.role === "admin" ? "Administration" : "Mon profil"}
+                            </Link>
+                          </li>
                           <li>
                             <Link href="/user-profile" onClick={closeMobileManu}>Mon profil</Link>
                           </li>
                           <li>
                             <Link href="/user-dashboard" onClick={closeMobileManu}>Mes réservations</Link>
+                          </li>
+                          <li>
+                            <Link href="/user-dashboard" onClick={closeMobileManu}>Mes billets</Link>
+                          </li>
+                          <li>
+                            <Link href="/notifications" onClick={closeMobileManu}>Notifications</Link>
                           </li>
                           <li>
                             <button type="button" className="nolva-mobile-menu-action" onClick={handleLogout}>
@@ -166,6 +124,11 @@ const MobileManuSidebar = ({ isMobileMenuOpen, closeMobileManu, toggleMainMenu, 
                   </Collapse>
                 </li>
               </ul>
+              {isAuthenticated && (
+                <p className="nolva-mobile-signed-in">
+                  Connecté en tant que <strong>{displayName}</strong>
+                </p>
+              )}
             </div>
             <div className="header-res-lan-curr">
               <div className="header-res-social">

@@ -4,13 +4,13 @@ interface Pages {
 }
 
 const pages: Pages[] = [
-  { name: "À propos de NOLVA", href: "/a-propos" },
-  { name: "Comment ça marche", href: "/comment-ca-marche" },
-  { name: "Devenir prestataire", href: "/inscription?role=provider" },
-  { name: "Contact", href: "/contact" },
+  { name: "À propos de NOLVA", href: "/about-us" },
+  { name: "Comment ça marche", href: "/politique-nolva" },
+  { name: "Devenir prestataire", href: "/register?role=provider" },
+  { name: "Contact", href: "/contact-us" },
   { name: "FAQ", href: "/faq" },
   { name: "Confidentialité", href: "/confidentialite" },
-  { name: "Conditions d'utilisation", href: "/conditions" },
+  { name: "Conditions d'utilisation", href: "/terms-condition" },
 ];
 
 export default pages;

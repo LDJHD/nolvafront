@@ -8,7 +8,7 @@ const page = () => {
         <>
 
 
-            <Breadcrumb title={"Conditions generales d'utilisation"} />
+            <Breadcrumb title={"Conditions générales d'utilisation"} />
             <CguPage />
 
         </>

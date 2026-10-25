@@ -8,8 +8,6 @@ import { showErrorToast, showSuccessToast } from "../toast-popup/Toastify";
 import { setCredentials } from "@/store/reducers/authSlice";
 import { authApi } from "@/lib/api";
 import { parseRegisterError } from "@/lib/registerErrors";
-import { useProviderTypes } from "@/lib/useCatalog";
-import { BENIN_CITY_DATALIST_ID, beninCities } from "@/lib/beninCities";
 import Link from "next/link";
 
 const phoneCountries = [
@@ -39,16 +37,18 @@ export const setRegistrationData = (data: any[]) => {
   }
 }
 
+type AccountRole = "user" | "provider";
+
 const RegisterPage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { types: providerTypes, loading: typesLoading } = useProviderTypes();
 
-  const [role, setRole] = useState("user");
+  const [step, setStep] = useState<1 | 2>(1);
+  const [role, setRole] = useState<AccountRole | "">("");
   const [loading, setLoading] = useState(false);
   const [validated, setValidated] = useState(false);
+  const [consent, setConsent] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [form, setForm] = useState({
     first_name: "",
@@ -57,12 +57,6 @@ const RegisterPage = () => {
     phone_country: "+229",
     phone: "+229 ",
     password: "",
-    confirmPassword: "",
-    city: "",
-    business_name: "",
-    company_position: "",
-    type: "",
-    description: "",
   });
 
   const handleChange = (e: any) => {
@@ -85,37 +79,49 @@ const RegisterPage = () => {
     return `${form.phone_country}${compact.replace(/^\+?\d{1,4}/, "")}`;
   };
 
+  const goToStepTwo = () => {
+    if (!role) {
+      showErrorToast("Choisissez d'abord votre profil pour continuer.");
+      return;
+    }
+    setStep(2);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const backToStepOne = () => {
+    setStep(1);
+    setValidated(false);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    if (!consent) {
+      showErrorToast("Vous devez accepter les Conditions Générales d'Utilisation et la Politique de confidentialité.");
+      return;
+    }
     if (e.currentTarget.checkValidity() === false) {
       setValidated(true);
       return;
     }
-    if (form.password !== form.confirmPassword) {
-      showErrorToast("Les mots de passe ne correspondent pas.");
-      return;
-    }
     setLoading(true);
     try {
-      const payload: any = {
+      const payload = {
         first_name: form.first_name,
         last_name: form.last_name,
         email: form.email,
         phone: normalizedPhone(),
         password: form.password,
-        role,
-        city: form.city,
+        role: role || "user",
       };
-      if (role === "provider") {
-        payload.business_name = form.business_name;
-        payload.company_position = form.company_position;
-        payload.type = form.type;
-        payload.description = form.description;
-      }
       const res = await authApi.register(payload);
       const { token, user } = res.data;
       dispatch(setCredentials({ user, token: token.value || token }));
-      const baseMessage = res.data?.message || "Compte cree. Consultez votre email.";
+      const baseMessage = res.data?.message || "Compte créé. Consultez votre email.";
       showSuccessToast(`${baseMessage} Complétez votre profil.`);
       router.push("/user-profile");
     } catch (err: any) {
@@ -129,212 +135,200 @@ const RegisterPage = () => {
   return (
     <>
       <Breadcrumb title={"Inscription"} />
-      <section className="gi-register padding-tb-40">
+      <section className="nolva-auth-section padding-tb-40">
         <Container>
-          <div className="section-title-2">
-            <h2 className="gi-title">
-              Inscription<span></span>
-            </h2>
-            <p>Rejoignez NOLVA - La plateforme evenementielle du Benin.</p>
-          </div>
-
-          <div className="nolva-role-selector mb-4">
-            <div className="row justify-content-center g-3">
-              <div className="col-md-5">
-                <div
-                  className={`nolva-role-card ${role === "user" ? "active" : ""}`}
-                  onClick={() => setRole("user")}
-                  style={{ cursor: "pointer" }}
-                >
-                  <i className="fi fi-rr-user"></i>
-                  <h6>Utilisateur</h6>
-                  <p>Je recherche des prestataires pour mon evenement</p>
-                </div>
-              </div>
-              <div className="col-md-5">
-                <div
-                  className={`nolva-role-card ${role === "provider" ? "active" : ""}`}
-                  onClick={() => setRole("provider")}
-                  style={{ cursor: "pointer" }}
-                >
-                  <i className="fi fi-rr-briefcase"></i>
-                  <h6>Prestataire</h6>
-                  <p>Je propose mes services pour des evenements</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="gi-register-wrapper">
-              <div className="gi-register-container">
-                <div className="gi-register-form">
-                  <Form noValidate validated={validated} onSubmit={handleSubmit} className="nolva-register-form">
-
-                    <div className="row g-3">
-                      <div className="col-md-6">
-                        <div className="nolva-register-field">
-                          <label htmlFor="reg-first_name">Prénom *</label>
-                          <Form.Group controlId="reg-first_name">
-                            <Form.Control type="text" name="first_name" placeholder="Votre prénom"
-                              value={form.first_name} onChange={handleChange} required />
-                            <Form.Control.Feedback type="invalid">Prénom requis.</Form.Control.Feedback>
-                          </Form.Group>
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="nolva-register-field">
-                          <label htmlFor="reg-last_name">Nom *</label>
-                          <Form.Group controlId="reg-last_name">
-                            <Form.Control type="text" name="last_name" placeholder="Votre nom"
-                              value={form.last_name} onChange={handleChange} required />
-                            <Form.Control.Feedback type="invalid">Nom requis.</Form.Control.Feedback>
-                          </Form.Group>
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="nolva-register-field">
-                          <label htmlFor="reg-email">Email *</label>
-                          <Form.Group controlId="reg-email">
-                            <Form.Control type="email" name="email" placeholder="votre@email.com"
-                              value={form.email} onChange={handleChange} required />
-                            <Form.Control.Feedback type="invalid">Email valide requis.</Form.Control.Feedback>
-                          </Form.Group>
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="nolva-register-field">
-                          <label htmlFor="reg-phone">Téléphone *</label>
-                          <Form.Group controlId="reg-phone" className="nolva-phone-field">
-                            <Form.Select name="phone_country" value={form.phone_country} onChange={handlePhoneCountryChange} aria-label="Pays">
-                              {phoneCountries.map((country) => (
-                                <option key={country.code} value={country.code}>{country.label}</option>
-                              ))}
-                            </Form.Select>
-                            <Form.Control type="tel" name="phone" placeholder="+229 XX XX XX XX"
-                              value={form.phone} onChange={handleChange} required />
-                            <Form.Control.Feedback type="invalid">Numéro requis.</Form.Control.Feedback>
-                          </Form.Group>
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="nolva-register-field">
-                          <label htmlFor="reg-password">Mot de passe *</label>
-                          <Form.Group controlId="reg-password" className="nolva-password-field">
-                            <Form.Control type={showPassword ? "text" : "password"} name="password" placeholder="Au moins 8 caractères"
-                              value={form.password} onChange={handleChange} required minLength={8} />
-                            <button type="button" onClick={() => setShowPassword((value) => !value)} aria-label="Afficher le mot de passe">
-                              <i className={showPassword ? "fi fi-rr-eye-crossed" : "fi fi-rr-eye"}></i>
-                            </button>
-                            <Form.Control.Feedback type="invalid">Au moins 8 caractères.</Form.Control.Feedback>
-                          </Form.Group>
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="nolva-register-field">
-                          <label htmlFor="reg-confirmPassword">Confirmer le mot de passe *</label>
-                          <Form.Group controlId="reg-confirmPassword" className="nolva-password-field">
-                            <Form.Control type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder="Répétez le mot de passe"
-                              value={form.confirmPassword} onChange={handleChange} required />
-                            <button type="button" onClick={() => setShowConfirmPassword((value) => !value)} aria-label="Afficher la confirmation du mot de passe">
-                              <i className={showConfirmPassword ? "fi fi-rr-eye-crossed" : "fi fi-rr-eye"}></i>
-                            </button>
-                            <Form.Control.Feedback type="invalid">Confirmation requise.</Form.Control.Feedback>
-                          </Form.Group>
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="nolva-register-field">
-                          <label htmlFor="reg-city">Ville *</label>
-                          <Form.Group controlId="reg-city">
-                            <Form.Control
-                              list={BENIN_CITY_DATALIST_ID}
-                              name="city"
-                              value={form.city}
-                              onChange={handleChange}
-                              placeholder="Sélectionnez ou écrivez votre ville"
-                              required
-                            />
-                            <datalist id={BENIN_CITY_DATALIST_ID}>
-                              {beninCities.map((c) => <option key={c} value={c} />)}
-                            </datalist>
-                            <Form.Control.Feedback type="invalid">Ville requise.</Form.Control.Feedback>
-                          </Form.Group>
-                        </div>
-                      </div>
-                    </div>
-
-                    {role === "provider" && (
-                      <div className="nolva-provider-fields mt-4">
-                        <h6 className="mb-3" style={{ color: "var(--nolva-red)" }}>
-                          Informations prestataire
-                        </h6>
-                        <div className="row g-3">
-                          <div className="col-md-6">
-                            <div className="nolva-register-field">
-                              <label htmlFor="reg-business_name">Nom commercial *</label>
-                              <Form.Group controlId="reg-business_name">
-                                <Form.Control type="text" name="business_name" placeholder="Nom de votre activité"
-                                  value={form.business_name} onChange={handleChange} required={role === "provider"} />
-                                <Form.Control.Feedback type="invalid">Nom commercial requis.</Form.Control.Feedback>
-                              </Form.Group>
-                            </div>
-                          </div>
-                          <div className="col-md-6">
-                            <div className="nolva-register-field">
-                              <label htmlFor="reg-company_position">Poste occupé dans l&apos;entreprise</label>
-                              <Form.Group controlId="reg-company_position">
-                                <Form.Control
-                                  type="text"
-                                  name="company_position"
-                                  placeholder="Ex: Gérant, Directeur artistique, Responsable commercial"
-                                  value={form.company_position}
-                                  onChange={handleChange}
-                                />
-                              </Form.Group>
-                            </div>
-                          </div>
-                          <div className="col-md-6">
-                            <div className="nolva-register-field">
-                              <label htmlFor="reg-type">Type de prestation *</label>
-                              <Form.Group controlId="reg-type" className="gi-rg-select-inner">
-                                <Form.Select name="type" value={form.type} onChange={handleChange}
-                                  required={role === "provider"} className="gi-register-select" disabled={typesLoading}>
-                                  <option value="">Choisissez votre type</option>
-                                  {providerTypes.map((t) => (
-                                    <option key={t.slug} value={t.slug}>{t.label}</option>
-                                  ))}
-                                </Form.Select>
-                                <Form.Control.Feedback type="invalid">Type requis.</Form.Control.Feedback>
-                              </Form.Group>
-                            </div>
-                          </div>
-                          <div className="col-12">
-                            <div className="nolva-register-field">
-                              <label htmlFor="reg-description">Description de votre activité</label>
-                              <Form.Group controlId="reg-description">
-                                <Form.Control as="textarea" rows={3} name="description"
-                                  placeholder="Décrivez votre activité, votre expérience..."
-                                  value={form.description} onChange={handleChange} />
-                              </Form.Group>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    <span className="gi-register-wrap gi-register-btn mt-4">
-                      <span>
-                        Deja inscrit ? <Link href="/login">Se connecter</Link>
-                      </span>
-                      <button className="gi-btn-1" type="submit" disabled={loading}>
-                        {loading ? "Creation en cours..." : "Creer mon compte"}
-                      </button>
+          <div className="nolva-auth-card">
+            <div className="nolva-auth-head">
+              <span className="nolva-auth-eyebrow">Étape {step} sur 2</span>
+              {step === 1 ? (
+                <>
+                  <h2 className="nolva-auth-title">Comment souhaitez-vous utiliser NOLVA ?</h2>
+                  <p className="nolva-auth-subtitle">
+                    Choisissez votre profil pour commencer. Vous pourrez faire évoluer votre compte plus tard.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h2 className="nolva-auth-title">Créez votre compte</h2>
+                  <p className="nolva-auth-subtitle">
+                    Quelques informations essentielles, puis vous pourrez compléter votre profil à votre rythme.
+                  </p>
+                  <div className="nolva-auth-summary">
+                    <span className="nolva-role-pill">
+                      <i className={role === "provider" ? "fi fi-rr-briefcase" : "fi fi-rr-user"} aria-hidden="true"></i>
+                      Profil : {role === "provider" ? "Prestataire" : "Participant"}
                     </span>
-                  </Form>
-                </div>
-              </div>
+                    <button type="button" className="nolva-link-button" onClick={backToStepOne}>
+                      Modifier
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
+
+            {step === 1 ? (
+              <>
+                <div className="nolva-role-grid">
+                  <button
+                    type="button"
+                    className={`nolva-role-choice ${role === "user" ? "selected" : ""}`}
+                    onClick={() => setRole("user")}
+                    aria-pressed={role === "user"}
+                  >
+                    <span className="nolva-role-check" aria-hidden="true">✓</span>
+                    <span className="nolva-role-icon"><i className="fi fi-rr-user" aria-hidden="true"></i></span>
+                    <span className="nolva-role-name">PARTICIPANT</span>
+                    <span className="nolva-role-desc">
+                      Je découvre des événements, achète mes billets et recherche des prestataires.
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className={`nolva-role-choice ${role === "provider" ? "selected" : ""}`}
+                    onClick={() => setRole("provider")}
+                    aria-pressed={role === "provider"}
+                  >
+                    <span className="nolva-role-check" aria-hidden="true">✓</span>
+                    <span className="nolva-role-icon"><i className="fi fi-rr-briefcase" aria-hidden="true"></i></span>
+                    <span className="nolva-role-name">PRESTATAIRE</span>
+                    <span className="nolva-role-desc">
+                      Je propose mes services et souhaite recevoir des demandes.
+                    </span>
+                  </button>
+                </div>
+
+                <p className="nolva-auth-note">
+                  <i className="fi fi-rr-info" aria-hidden="true"></i> Aucun choix n&apos;est sélectionné par défaut.
+                </p>
+
+                <div className="nolva-auth-actions">
+                  <button
+                    type="button"
+                    className="nolva-btn-primary nolva-btn-block"
+                    onClick={goToStepTwo}
+                    disabled={!role}
+                  >
+                    CONTINUER
+                  </button>
+                </div>
+
+                <p className="nolva-auth-footnote">
+                  Déjà un compte ? <Link href="/login">Se connecter</Link>
+                </p>
+              </>
+            ) : (
+              <Form noValidate validated={validated} onSubmit={handleSubmit} className="nolva-register-form nolva-auth-form">
+                <div className="row g-3">
+                  <div className="col-md-6">
+                    <div className="nolva-register-field">
+                      <label htmlFor="reg-first_name">Prénom *</label>
+                      <Form.Group controlId="reg-first_name">
+                        <Form.Control type="text" name="first_name" placeholder="Votre prénom"
+                          value={form.first_name} onChange={handleChange} required autoComplete="given-name" />
+                        <Form.Control.Feedback type="invalid">Prénom requis.</Form.Control.Feedback>
+                      </Form.Group>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="nolva-register-field">
+                      <label htmlFor="reg-last_name">Nom *</label>
+                      <Form.Group controlId="reg-last_name">
+                        <Form.Control type="text" name="last_name" placeholder="Votre nom"
+                          value={form.last_name} onChange={handleChange} required autoComplete="family-name" />
+                        <Form.Control.Feedback type="invalid">Nom requis.</Form.Control.Feedback>
+                      </Form.Group>
+                    </div>
+                  </div>
+
+                  <div className="col-md-6">
+                    <div className="nolva-register-field">
+                      <label htmlFor="reg-phone">Téléphone *</label>
+                      <Form.Group controlId="reg-phone" className="nolva-phone-field">
+                        <Form.Select name="phone_country" value={form.phone_country} onChange={handlePhoneCountryChange} aria-label="Indicatif pays">
+                          {phoneCountries.map((country) => (
+                            <option key={country.code} value={country.code}>{country.label}</option>
+                          ))}
+                        </Form.Select>
+                        <Form.Control type="tel" name="phone" placeholder="+229 XX XX XX XX"
+                          value={form.phone} onChange={handleChange} required autoComplete="tel" />
+                        <Form.Control.Feedback type="invalid">Numéro requis.</Form.Control.Feedback>
+                      </Form.Group>
+                    </div>
+                  </div>
+
+                  <div className="col-md-6">
+                    <div className="nolva-register-field">
+                      <label htmlFor="reg-email">Email *</label>
+                      <Form.Group controlId="reg-email">
+                        <Form.Control type="email" name="email" placeholder="votre@email.com"
+                          value={form.email} onChange={handleChange} required autoComplete="email" />
+                        <Form.Control.Feedback type="invalid">Email valide requis.</Form.Control.Feedback>
+                      </Form.Group>
+                    </div>
+                  </div>
+
+                  <div className="col-12">
+                    <div className="nolva-register-field">
+                      <label htmlFor="reg-password">Mot de passe *</label>
+                      <Form.Group controlId="reg-password" className="nolva-password-field">
+                        <Form.Control type={showPassword ? "text" : "password"} name="password" placeholder="Au moins 8 caractères"
+                          value={form.password} onChange={handleChange} required minLength={8} autoComplete="new-password" />
+                        <button type="button" onClick={() => setShowPassword((value) => !value)} aria-label="Afficher le mot de passe">
+                          <i className={showPassword ? "fi fi-rr-eye-crossed" : "fi fi-rr-eye"}></i>
+                        </button>
+                        <Form.Control.Feedback type="invalid">Au moins 8 caractères.</Form.Control.Feedback>
+                      </Form.Group>
+                    </div>
+                  </div>
+                </div>
+
+                <label className={`nolva-consent ${validated && !consent ? "is-invalid" : ""}`}>
+                  <input
+                    type="checkbox"
+                    checked={consent}
+                    onChange={(e) => setConsent(e.target.checked)}
+                    required
+                  />
+                  <span>
+                    J&apos;accepte les{" "}
+                    <Link href="/terms-condition" target="_blank" rel="noopener noreferrer">
+                      Conditions Générales d&apos;Utilisation
+                    </Link>{" "}
+                    et la{" "}
+                    <Link href="/confidentialite" target="_blank" rel="noopener noreferrer">
+                      Politique de confidentialité
+                    </Link>
+                    .
+                  </span>
+                </label>
+                <p className="nolva-auth-note nolva-auth-note-small">
+                  L&apos;acceptation de ces documents est obligatoire pour créer votre compte.
+                </p>
+
+                <div className="nolva-auth-actions">
+                  <button
+                    type="button"
+                    className="nolva-btn-secondary"
+                    onClick={backToStepOne}
+                    disabled={loading}
+                  >
+                    Retour
+                  </button>
+                  <button
+                    className="nolva-btn-primary nolva-btn-grow"
+                    type="submit"
+                    disabled={loading || !consent}
+                  >
+                    {loading ? "CRÉATION EN COURS..." : "CRÉER MON COMPTE"}
+                  </button>
+                </div>
+
+                <p className="nolva-auth-footnote">
+                  Déjà inscrit ? <Link href="/login">Se connecter</Link>
+                </p>
+              </Form>
+            )}
           </div>
         </Container>
       </section>

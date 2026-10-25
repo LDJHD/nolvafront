@@ -13,7 +13,7 @@ const todayIsoDate = () => {
 };
 
 const roleLabels: Record<string, string> = {
-  user: "Utilisateur",
+  user: "Participant",
   provider: "Prestataire",
 };
 
@@ -192,7 +192,7 @@ const AdminUsersDirectory = () => {
                 style={{ width: "auto" }}
               >
                 <option value="">Tous</option>
-                <option value="user">Utilisateur</option>
+                <option value="user">Participant</option>
                 <option value="provider">Prestataire</option>
               </select>
             </label>

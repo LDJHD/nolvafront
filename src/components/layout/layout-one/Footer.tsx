@@ -129,13 +129,16 @@ function Footer() {
                             <Link href="/evenements">Événements</Link>
                           </li>
                           <li className="gi-footer-link">
+                            <Link href="/lieux">Lieux</Link>
+                          </li>
+                          <li className="gi-footer-link">
                             <Link href="/politique-nolva">Comment ça marche</Link>
                           </li>
                           <li className="gi-footer-link">
                             <Link href="/terms-condition">CGU</Link>
                           </li>
                           <li className="gi-footer-link">
-                            <Link href="/privacy-policy">Confidentialité</Link>
+                            <Link href="/confidentialite">Politique de confidentialité</Link>
                           </li>
                           <li className="gi-footer-link">
                             <Link href="/contact-us">Contact</Link>
@@ -184,9 +187,6 @@ function Footer() {
                           </li>
                           <li className="gi-footer-link">
                             <Link href="/vendor-dashboard">Espace Prestataire</Link>
-                          </li>
-                          <li className="gi-footer-link">
-                            <Link href="/demande-devis">Demande de devis</Link>
                           </li>
                         </ul>
                       </motion.div>
@@ -260,15 +260,17 @@ function Footer() {
                   <div className="footer-copy">
                     <div className="footer-bottom-copy">
                       <div className="gi-copy">
-                        Copyright © 2024{" "}
-                        <Link className="site-name" href="/">
-                          NOLVA
-                        </Link>
-                        {" "}— Tous droits réservés. Plateforme événementielle au Bénin.
+                        © 2026 NOLVA — Tous droits réservés.
                       </div>
                     </div>
                   </div>
                   <div className="footer-bottom-right">
+                    <div className="nolva-footer-legal">
+                      <Link href="/terms-condition">CGU</Link>
+                      <Link href="/confidentialite">Confidentialité</Link>
+                      <Link href="/politique-nolva">Comment ça marche</Link>
+                      <Link href="/contact-us">Contact</Link>
+                    </div>
                     <div className="footer-bottom-payment d-flex justify-content-center">
                       <div className="payment-link">
                         <span style={{ color: "#999", fontSize: "14px" }}>

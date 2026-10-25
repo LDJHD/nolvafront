@@ -36,7 +36,8 @@ export default function NolvaFooter() {
               {[
                 { label: "Trouver un prestataire", href: "/prestataires" },
                 { label: "Événements", href: "/evenements" },
-                { label: "Devenir prestataire", href: "/inscription?role=provider" },
+                { label: "Lieux", href: "/lieux" },
+                { label: "Devenir prestataire", href: "/register?role=provider" },
                 { label: "Comment ça marche", href: "/politique-nolva" },
               ].map((link) => (
                 <li key={link.href} style={{ marginBottom: "10px" }}>
@@ -107,11 +108,11 @@ export default function NolvaFooter() {
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", marginTop: "40px", paddingTop: "24px", gap: "16px" }}
           className="d-flex flex-column flex-md-row justify-content-between align-items-center">
           <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "13px", margin: 0 }}>
-            © {new Date().getFullYear()} NOLVA. Tous droits réservés.
+            © 2026 NOLVA — Tous droits réservés.
           </p>
           <div style={{ display: "flex", gap: "20px" }}>
             <Link href="/confidentialite" style={{ color: "rgba(255,255,255,0.4)", fontSize: "13px", textDecoration: "none" }}>
-              Confidentialité
+              Politique de confidentialité
             </Link>
             <Link href="/politique-nolva" style={{ color: "rgba(255,255,255,0.4)", fontSize: "13px", textDecoration: "none" }}>
               Paiement sécurisé
@@ -119,7 +120,7 @@ export default function NolvaFooter() {
             <Link href="/terms-condition" style={{ color: "rgba(255,255,255,0.4)", fontSize: "13px", textDecoration: "none" }}>
               CGU
             </Link>
-            <Link href="/contact" style={{ color: "rgba(255,255,255,0.4)", fontSize: "13px", textDecoration: "none" }}>
+            <Link href="/contact-us" style={{ color: "rgba(255,255,255,0.4)", fontSize: "13px", textDecoration: "none" }}>
               Contact
             </Link>
           </div>

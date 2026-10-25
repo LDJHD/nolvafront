@@ -9,9 +9,9 @@ interface RootLayoutProps {
 }
 
 export const metadata = {
-  title: "NOLVA - L'outil des pros de l'evenementiel au Benin",
-  description: "Trouvez les meilleurs prestataires evenementiels au Benin : DJs, photographes, hotesses, animateurs, securite et plus encore.",
-  keywords: "prestataires evenementiels, Benin, DJ, photographe, hotesse, Cotonou, evenement",
+  title: "NOLVA - L'outil des pros de l'événementiel au Bénin",
+  description: "Trouvez les meilleurs prestataires événementiels au Bénin : DJs, photographes, hôtesses, animateurs, sécurité et plus encore.",
+  keywords: "prestataires événementiels, Bénin, DJ, photographe, hôtesse, Cotonou, événement",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
