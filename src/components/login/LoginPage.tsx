@@ -29,9 +29,7 @@ const LoginPage = () => {
   }
 
   const handleGoogleLogin = () => {
-    const googleAuthUrl =
-      process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL || 'http://localhost:3333/api/auth/google'
-    window.location.href = googleAuthUrl
+    showToast('Fonctionnalité bientôt disponible')
   }
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
