@@ -1,8 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import { authApi } from "@/lib/api";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { getBackendUrl } from "@/lib/apiConfig";
 
 const PushNotificationManager = () => {
+  const token = useSelector((state: RootState) => state.auth.token);
   const [supported, setSupported] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -12,34 +15,38 @@ const PushNotificationManager = () => {
     if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
     setSupported(true);
 
-    // Check existing subscription
     navigator.serviceWorker.ready.then((reg) => {
-      reg.pushManager.getSubscription().then((sub) => {
-        setSubscribed(!!sub);
-      });
+      reg.pushManager
+        .getSubscription()
+        .then((sub) => setSubscribed(!!sub))
+        .catch(() => setSubscribed(false));
     });
   }, []);
+
+  const authHeaders = () => {
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (token) headers.Authorization = `Bearer ${token}`;
+    return headers;
+  };
 
   const subscribe = async () => {
     if (!supported) return;
     setLoading(true);
     try {
       const reg = await navigator.serviceWorker.ready;
-      const publicKey = await fetch("/api/push/vapid-public-key").then((r) => r.json()).then((d) => d.publicKey).catch(() => null);
+      const backend = getBackendUrl();
 
-      // Fetch from backend
-      const res = await fetch("http://localhost:3333/api/push/vapid-public-key");
-      const data = await res.json();
-      const vapidKey = data.publicKey;
+      const data = await fetch(`${backend}/api/push/vapid-public-key`).then((r) => r.json());
+      if (!data?.publicKey) throw new Error("Clé VAPID indisponible");
 
       const sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(vapidKey),
+        applicationServerKey: urlBase64ToUint8Array(data.publicKey),
       });
 
-      await fetch("http://localhost:3333/api/push/subscribe", {
+      await fetch(`${backend}/api/push/subscribe`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         body: JSON.stringify({ subscription: sub.toJSON() }),
       });
 
@@ -58,9 +65,9 @@ const PushNotificationManager = () => {
       const sub = await reg.pushManager.getSubscription();
       if (sub) {
         await sub.unsubscribe();
-        await fetch("http://localhost:3333/api/push/unsubscribe", {
+        await fetch(`${getBackendUrl()}/api/push/unsubscribe`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: authHeaders(),
           body: JSON.stringify({ endpoint: sub.endpoint }),
         });
       }

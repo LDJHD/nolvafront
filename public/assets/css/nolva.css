@@ -2966,6 +2966,269 @@ html { scroll-behavior: smooth; }
 
 
 /* ============================================
+   NOLVA — Header mobile (logo + compte)
+   ============================================ */
+.nolva-mobile-header {
+  display: none;
+}
+
+@media (max-width: 991px) {
+  /* On mobile, le header noir du site est remplacé par une barre blanche
+     compacte : logo NOLVA à gauche, notifications + compte à droite. */
+  .header-top {
+    display: none !important;
+  }
+
+  .nolva-mobile-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 16px 12px;
+    background: #ffffff;
+    border-bottom: 1px solid #ececf1;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+
+  /* Le header desktop (logo + recherche) est remplacé par le header mobile */
+  .gi-header-bottom {
+    display: none !important;
+  }
+
+  .nolva-mobile-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .nolva-mobile-header-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  .nolva-mobile-header-logo img {
+    max-height: 34px;
+    width: auto;
+    display: block;
+  }
+
+  .nolva-mobile-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nolva-mobile-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 38px;
+    padding: 0 4px 0 12px;
+    background: #f8f8fb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+  }
+  .nolva-mobile-search:focus-within {
+    background: #ffffff;
+    border-color: #6d28d9;
+    box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.12);
+  }
+  .nolva-mobile-search-icon {
+    flex-shrink: 0;
+    font-size: 14px;
+    color: #9ca3af;
+    line-height: 1;
+  }
+  .nolva-mobile-search input {
+    flex: 1 1 auto;
+    min-width: 0;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: auto !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #111827 !important;
+    font-family: inherit !important;
+  }
+  .nolva-mobile-search input::placeholder {
+    color: #9ca3af !important;
+    font-weight: 400 !important;
+  }
+  .nolva-mobile-search-btn {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 8px;
+    background: #6d28d9;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+  }
+  .nolva-mobile-search-btn i {
+    font-size: 13px;
+    line-height: 1;
+  }
+
+  .nolva-mobile-header .nolva-notification {
+    display: flex;
+    align-items: center;
+  }
+  .nolva-mobile-header .nolva-notification-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid #e5e7eb;
+    background: #f8f8fb;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .nolva-mobile-header .nolva-notification-btn .header-icon {
+    background: transparent;
+    border: 0;
+    width: auto;
+    height: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nolva-mobile-header .nolva-notification-btn .header-icon i {
+    color: #4b5563 !important;
+    font-size: 17px;
+    line-height: 1;
+  }
+
+  .nolva-mobile-account {
+    position: relative;
+    display: flex;
+  }
+  .nolva-mobile-account-btn {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid #e5e7eb;
+    background: #f8f8fb;
+    color: #4b5563;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    font-size: 17px;
+    line-height: 1;
+  }
+  .nolva-mobile-account-btn i {
+    font-size: 17px;
+    line-height: 1;
+  }
+  .nolva-mobile-account-btn.is-connected {
+    background: linear-gradient(135deg, #6d28d9 0%, #ec4899 100%);
+    border-color: transparent;
+    color: #ffffff;
+  }
+  .nolva-mobile-account-dot {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #22c55e;
+    border: 2px solid #ffffff;
+  }
+
+  .nolva-mobile-account-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: transparent;
+  }
+  .nolva-mobile-account-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 232px;
+    background: #ffffff;
+    border: 1px solid #ececf1;
+    border-radius: 14px;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+    padding: 6px;
+    z-index: 41;
+    overflow: hidden;
+  }
+  .nolva-mobile-account-head {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #f1f1f4;
+    margin-bottom: 4px;
+  }
+  .nolva-mobile-account-head strong {
+    font-size: 14px;
+    color: #111827;
+    line-height: 1.25;
+  }
+  .nolva-mobile-account-head span {
+    font-size: 12px;
+    color: #6b7280;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .nolva-mobile-account-menu a,
+  .nolva-mobile-account-logout {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border: 0;
+    background: transparent;
+    border-radius: 9px;
+    color: #1f2937;
+    font-size: 13.5px;
+    font-weight: 500;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .nolva-mobile-account-menu a i,
+  .nolva-mobile-account-logout i {
+    font-size: 15px;
+    color: #6d28d9;
+  }
+  .nolva-mobile-account-menu a:hover,
+  .nolva-mobile-account-logout:hover {
+    background: #f5f3ff;
+    color: #6d28d9;
+  }
+  .nolva-mobile-account-logout,
+  .nolva-mobile-account-logout i {
+    color: #dc2626 !important;
+  }
+  .nolva-mobile-account-logout:hover {
+    background: #fef2f2;
+    color: #b91c1c !important;
+  }
+}
+
+
+/* ============================================
    NOLVA — Suppression de compte
    ============================================ */
 .nolva-delete-account {
