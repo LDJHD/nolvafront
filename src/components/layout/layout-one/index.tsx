@@ -12,8 +12,15 @@ function LayoutOne({ children }) {
     link.rel = "stylesheet";
     document.head.appendChild(link);
 
+    // Load NOLVA custom CSS
+    const nolvaCss = document.createElement("link");
+    nolvaCss.href = "/assets/css/nolva.css";
+    nolvaCss.rel = "stylesheet";
+    document.head.appendChild(nolvaCss);
+
     return () => {
       document.head.removeChild(link);
+      document.head.removeChild(nolvaCss);
     };
   }, []);
 
