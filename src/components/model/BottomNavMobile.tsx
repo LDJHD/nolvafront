@@ -1,19 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
 
 const BottomNavMobile = () => {
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-  const user = useSelector((state: RootState) => state.auth.user);
-  const accountHref = !isAuthenticated
-    ? "/login"
-    : user?.role === "admin"
-      ? "/admin"
-      : user?.role === "provider"
-        ? "/vendor-dashboard"
-        : "/user-profile";
-
   return (
     <nav className="nolva-bottom-nav">
       <ul className="nolva-bottom-nav-list">
@@ -42,9 +30,9 @@ const BottomNavMobile = () => {
           </Link>
         </li>
         <li className="nolva-bottom-nav-item">
-          <Link href={accountHref} className="nolva-bottom-nav-link">
-            <i className={isAuthenticated ? "fi fi-rr-user" : "fi fi-rr-user"} aria-hidden="true"></i>
-            <span>{isAuthenticated ? "Mon compte" : "Connexion"}</span>
+          <Link href="/lieux" className="nolva-bottom-nav-link">
+            <i className="fi fi-rr-marker" aria-hidden="true"></i>
+            <span>Lieux</span>
           </Link>
         </li>
       </ul>

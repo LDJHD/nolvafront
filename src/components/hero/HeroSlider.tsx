@@ -32,7 +32,7 @@ function HeroSlider() {
       <div className="nolva-hero-overlay">
         <div className="container">
           <div className="nolva-hero-content">
-            <p className="nolva-hero-tagline text-red-500">TOUT L’ÉVÉNEMENTIEL, UNE SEULE PLATEFORME.</p>
+            <p className="nolva-hero-tagline">TOUT L’ÉVÉNEMENTIEL, UNE SEULE PLATEFORME.</p>
             <h1 className="nolva-hero-title">
               Votre événement, de l’idée au jour J.<br /><br />
               <span>Prestataires, événements et assistance intelligente réunis sur NOLVA</span>

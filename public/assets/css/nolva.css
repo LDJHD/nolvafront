@@ -443,7 +443,7 @@ a.nolva-btn-reserve:hover {
 }
 .nolva-hero-content { max-width: 720px; }
 .nolva-hero-tagline {
-  color: var(--nolva-red);
+  color: #e31e24;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 3px;
@@ -457,7 +457,7 @@ a.nolva-btn-reserve:hover {
   content: '';
   width: 30px;
   height: 2px;
-  background: var(--nolva-red);
+  background: #e31e24;
 }
 .nolva-hero-title {
   font-size: 50px;
