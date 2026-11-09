@@ -119,7 +119,7 @@ const EventBadgeGenerator = ({ eventId, eventTitle }: Props) => {
         <div className="nolva-badge-result mt-4">
           <div className="nolva-badge-card">
             <div className="nolva-badge-header">
-              <h4>NOLVA — Badge d'accès</h4>
+              <h4>NOLVA — Badge d&apos;accès</h4>
               <p>{badge.event?.title || eventTitle}</p>
             </div>
             <div className="nolva-badge-body">

@@ -23,7 +23,7 @@ const EventCreationChoice = () => {
             >
               <i className="fi fi-rr-magic-wand"></i>
               <h5>CRÉER AVEC NOLVA IA</h5>
-              <p>J'ai une idée et je souhaite être accompagné pour construire mon événement avec NOLVA IA.</p>
+              <p>J&apos;ai une idée et je souhaite être accompagné pour construire mon événement avec NOLVA IA.</p>
               <span className="nolva-badge-ia">nolva ia</span>
             </button>
           </div>

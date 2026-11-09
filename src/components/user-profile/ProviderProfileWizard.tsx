@@ -133,7 +133,7 @@ const ProviderProfileWizard = ({ onDone }: Props) => {
           <Form.Group className="mb-3">
             <Form.Label>Description de votre activité</Form.Label>
             <Form.Control as="textarea" rows={4} name="description" value={form.description} onChange={handleChange} />
-            <small className="text-muted">💡 M'aider à rédiger</small>
+            <small className="text-muted">💡 M&apos;aider à rédiger</small>
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Photos de réalisations (max 7)</Form.Label>
@@ -161,7 +161,7 @@ const ProviderProfileWizard = ({ onDone }: Props) => {
                 <Form.Control value={svc.description} onChange={(e) => updateService(i, "description", e.target.value)} />
               </Form.Group>
               <Form.Group className="mb-2">
-                <Form.Label>Prix ou "sur devis"</Form.Label>
+                <Form.Label>Prix ou &quot;sur devis&quot;</Form.Label>
                 <Form.Control value={svc.price} onChange={(e) => updateService(i, "price", e.target.value)} placeholder="Ex: 50000 ou Sur devis" />
               </Form.Group>
               {services.length > 1 && (
@@ -179,7 +179,7 @@ const ProviderProfileWizard = ({ onDone }: Props) => {
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Zone d'intervention</Form.Label>
+            <Form.Label>Zone d&apos;intervention</Form.Label>
             <Form.Control value={form.city} onChange={handleChange} name="city" />
           </Form.Group>
           <Form.Group className="mb-3">

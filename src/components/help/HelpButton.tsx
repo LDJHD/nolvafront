@@ -16,7 +16,7 @@ const HelpButton = () => {
       </button>
       {open && (
         <div className="nolva-help-panel">
-          <p>Besoin d'aide ?</p>
+          <p>Besoin d&apos;aide ?</p>
           <a href="https://wa.me/2290195676714" target="_blank" rel="noopener noreferrer" className="nolva-help-whatsapp">
             <i className="fi fi-brands-whatsapp"></i> WhatsApp NOLVA
           </a>
