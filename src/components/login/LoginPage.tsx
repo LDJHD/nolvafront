@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setCredentials } from "@/store/reducers/authSlice";
 import { authApi } from "@/lib/api";
+import { getBackendUrl } from "@/lib/apiConfig";
 
 const LoginPage = () => {
   const [uid, setUid] = useState("");
@@ -29,8 +30,7 @@ const LoginPage = () => {
   }
 
   const handleGoogleLogin = () => {
-    const googleAuthUrl =
-      process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL || 'http://localhost:3333/api/auth/google'
+    const googleAuthUrl = `${getBackendUrl()}/api/auth/google`
     window.location.href = googleAuthUrl
   }
 
