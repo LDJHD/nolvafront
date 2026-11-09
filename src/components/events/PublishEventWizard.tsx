@@ -25,13 +25,25 @@ const PublishEventWizard = () => {
   const router = useRouter();
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const { types: eventTypes, loading: typesLoading } = useEventTypes();
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("nolva_event_wizard_step");
+        if (saved) return Number(saved);
+      } catch {}
+    }
+    return 0;
+  });
   const [submitting, setSubmitting] = useState(false);
   const [tips, setTips] = useState<string[]>([]);
   const [providerTypes, setProviderTypes] = useState<{ slug: string; label: string }[]>([]);
   const [showProvidersModal, setShowProvidersModal] = useState(false);
   const [publishedEventId, setPublishedEventId] = useState<number | null>(null);
   const [isFreeEvent, setIsFreeEvent] = useState(false);
+  const [accessType, setAccessType] = useState<"free" | "paid" | "invite">("free");
+  const [isPrivateEvent, setIsPrivateEvent] = useState(false);
+  const [images, setImages] = useState<string[]>([]);
+  const [video, setVideo] = useState<string>("");
 
   const [form, setForm] = useState({
     event_type: "",
@@ -42,6 +54,8 @@ const PublishEventWizard = () => {
     city: "",
     image: "",
     expected_participants: "",
+    external_ticket_url: "",
+    is_external_ticket: false,
   });
   const [tickets, setTickets] = useState<TicketDraft[]>([
     { label: "Standard", price: "5000", quantity: "100" },
@@ -74,6 +88,14 @@ const PublishEventWizard = () => {
   useEffect(() => {
     void loadSuggestions();
   }, [loadSuggestions]);
+
+  // Auto-save
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("nolva_event_wizard_step", String(step));
+      localStorage.setItem("nolva_event_wizard_form", JSON.stringify({ form, isFreeEvent, accessType, isPrivateEvent, tickets }));
+    }
+  }, [step, form, isFreeEvent, accessType, isPrivateEvent, tickets]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -156,17 +178,21 @@ const PublishEventWizard = () => {
         city: form.city,
         image: form.image || undefined,
         ticket_types,
+        external_ticket_url: form.is_external_ticket ? form.external_ticket_url : undefined,
         ticket_price: isFreeEvent ? 0 : undefined,
         ticket_count: isFreeEvent ? 0 : undefined,
         expected_participants: isFreeEvent && form.expected_participants
           ? Number(form.expected_participants)
           : undefined,
         auto_publish: true,
+        is_private: isPrivateEvent,
       });
       const d = res.data;
       setProviderTypes(d.provider_types || []);
       setPublishedEventId(d.event?.id ?? null);
       showSuccessToast(d.message || "Événement publié !");
+      localStorage.removeItem("nolva_event_wizard_step");
+      localStorage.removeItem("nolva_event_wizard_form");
       setShowProvidersModal(true);
     } catch (err: any) {
       showErrorToast(
@@ -192,7 +218,7 @@ const PublishEventWizard = () => {
     );
   }
 
-  const steps = ["Type", "Informations", "Billets", "Publication"];
+  const steps = ["Type", "Informations", "Billets", "Vérification"];
 
   return (
     <section className="padding-tb-40">
@@ -304,8 +330,48 @@ const PublishEventWizard = () => {
                   />
                 </Col>
                 <Col md={12}>
-                  <Form.Label>Image</Form.Label>
+                  <Form.Label>Image principale</Form.Label>
                   <Form.Control type="file" accept="image/*" onChange={handleImage} />
+                </Col>
+                <Col md={12}>
+                  <Form.Label>Photos supplémentaires (max 3)</Form.Label>
+                  <Form.Control type="file" accept="image/*" multiple onChange={(e) => {
+                    const files = Array.from((e.target as any).files || []);
+                    files.slice(0, 3 - images.length).forEach((file: any) => {
+                      const reader = new FileReader();
+                      reader.onload = () => setImages((prev) => [...prev, String(reader.result)]);
+                      reader.readAsDataURL(file);
+                    });
+                  }} />
+                  <div className="d-flex gap-2 mt-2 flex-wrap">
+                    {images.map((img, i) => (
+                      <img key={i} src={img} alt={`photo ${i + 1}`} style={{ width: 80, height: 80, objectFit: "cover", borderRadius: 8 }} />
+                    ))}
+                  </div>
+                </Col>
+                <Col md={12}>
+                  <Form.Label>Vidéo (max 30s, facultatif)</Form.Label>
+                  <Form.Control type="file" accept="video/*" onChange={(e) => {
+                    const file = (e.target as any).files?.[0];
+                    if (!file) return;
+                    if (file.size > 10 * 1024 * 1024) {
+                      showErrorToast("Vidéo trop volumineuse (max 10 Mo)");
+                      return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = () => setVideo(String(reader.result));
+                    reader.readAsDataURL(file);
+                  }} />
+                  {video && <p className="small text-success mt-1">Vidéo chargée ✓</p>}
+                </Col>
+                <Col md={12}>
+                  <Form.Check
+                    type="switch"
+                    id="wizard-private-event"
+                    label="Événement privé (non visible publiquement, accès par lien)"
+                    checked={isPrivateEvent}
+                    onChange={(e) => setIsPrivateEvent(e.target.checked)}
+                  />
                 </Col>
                 {tips.length > 0 && (
                   <Col md={12}>
@@ -319,14 +385,55 @@ const PublishEventWizard = () => {
 
             {step === 2 && (
               <>
-                <Form.Check
-                  className="mb-3"
-                  type="switch"
-                  id="wizard-free-event"
-                  label="Evenement gratuit"
-                  checked={isFreeEvent}
-                  onChange={(e) => setIsFreeEvent(e.target.checked)}
-                />
+                <Form.Label className="fw-bold mb-2">Comment les participants accèdent-ils à votre événement ?</Form.Label>
+                <div className="d-flex gap-2 mb-3 flex-wrap">
+                  {[
+                    { key: "free", label: "Gratuit", icon: "fi fi-rr-gift", desc: "Accès libre" },
+                    { key: "paid", label: "Payant", icon: "fi fi-rr-ticket", desc: "Billetterie" },
+                    { key: "invite", label: "Sur invitation", icon: "fi fi-rr-envelope", desc: "Lien privé" },
+                  ].map((opt) => (
+                    <button
+                      key={opt.key}
+                      type="button"
+                      className={`nolva-access-card ${accessType === opt.key ? "selected" : ""}`}
+                      onClick={() => {
+                        setAccessType(opt.key as any);
+                        setIsFreeEvent(opt.key === "free");
+                      }}
+                    >
+                      <i className={opt.icon}></i>
+                      <span className="fw-bold">{opt.label}</span>
+                      <small>{opt.desc}</small>
+                    </button>
+                  ))}
+                </div>
+
+                {accessType === "free" && (
+                  <>
+                    <div className="alert alert-light border">
+                      Aucun billet payant ne sera cree. L&apos;evenement restera gratuit.
+                    </div>
+                    <Row className="g-2 mb-3 align-items-end">
+                      <Col md={5}>
+                        <Form.Label>Nombre de participants attendus</Form.Label>
+                        <Form.Control
+                          type="number"
+                          min={0}
+                          name="expected_participants"
+                          value={form.expected_participants}
+                          onChange={handleChange}
+                          placeholder="Ex : 150"
+                        />
+                      </Col>
+                      <Col md={7}>
+                        <p className="small text-muted mb-0">
+                          Ce nombre s&apos;affichera sur la fiche (« X participants attendus ») et
+                          servira de jauge de places pour l&apos;evenement.
+                        </p>
+                      </Col>
+                    </Row>
+                  </>
+                )}
                 {isFreeEvent && (
                   <>
                     <div className="alert alert-light border">
@@ -401,43 +508,112 @@ const PublishEventWizard = () => {
                 {!isFreeEvent && <button type="button" className="btn btn-outline-secondary btn-sm" onClick={addTicketRow}>
                   + Ajouter un type de billet
                 </button>}
+
+                {!isFreeEvent && (
+                  <div className="mt-3 p-3" style={{ background: "#f8f9fa", borderRadius: "8px", borderLeft: "4px solid #E31E24" }}>
+                    <Form.Check
+                      type="switch"
+                      id="wizard-external-ticket"
+                      label="Billetterie externe (lien)"
+                      checked={form.is_external_ticket}
+                      onChange={(e) => setForm({ ...form, is_external_ticket: e.target.checked })}
+                    />
+                    {form.is_external_ticket && (
+                      <Form.Group className="mt-2">
+                        <Form.Label>Lien de billetterie externe</Form.Label>
+                        <Form.Control
+                          name="external_ticket_url"
+                          value={form.external_ticket_url}
+                          onChange={handleChange}
+                          placeholder="https://..."
+                        />
+                      </Form.Group>
+                    )}
+                    {!form.is_external_ticket && tickets.some((t) => Number(t.price) > 0) && (
+                      <div className="mt-2 small">
+                        <strong>Frais NOLVA (5%) :</strong>
+                        {tickets.filter((t) => t.label.trim()).map((t, i) => {
+                          const price = Number(t.price) || 0;
+                          const frais = Math.round(price * 0.05);
+                          return (
+                            <div key={i} className="mt-1">
+                              {t.label} : Ticket {price.toLocaleString("fr-FR")} F — Frais {frais.toLocaleString("fr-FR")} F — Total participant { (price + frais).toLocaleString("fr-FR")} F
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
               </>
             )}
 
             {step === 3 && (
-              <div className="small">
-                <p>
-                  <strong>{form.title}</strong> — {form.city}
-                </p>
-                <p>
-                  Acces :{" "}
-                  {isFreeEvent
-                    ? "Gratuit"
-                    : tickets
-                        .filter((t) => t.label.trim())
-                        .map((t) => `${t.label} (${Number(t.price).toLocaleString("fr-FR")} FCFA)`)
-                        .join(", ")}
-                </p>
-                <p className="text-muted mb-0">
-                  {isFreeEvent
-                    ? "Aucun paiement billet ne sera demande. Soumission a validation administrateur."
-                    : "Paiement des participants via FedaPay (sequestre NOLVA). Soumission a validation administrateur."}
-                </p>
+              <div>
+                <h5 className="mb-3">Voici ce que les visiteurs verront</h5>
+                <div className="border rounded p-3" style={{ background: "#f8f9fa" }}>
+                  {form.image && (
+                    <img src={form.image} alt="affiche" style={{ width: "100%", maxHeight: 200, objectFit: "cover", borderRadius: 8, marginBottom: 12 }} />
+                  )}
+                  <h4>{form.title}</h4>
+                  <p className="text-muted mb-1">{form.event_type} — {form.city}</p>
+                  <p className="mb-1"><strong>Lieu :</strong> {form.location || "À confirmer"}</p>
+                  <p className="mb-1"><strong>Date :</strong> {form.event_date}</p>
+                  {form.description && <p className="mb-2">{form.description}</p>}
+                  <p className="mb-1">
+                    <strong>Accès :</strong>{" "}
+                    {accessType === "free" ? "Gratuit" : accessType === "invite" ? "Sur invitation" : "Payant"}
+                  </p>
+                  {!isFreeEvent && tickets.filter((t) => t.label.trim()).length > 0 && (
+                    <div className="mb-2">
+                      <strong>Billets :</strong>
+                      <ul className="mb-0">
+                        {tickets.filter((t) => t.label.trim()).map((t, i) => (
+                          <li key={i}>{t.label} — {Number(t.price).toLocaleString("fr-FR")} FCFA ({t.quantity || "∞"} places)</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {form.is_external_ticket && form.external_ticket_url && (
+                    <p className="mb-1"><strong>Billetterie externe :</strong> {form.external_ticket_url}</p>
+                  )}
+                  {isPrivateEvent && (
+                    <p className="text-warning mb-1"><i className="fi fi-rr-lock"></i> Événement privé (non visible publiquement)</p>
+                  )}
+                  {form.expected_participants && (
+                    <p className="mb-1"><strong>Participants attendus :</strong> {form.expected_participants}</p>
+                  )}
+                  {images.length > 0 && (
+                    <div className="d-flex gap-2 mt-2 flex-wrap">
+                      {images.map((img, i) => (
+                        <img key={i} src={img} alt={`photo ${i + 1}`} style={{ width: 60, height: 60, objectFit: "cover", borderRadius: 6 }} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className="d-flex gap-2 mt-3">
+                  <button type="button" className="gi-btn-2" onClick={() => setStep(2)}>
+                    MODIFIER
+                  </button>
+                  <button type="button" className="gi-btn-1" disabled={submitting} onClick={() => void handlePublish()}>
+                    {submitting ? "Publication..." : "PUBLIER MON ÉVÉNEMENT"}
+                  </button>
+                </div>
               </div>
             )}
 
-            <div className="d-flex gap-2 mt-4 flex-wrap">
-              {step > 0 && (
-                <button
-                  type="button"
-                  className="gi-btn-2"
-                  onClick={() => setStep((s) => s - 1)}
-                  disabled={submitting}
-                >
-                  Précédent
-                </button>
-              )}
-              {step < 3 ? (
+            {step < 3 && (
+              <div className="d-flex gap-2 mt-4 flex-wrap">
+                {step > 0 && (
+                  <button
+                    type="button"
+                    className="gi-btn-2"
+                    onClick={() => setStep((s) => s - 1)}
+                    disabled={submitting}
+                  >
+                    Précédent
+                  </button>
+                )}
                 <button
                   type="button"
                   className="gi-btn-1"
@@ -446,20 +622,11 @@ const PublishEventWizard = () => {
                 >
                   Suivant
                 </button>
-              ) : (
-                <button
-                  type="button"
-                  className="gi-btn-1"
-                  disabled={submitting}
-                  onClick={() => void handlePublish()}
-                >
-                  {submitting ? "Publication..." : "Publier mon événement"}
-                </button>
-              )}
-              <Link href="/evenements" className="gi-btn-2">
-                Annuler
-              </Link>
-            </div>
+                <Link href="/evenements" className="gi-btn-2">
+                  Annuler
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>

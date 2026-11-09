@@ -48,12 +48,14 @@ export const authApi = {
   logout: () => api.post('/auth/logout'),
   me: () => api.get('/auth/me'),
   updateProfile: (data: any) => api.put('/auth/profile', data),
+  deleteAccount: () => api.delete('/auth/account'),
 }
 
 // ─── Prestataires ─────────────────────────────────────────
 export const providersApi = {
   list: (params?: any) => api.get('/providers', { params }),
   popular: () => api.get('/providers/popular'),
+  similar: (id: number | string) => api.get(`/providers/${id}/similar`),
   show: (id: number | string) => api.get(`/providers/${id}`),
   myProfile: () => api.get('/provider/profile'),
   updateMyProfile: (data: any) => api.put('/provider/profile', data),
@@ -233,6 +235,9 @@ export const eventsApi = {
   create: (data: any) => api.post('/events', data),
   myEvents: (params?: any) => api.get('/user/events', { params }),
   updateMine: (id: number | string, data: any) => api.put(`/user/events/${id}`, data),
+  generateBadge: (data: any) => api.post('/events/badges/generate', data),
+  myBadges: () => api.get('/events/badges/mine'),
+  showBadge: (code: string) => api.get(`/events/badges/${code}`),
   cancelMine: (id: number | string, data?: { reason?: string }) =>
     api.post(`/user/events/${id}/cancel`, data || {}),
   rescheduleMine: (

@@ -31,7 +31,7 @@ export default function NolvaHeader() {
       <div style={{ background: "#1A1A1A", padding: "8px 0" }}>
         <div className="container d-flex justify-content-between align-items-center">
           <span style={{ color: "rgba(255,255,255,0.7)", fontSize: "13px" }}>
-            🇧🇯 Bénin · Cotonou · Porto-Novo · Calavi
+            🇧🇯 Bénin · Abomey-Calavi · Porto-Novo · Cotonou
           </span>
           <div style={{ display: "flex", gap: "16px" }}>
             {!isAuthenticated ? (

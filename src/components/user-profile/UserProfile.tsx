@@ -3,14 +3,18 @@ import { useEffect, useMemo, useState } from "react";
 import { Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { authApi } from "@/lib/api";
-import { initFromStorage, updateUser } from "@/store/reducers/authSlice";
+import { useRouter } from "next/navigation";
+import { authApi, providersApi } from "@/lib/api";
+import { initFromStorage, updateUser, logout } from "@/store/reducers/authSlice";
 import { showErrorToast, showSuccessToast } from "../toast-popup/Toastify";
 import Link from "next/link";
 import ProviderProfileForm from "./ProviderProfileForm";
+import ProviderProfileWizard from "./ProviderProfileWizard";
+import ProfileCompletion from "./ProfileCompletion";
 
 const UserProfile = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
   const [booting, setBooting] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -23,6 +27,8 @@ const UserProfile = () => {
     city: user?.city || "",
     avatar: user?.avatar || "",
   });
+  const [showProviderWizard, setShowProviderWizard] = useState(false);
+  const [providerProfile, setProviderProfile] = useState<any>(null);
 
   useEffect(() => {
     dispatch(initFromStorage());
@@ -54,6 +60,11 @@ const UserProfile = () => {
       city: user.city || "",
       avatar: user.avatar || "",
     });
+    if (user.role === "provider") {
+      providersApi.myProfile().then((res: any) => {
+        if (res?.data) setProviderProfile(res.data);
+      }).catch(() => {});
+    }
   }, [user]);
 
   const avatarSrc = useMemo(
@@ -215,7 +226,57 @@ const UserProfile = () => {
                 </div>
               </Form>
 
-              {user.role === "provider" && <ProviderProfileForm />}
+              {user.role === "provider" && (
+                <>
+                  <ProfileCompletion provider={providerProfile} />
+                  <ProviderProfileForm />
+                </>
+              )}
+
+              {user.role === "user" && !showProviderWizard && (
+                <div className="nolva-activate-provider">
+                  <h5>Vous proposez également des services ?</h5>
+                  <p>
+                    Activez votre profil prestataire pour proposer vos services et recevoir des demandes.
+                    Vous ne recréez aucun compte, vous complétez simplement les informations professionnelles.
+                  </p>
+                  <button
+                    type="button"
+                    className="nolva-btn-primary"
+                    onClick={() => setShowProviderWizard(true)}
+                  >
+                    ACTIVER MON PROFIL PRESTATAIRE
+                  </button>
+                </div>
+              )}
+
+              {showProviderWizard && (
+                <ProviderProfileWizard onDone={() => setShowProviderWizard(false)} />
+              )}
+              <div className="nolva-delete-account">
+                <h5>Supprimer mon compte</h5>
+                <p>
+                  Cette action est irréversible. Toutes vos données seront supprimées.
+                  Si une prestation ou un événement est en cours, la suppression sera refusée.
+                </p>
+                <button
+                  type="button"
+                  className="nolva-btn-danger"
+                  onClick={async () => {
+                    if (!window.confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) return
+                    try {
+                      await authApi.deleteAccount()
+                      dispatch(logout())
+                      router.push('/')
+                      showSuccessToast('Compte supprimé avec succès.')
+                    } catch (err: any) {
+                      showErrorToast(err?.response?.data?.message || 'Impossible de supprimer le compte.')
+                    }
+                  }}
+                >
+                  Supprimer mon compte
+                </button>
+              </div>
             </div>
           </div>
         </div>

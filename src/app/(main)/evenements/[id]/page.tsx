@@ -7,6 +7,8 @@ import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { paymentsApi, eventsApi } from "@/lib/api";
+import EventLocationMap from "@/components/events/EventLocationMap";
+import EventCountdown from "@/components/events/EventCountdown";
 import { toast } from "react-toastify";
 
 const EventDetailPage = () => {
@@ -280,6 +282,9 @@ const EventDetailPage = () => {
                   </div>
                 )}
                 <h1 className="nolva-event-hero-title">{event.title}</h1>
+                <div className="mb-3">
+                  <EventCountdown eventDate={event.event_date || event.eventDate} />
+                </div>
                 <button type="button" className="btn btn-outline-secondary btn-sm mb-3" onClick={copyShareLink}>
                   Copier le lien
                 </button>
@@ -706,6 +711,14 @@ const EventDetailPage = () => {
                         {event.city || "Non precisee"}
                       </li>
                     </ul>
+                    <div className="mt-3">
+                      <EventLocationMap
+                        latitude={event.latitude}
+                        longitude={event.longitude}
+                        locationName={event.location}
+                        canEdit={false}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

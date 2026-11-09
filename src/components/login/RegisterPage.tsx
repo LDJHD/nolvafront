@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Breadcrumb from "../breadcrumb/Breadcrumb";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -50,18 +50,33 @@ const RegisterPage = () => {
   const [consent, setConsent] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const [form, setForm] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone_country: "+229",
-    phone: "+229 ",
-    password: "",
+  const [form, setForm] = useState(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("nolva_register_draft");
+        if (saved) return JSON.parse(saved);
+      } catch {}
+    }
+    return {
+      first_name: "",
+      last_name: "",
+      email: "",
+      phone_country: "+229",
+      phone: "+229 ",
+      password: "",
+    };
   });
 
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  // Auto-save form data
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("nolva_register_draft", JSON.stringify(form));
+    }
+  }, [form]);
 
   const handlePhoneCountryChange = (e: any) => {
     const code = e.target.value;
@@ -123,6 +138,7 @@ const RegisterPage = () => {
       dispatch(setCredentials({ user, token: token.value || token }));
       const baseMessage = res.data?.message || "Compte créé. Consultez votre email.";
       showSuccessToast(`${baseMessage} Complétez votre profil.`);
+      localStorage.removeItem("nolva_register_draft");
       router.push("/user-profile");
     } catch (err: any) {
       showErrorToast(parseRegisterError(err));

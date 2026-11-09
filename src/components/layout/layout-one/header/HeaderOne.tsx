@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import MobileManuSidebar from "../../../model/MobileManuSidebar";
+import BottomNavMobile from "../../../model/BottomNavMobile";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import NotificationBell from "@/components/notifications/NotificationBell";
@@ -94,6 +95,7 @@ function HeaderOne() {
         toggleMainMenu={toggleMainMenu}
         activeMainMenu={activeMainMenu}
       />
+      <BottomNavMobile />
     </>
   );
 }

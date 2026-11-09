@@ -27,6 +27,7 @@ const ProviderProfilePage = () => {
   const [provider, setProvider] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [suggestions, setSuggestions] = useState<any[]>([]);
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const { types: providerTypeCatalog } = useProviderTypes();
 
@@ -36,6 +37,9 @@ const ProviderProfilePage = () => {
       .then((res) => setProvider(res.data))
       .catch(() => setError(true))
       .finally(() => setLoading(false));
+    providersApi.similar(id as string)
+      .then((res) => setSuggestions(Array.isArray(res.data) ? res.data : res.data?.data || []))
+      .catch(() => setSuggestions([]));
   }, [id]);
 
   if (loading) return <div className="text-center py-5"><Spinner /></div>;
@@ -212,13 +216,18 @@ const ProviderProfilePage = () => {
                 </div>
               </div>
 
-              {/* Réseaux sociaux */}
-              {weeklySchedule.length > 0 && (
-                <div className="gi-vendor-dashboard-card mb-4">
-                  <div className="gi-vendor-card-header">
-                    <h5>Disponibilites</h5>
+              {/* Agenda */}
+              <div className="gi-vendor-dashboard-card mb-4">
+                <div className="gi-vendor-card-header">
+                  <h5>Agenda</h5>
+                </div>
+                <div className="gi-vendor-card-body">
+                  <div className="d-flex gap-2 mb-3">
+                    <span className="nolva-agenda-state available">Disponible</span>
+                    <span className="nolva-agenda-state pending">En attente</span>
+                    <span className="nolva-agenda-state unavailable">Indisponible</span>
                   </div>
-                  <div className="gi-vendor-card-body">
+                  {weeklySchedule.length > 0 && (
                     <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                       {weeklySchedule.map((item: any) => (
                         <li key={item.day} className="mb-2 d-flex justify-content-between gap-2">
@@ -231,9 +240,9 @@ const ProviderProfilePage = () => {
                         </li>
                       ))}
                     </ul>
-                  </div>
+                  )}
                 </div>
-              )}
+              </div>
 
               {(provider.instagram || provider.facebook || provider.tiktok) && (
                 <div className="gi-vendor-dashboard-card">
@@ -266,6 +275,32 @@ const ProviderProfilePage = () => {
           </div>
         </div>
       </section>
+
+      {/* Suggestions */}
+      {suggestions.length > 0 && (
+        <section className="padding-tb-40" style={{ background: "#f8f9fa" }}>
+          <div className="container">
+            <h4 className="mb-3">NOLVA vous propose aussi</h4>
+            <div className="row g-3">
+              {suggestions.map((s: any) => (
+                <div key={s.id} className="col-md-4 col-sm-6">
+                  <Link href={`/prestataires/${s.id}`} className="text-decoration-none">
+                    <div className="gi-vendor-dashboard-card h-100">
+                      <div className="gi-vendor-card-body">
+                        <h6 style={{ fontWeight: 700 }}>{s.businessName || s.business_name}</h6>
+                        <p className="text-muted small mb-1">{s.type} — {s.city}</p>
+                        <span className={`nolva-status ${s.isAvailable || s.is_available ? "available" : "busy"}`}>
+                          {s.isAvailable || s.is_available ? "Disponible" : "Indisponible"}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </>
   );
 };

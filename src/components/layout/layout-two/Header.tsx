@@ -11,6 +11,7 @@ import list from "../../../utility/header/list";
 import Link from "next/link";
 import productpage from "../../../utility/header/productpage";
 import MobileManuSidebar from "../../model/MobileManuSidebar";
+import BottomNavMobile from "../../model/BottomNavMobile";
 import FashionSidebar from "@/components/model/FashionSidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
@@ -569,6 +570,7 @@ const Header = ({
         toggleMainMenu={toggleMainMenu}
         activeMainMenu={activeMainMenu}
       />
+      <BottomNavMobile />
       <FashionSidebar
         MinPrice={MinPrice}
         MaxPrice={MaxPrice}

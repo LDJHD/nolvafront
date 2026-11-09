@@ -10,6 +10,7 @@ import Link from "next/link";
 import productpage from "../../../../utility/header/productpage";
 import pages from "../../../../utility/header/pages";
 import MobileManuSidebar from "../../../model/MobileManuSidebar";
+import BottomNavMobile from "../../../model/BottomNavMobile";
 import SidebarCart from "../../../model/SidebarCart";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -418,6 +419,7 @@ const HeaderButtom = ({ cartItems, wishlistItems }) => {
         activeMainMenu={activeMainMenu}
         isMobileMenuOpen={isMobileMenuOpen}
       />
+      <BottomNavMobile />
       <SidebarCart isCartOpen={isCartOpen} closeCart={closeCart} />
     </>
   );

@@ -5,10 +5,12 @@ import { RootState } from "@/store";
 import { reservationsApi, quoteRequestsApi, eventsApi } from "@/lib/api";
 import ReservationPaymentActions from "./ReservationPaymentActions";
 import { downloadPaymentProof } from "@/lib/downloadPaymentProof";
+import { downloadRegistrationsPdf } from "@/lib/downloadRegistrationsPdf";
 import Link from "next/link";
 import VendorSidebar from "../vendor-sidebar/VendorSidebar";
 import { Col, Form, Modal, Row } from "react-bootstrap";
 import { emptyTicketRow, type TicketDraft } from "@/lib/eventPublishGuide";
+import EventLocationMap from "@/components/events/EventLocationMap";
 import { useEventTypes } from "@/lib/useCatalog";
 
 const UserDashboard = () => {
@@ -26,6 +28,8 @@ const UserDashboard = () => {
     event_date: "",
     city: "",
     location: "",
+    latitude: null as number | null,
+    longitude: null as number | null,
     image: "",
     expected_participants: "",
     is_free: true,
@@ -197,6 +201,8 @@ const UserDashboard = () => {
       event_date: eventDateValue(event) ? toDateTimeLocalValue(eventDateValue(event)) : "",
       city: event.city || "",
       location: event.location || "",
+      latitude: event.latitude ?? null,
+      longitude: event.longitude ?? null,
       image: event.image || event.cover_image || "",
       expected_participants: event.expectedParticipants ?? event.expected_participants ?? "",
       is_free: tickets.length === 0 && Number(event.ticketPrice || event.ticket_price || 0) === 0,
@@ -244,6 +250,8 @@ const UserDashboard = () => {
         event_date: formatLocalDateForApi(editForm.event_date),
         city: editForm.city.trim(),
         location: editForm.location.trim() || undefined,
+        latitude: editForm.latitude || undefined,
+        longitude: editForm.longitude || undefined,
         image: editForm.image || undefined,
         ticket_types: ticketTypes,
         ticket_price: editForm.is_free ? 0 : undefined,
@@ -434,8 +442,9 @@ const UserDashboard = () => {
     setRegistrationsLoading(true);
     try {
       const res = await eventsApi.eventRegistrations(event.id);
-      setRegistrations(res.data?.registrations || []);
-    } catch {
+      setRegistrations(res.data?.registrations || res.data?.data || []);
+    } catch (err: any) {
+      console.error("Erreur chargement inscrits:", err?.response?.data || err?.message);
       setRegistrations([]);
     } finally {
       setRegistrationsLoading(false);
@@ -919,6 +928,15 @@ const UserDashboard = () => {
             <Form.Control value={editForm.location} onChange={(e) => setEditForm({ ...editForm, location: e.target.value })} />
           </Col>
           <Col md={12}>
+            <EventLocationMap
+              latitude={editForm.latitude as number | null}
+              longitude={editForm.longitude as number | null}
+              locationName={editForm.location}
+              canEdit={true}
+              onLocationUpdate={(lat, lng) => setEditForm({ ...editForm, latitude: lat, longitude: lng })}
+            />
+          </Col>
+          <Col md={12}>
             <Form.Label>Photo de l&apos;evenement</Form.Label>
             <div className="d-flex flex-wrap align-items-center gap-3">
               {editForm.image ? (
@@ -1109,6 +1127,15 @@ const UserDashboard = () => {
         )}
       </Modal.Body>
       <Modal.Footer>
+        {registrations.length > 0 && (
+          <button
+            type="button"
+            className="btn btn-outline-primary me-2"
+            onClick={() => downloadRegistrationsPdf(registrationsEvent?.title || "evenement", registrations)}
+          >
+            <i className="fi fi-rr-download me-1"></i> Télécharger PDF
+          </button>
+        )}
         <button type="button" className="btn btn-outline-secondary" onClick={() => setRegistrationsEvent(null)}>
           Fermer
         </button>

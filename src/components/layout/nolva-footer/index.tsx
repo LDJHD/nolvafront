@@ -78,7 +78,7 @@ export default function NolvaFooter() {
           <div className="col-lg-4 col-md-6">
             <h6 style={{ fontWeight: 700, marginBottom: "20px", color: "var(--nolva-gold)" }}>Contact</h6>
             <div style={{ color: "rgba(255,255,255,0.6)", fontSize: "14px", lineHeight: "2" }}>
-              <p>📍 Cotonou, Bénin</p>
+              <p>📍 Abomey-Calavi, Bénin</p>
               <p>📞 +229 XX XX XX XX</p>
               <p>✉️ contact@nolva.org</p>
             </div>

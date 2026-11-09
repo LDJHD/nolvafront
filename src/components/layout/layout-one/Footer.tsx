@@ -227,7 +227,7 @@ function Footer() {
                                 <i className="fi fi-rr-marker location svg_img foo_svg"></i>
                               </span>
                               <p>
-                                Cotonou, Bénin
+                                Abomey-Calavi, Bénin
                               </p>
                             </li>
                             <li className="gi-footer-link gi-foo-call">
