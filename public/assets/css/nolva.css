@@ -2955,6 +2955,94 @@ html { scroll-behavior: smooth; }
 .nolva-bottom-nav-create {
   animation: nolva-create-pulse 2.5s ease-in-out infinite;
 }
+/* Le bouton "Créer" est un <button> : on neutralise les styles natifs */
+button.nolva-bottom-nav-create {
+  padding: 0;
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Menu d'actions du bouton "Créer" (mobile) */
+.nolva-create-backdrop {
+  position: fixed;
+  inset: 0 0 72px 0;
+  z-index: 999;
+  background: rgba(15, 23, 42, 0.28);
+  -webkit-backdrop-filter: blur(1px);
+  backdrop-filter: blur(1px);
+}
+.nolva-create-menu {
+  position: absolute;
+  bottom: calc(100% + 42px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;
+  width: 250px;
+  max-width: calc(100vw - 32px);
+  background: #ffffff;
+  border: 1px solid #ececf1;
+  border-radius: 16px;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.22);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: nolva-create-menu-in 0.16s ease-out;
+}
+@keyframes nolva-create-menu-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(6px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.nolva-create-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 11px;
+  text-decoration: none;
+  color: #1f2937;
+  transition: background 0.18s ease;
+}
+.nolva-create-menu-item:hover,
+.nolva-create-menu-item:active {
+  background: #f5f3ff;
+  color: #1f2937;
+}
+.nolva-create-menu-icon {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6d28d9 0%, #9333ea 50%, #ec4899 100%);
+  color: #ffffff;
+}
+.nolva-create-menu-icon i {
+  font-size: 16px;
+  line-height: 1;
+}
+.nolva-create-menu-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  min-width: 0;
+}
+.nolva-create-menu-text strong {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #111827;
+}
+.nolva-create-menu-text small {
+  font-size: 11px;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 
 /* Bottom nav mobile padding */
